@@ -1,0 +1,107 @@
+/**
+ * Folio Pop — design tokens (ported verbatim from the Folio Pop Design System).
+ *
+ * Single source of truth for the inline-style components. Font families,
+ * border-radius, and box-shadows live in `globals.css` under `@theme` so
+ * Tailwind emits matching utilities (font-*, rounded-*, shadow-*); everything
+ * else lives here on :root.
+ */
+:root {
+  /* ── Color · base ── */
+  --cream: #fff8f0;
+  --paper: #ffffff;
+  --ink: #132a3e;
+  --ink-2: #3d5468;
+  --ink-3: #6b7f91;
+
+  /* ── Color · primary (tangerine) ── */
+  --orange-500: #ff6b35;
+  --orange-600: #e8551f;
+  --orange-700: #c74413;
+  --orange-100: #ffe3d6;
+  --orange-50: #fff1e9;
+
+  /* ── Color · secondary (deep sea blue) ── */
+  --blue-700: #004e89;
+  --blue-800: #003c6b;
+  --blue-500: #1b6fae;
+  --blue-100: #dcebf7;
+  --blue-50: #eef6fc;
+
+  /* ── Color · accents ── */
+  --sun-400: #ffc53d;
+  --sun-100: #fff0cc;
+  --mint-500: #2fbf8f;
+  --mint-100: #d8f4e9;
+  --coral-100: #ffdce4;
+
+  /* ── Color · semantic ── */
+  --success: #1e9e6a;
+  --warning: #e8a213;
+  --error: #d93b3b;
+  --info: #1b6fae;
+
+  /* ── Color · semantic aliases ── */
+  --surface-page: var(--cream);
+  --surface-card: var(--paper);
+  --surface-raised: var(--paper);
+  --surface-tint-orange: var(--orange-50);
+  --surface-tint-blue: var(--blue-50);
+  --surface-tint-sun: var(--sun-100);
+  --text-heading: var(--ink);
+  --text-body: var(--ink-2);
+  --text-muted: var(--ink-3);
+  --text-on-primary: #ffffff;
+  --text-on-dark: #fff8f0;
+  --action-primary: var(--orange-500);
+  --action-primary-hover: var(--orange-600);
+  --action-primary-active: var(--orange-700);
+  --action-secondary: var(--blue-700);
+  --action-secondary-hover: var(--blue-800);
+  --border-strong: var(--ink);
+  --border-soft: #e8ddd1;
+  --focus-ring: var(--blue-500);
+  --link: var(--blue-700);
+  --link-hover: var(--orange-600);
+
+  /* ── Typography · scale ── (font families are wired via @theme in globals.css) */
+  --text-hero: clamp(40px, 6vw, 64px);
+  --text-h1: 40px;
+  --text-h2: 28px;
+  --text-h3: 20px;
+  --text-lg: 18px;
+  --text-md: 16px;
+  --text-sm: 14px;
+  --text-xs: 12px;
+  --weight-display: 800;
+  --weight-heading: 700;
+  --weight-medium: 600;
+  --weight-body: 400;
+  --leading-tight: 1.1;
+  --leading-snug: 1.3;
+  --leading-body: 1.6;
+  --tracking-display: -0.02em;
+  --tracking-caps: 0.08em;
+
+  /* ── Spacing & layout ── */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --container-narrow: 680px;
+  --container-wide: 1080px;
+
+  /* ── Motion & effects ── (radius + shadow are wired via @theme in globals.css) */
+  --border-width: 2px;
+  --ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 150ms;
+  --dur-med: 250ms;
+  --lift: translate(-2px, -2px);
+  --press: translate(2px, 2px);
+}
