@@ -4,16 +4,20 @@ Personal portfolio for **Ashesh Srivastava** — an AI Product Manager / Forward
 Built on the [Folio Pop design system](https://claude.ai/design/p/edc09950-a47b-4511-8dc9-a93584fe8851):
 a Linktree-inspired, warm, punchy, link-first single-column page.
 
-> **Status: full site built from the final copy set (staging).** All 10 routes are live: Home
-> (hero → featured work → competency strip → closing CTA), two long-form case studies
-> (`/work/quicsnap-shutter-labs` with two data-viz charts, `/work/canvas`), a tabbed Projects
-> index + four project deep-dives, Library, and About. Unresolved editorial items render as
-> yellow **CONFIRM/SLOT chips** (toggle in `src/content/publish-state.ts` — flip
-> `SHOW_PENDING_MARKERS` to `false` at publish, after resolving or cutting each item).
-> Positioning: AI PM first, founder prologue. Shared copy lives in
-> [`src/content/site.ts`](src/content/site.ts); long-form copy in `src/content/case-*.ts` and
-> `project-*.ts`. Remaining `TODO`s: social handles, résumé PDF, repo links, location chip,
-> two timeline start-years.
+> **Status: full site built from the final copy set (staging).** All 12 routes are live: Home
+> (hero → skills overview → journey blocks with skill tags → own-product tiles with custom SVG
+> logo marks → closing CTA), four long-form work pages (`/work/quicsnap-shutter-labs` with two
+> data-viz charts, `/work/canvas`, `/work/ecommerce-brands`, `/work/marketplace-automation`), a
+> tabbed Projects index + four project deep-dives, Library, and About. Unresolved editorial items
+> render as yellow **CONFIRM chips** (toggle in `src/content/publish-state.ts` — flip
+> `SHOW_PENDING_MARKERS` to `false` at publish, after resolving or cutting each item; SLOT
+> asset-slot chips/frames are retired site-wide per Ash and render nothing).
+> Positioning: builder/tinkerer first — playing with frontier models at the capability overhang,
+> with the founder journey told first-venture-to-now. Shared copy lives in
+> [`src/content/site.ts`](src/content/site.ts); the home journey + PM skill registry in
+> [`src/content/journey.ts`](src/content/journey.ts); long-form copy in `src/content/case-*.ts`
+> and `project-*.ts`. Remaining `TODO`s: social handles, résumé PDF, repo links, location chip,
+> the ecommerce revenue arc ("$500K → X"), two timeline start-years.
 
 ## Stack
 
@@ -32,9 +36,12 @@ npm run dev        # http://localhost:3000
 
 Then open:
 
-- `/` — home: hero, featured work, competency strip (every claim links to its receipt)
+- `/` — home: hero, colored skills overview, the first-venture-to-now journey (clickable era
+  blocks + product tiles with logo marks, each tagged with the skills it earned)
 - `/work/quicsnap-shutter-labs` — the flagship case study (revenue chart + timeline strip)
 - `/work/canvas` — case study #2
+- `/work/ecommerce-brands` — founder era: the two private-label consumer brands (Amazon)
+- `/work/marketplace-automation` — founder era: the US marketplace automation business
 - `/projects` — tabbed index → `/projects/{orbit,blip,jobfairy,electricitybillsaved}`
 - `/library` — six real PM artifacts with context wrappers
 - `/about` — journey, timeline, fit, contact
@@ -74,6 +81,7 @@ src/
     index.ts            # barrel export → import from "@/components" (DS primitives only)
   content/
     site.ts             # ← single source of truth for shared copy & links
+    journey.ts          # home journey blocks + PM skill registry (colors, assignments)
     longform-types.ts   # typed block model for long-form pages
     publish-state.ts    # SHOW_PENDING_MARKERS — staging chips on/off
     case-*.ts           # case-study copy as typed blocks (quicsnap-shutter, canvas)
@@ -90,8 +98,8 @@ public/
 
 `public/mascot/` holds a cartoon **explorer/adventurer** mascot (hat, green shirt, backpack — an on-theme "forward-deployed" builder):
 
-- **Animated logo** — `logo-mascot.webm` (VP9) + `logo-mascot.mov` (HEVC) + `logo-poster.png`. A 4s loop of the explorer with a compass + torch. The source has a **solid black background (no alpha)**, so `<MascotLogo>` (default `variant="badge"`) frames it as a **dark rounded badge** (the black merges into the frame). Used site-wide via `SiteHeader`. Falls back to the poster under `prefers-reduced-motion`.
-- **Transparent cutout** — `logo-mascot-alpha.webm` (VP9 alpha) + `logo-mascot-alpha.mov` (HEVC alpha, Safari) + `logo-poster-alpha.png`, chroma-keyed from the original (`colorkey 0x000000`, tolerance 0.05, no blend — blend washes out the dark linework) and square-cropped to 720×720. Rendered by `<MascotLogo variant="cutout">`, used for the hero avatar directly on cream.
+- **Animated logo** — `logo-mascot.webm` (VP9) + `logo-mascot.mov` (HEVC) + `logo-poster.png`. A 4s loop of the explorer with a compass + torch. `logo-mascot.mov` is the master: HEVC **with an alpha layer** (black RGB under the transparent region), so `<MascotLogo>` (default `variant="badge"`) frames it as a **dark rounded badge** (the transparent/black area merges into the frame). Used site-wide via `SiteHeader`. Falls back to the poster under `prefers-reduced-motion`.
+- **Transparent cutout** — `logo-mascot-alpha.webm` (VP9 alpha) + `logo-mascot-alpha.mov` (HEVC alpha via videotoolbox, Safari) + `logo-poster-alpha.png`, re-encoded **directly from the master's own alpha layer** (no chroma key — keying binarizes the soft matte, eats the near-black linework, and leaves flickering speckles) and square-cropped to 720×720 (`crop=720:720`, centered). Rebuild: `ffmpeg -i logo-mascot.mov -vf crop=720:720 -c:v libvpx-vp9 -pix_fmt yuva420p -crf 24 -b:v 0 -auto-alt-ref 0` (webm) / `-c:v hevc_videotoolbox -allow_sw 1 -alpha_quality 0.75 -q:v 65 -tag:v hvc1 -pix_fmt bgra` (mov). Rendered by `<MascotLogo variant="cutout">`, used for the hero avatar directly on cream.
 - **Nine sprite tiles** — `mascot-{coding,map,inspect,radio,dig,measure,reading,reading-recline,campfire}.png`, sliced from a 3×3 sheet (`mascot-sheet.png`). Each pose maps to a likely section (coding → hero, map → projects, magnifier → research, radio → contact, …). Previewed in `/styleguide`.
 
 ## Editing content

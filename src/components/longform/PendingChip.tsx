@@ -24,6 +24,9 @@ const CHIP_STYLES: Record<PendingChipKind, [string, string, string]> = {
  */
 export function PendingChip({ chip_kind, chip_note }: PendingChipProps) {
   if (!SHOW_PENDING_MARKERS) return null;
+  // Ash (2026-08-02): asset-slot chips are retired site-wide — assets get added
+  // when they exist; the chips shouldn't ship in the meantime.
+  if (chip_kind === "SLOT") return null;
   const [chip_label, background, color] = CHIP_STYLES[chip_kind];
   return (
     <span

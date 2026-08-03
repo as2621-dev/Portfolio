@@ -21,7 +21,7 @@ import { site } from "@/content/site";
 export const metadata: Metadata = {
   title: "About · Ashesh Srivastava",
   description:
-    "Customer, operator, founder, builder — the journey from heavy industry through ecommerce at scale to AI product management, and what I'm right for (and not).",
+    "Customer, operator, founder, builder — the journey from ecommerce at scale to AI product management, and what I'm right for (and not).",
 };
 
 const PARAGRAPH_STYLE: React.CSSProperties = {
@@ -66,7 +66,7 @@ export default function AboutPage() {
       </header>
 
       <section id="journey" style={{ display: "flex", flexDirection: "column", gap: 20, scrollMarginTop: 96 }}>
-        <SectionHeader eyebrow="THE JOURNEY" title="Four careers, one thread" />
+        <SectionHeader eyebrow="THE JOURNEY" title="Operator, founder, builder — one thread" />
         {aboutJourneyParagraphs.map((journey_paragraph) => (
           <p key={journey_paragraph.slice(0, 32)} style={PARAGRAPH_STYLE}>
             <InlineText text={journey_paragraph} />

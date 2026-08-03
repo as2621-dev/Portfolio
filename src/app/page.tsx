@@ -1,13 +1,11 @@
 import type React from "react";
 import { MascotLogo } from "@/components/brand/MascotLogo";
-import { PendingChip } from "@/components/longform/PendingChip";
 import { Reveal } from "@/components/motion/Reveal";
-import { CompetencyStripSection } from "@/components/sections/CompetencyStripSection";
-import { FeaturedWorkSection } from "@/components/sections/FeaturedWorkSection";
+import { JourneySection } from "@/components/sections/JourneySection";
+import { SkillsSection } from "@/components/sections/SkillsSection";
 import { SocialLinksRow } from "@/components/sections/SocialLinksRow";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/Card";
 import { site } from "@/content/site";
 
 /** Load-time entrance stagger for the hero rows. */
@@ -16,9 +14,10 @@ function riseStyle(order: number): React.CSSProperties {
 }
 
 /**
- * Home: survive the 7-second scan, then route the reader to the flagship.
- * Hero → credibility band → featured work → competency strip → closing CTA.
- * Copy source: ~/"Portfolio "/copy/01-home.md; all copy reads from site.ts.
+ * Home: survive the 7-second scan, then walk the reader through the journey.
+ * Hero → credibility band → skills overview → journey blocks (venture blocks
+ * with skill tags, then the own-products tiles) → sign-off GIF.
+ * Journey content: src/content/journey.ts.
  */
 export default function HomePage() {
   return (
@@ -63,7 +62,7 @@ export default function HomePage() {
             ...riseStyle(3),
             fontSize: 22,
             color: "var(--ink-2)",
-            maxWidth: "26ch",
+            maxWidth: "32ch",
             lineHeight: 1.35,
             margin: 0,
           }}
@@ -78,31 +77,17 @@ export default function HomePage() {
           {site.hero_subline}
         </p>
 
-        {/* The deliberate-choice line — the heaviest strategic lifting on the page */}
-        <div className="fp-rise" style={riseStyle(5)}>
-          <Card tint="sun" padding={20} pop={false} style={{ borderRadius: "var(--radius-md)" }}>
-            <p style={{ margin: 0, fontSize: 15.5, lineHeight: 1.6, color: "var(--ink)", fontWeight: 500 }}>
-              {site.home_deliberate_line}
-            </p>
-          </Card>
-        </div>
-
-        <div
-          className="fp-rise"
-          style={{ ...riseStyle(6), display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}
-        >
-          {site.home_location_chip ? (
+        {site.home_location_chip && (
+          <div
+            className="fp-rise"
+            style={{ ...riseStyle(5), display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap" }}
+          >
             <Badge tone="mint">{site.home_location_chip}</Badge>
-          ) : (
-            <PendingChip
-              chip_kind="CONFIRM"
-              chip_note="location + open-to statement, e.g. “Remote / relocating · Open to senior AI PM roles”"
-            />
-          )}
-        </div>
+          </div>
+        )}
 
         {/* Credibility band */}
-        <div className="fp-rise" style={{ ...riseStyle(7), display: "flex", gap: 24, flexWrap: "wrap", marginTop: 4 }}>
+        <div className="fp-rise" style={{ ...riseStyle(6), display: "flex", gap: 24, flexWrap: "wrap", marginTop: 4 }}>
           {site.hero_stats.map((stat) => (
             <div key={stat.stat_label}>
               <div style={{ fontFamily: "var(--font-mono)", fontWeight: 600, fontSize: 24, color: "var(--ink)" }}>
@@ -117,41 +102,36 @@ export default function HomePage() {
 
         <div
           className="fp-rise"
-          style={{ ...riseStyle(8), display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center", marginTop: 8 }}
+          style={{ ...riseStyle(7), display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center", marginTop: 8 }}
         >
           <Button href={`mailto:${site.primary_email}`}>Email me →</Button>
           <Button variant="outline" href="#">
             Download résumé
           </Button>
-          <PendingChip chip_kind="SLOT" chip_note="résumé PDF — to be produced from the copy set" />
         </div>
 
-        <div className="fp-rise" style={riseStyle(9)}>
+        <div className="fp-rise" style={riseStyle(8)}>
           <SocialLinksRow />
         </div>
       </section>
 
-      <FeaturedWorkSection />
-      <CompetencyStripSection />
+      <SkillsSection />
+      <JourneySection />
 
-      {/* ── Closing CTA ── */}
+      {/* ── Sign-off ── */}
       <Reveal>
-        <Card tint="orange" padding={32}>
-          <h2 style={{ fontSize: 24, fontWeight: 800, margin: 0 }}>{site.closing_cta.closing_header}</h2>
-          <p style={{ fontSize: 16, lineHeight: 1.65, color: "var(--ink-2)", margin: "12px 0 20px" }}>
-            {site.closing_cta.closing_body}
-          </p>
-          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-            <Button href="/work/quicsnap-shutter-labs">Read the flagship story →</Button>
-            <Button variant="outline" href={`mailto:${site.primary_email}`}>
-              Email me
-            </Button>
-            <Button variant="outline" href="#">
-              Résumé
-            </Button>
-            <PendingChip chip_kind="SLOT" chip_note="résumé PDF" />
-          </div>
-        </Card>
+        {/* Animated GIF, kept out of the next/image optimizer on purpose. */}
+        <img
+          src="/step-in.gif"
+          alt="Pixel-art adventurer holding a torch beside a treasure chest in a rune-lit cave"
+          style={{
+            width: "100%",
+            display: "block",
+            border: "2px solid var(--ink)",
+            borderRadius: "var(--radius-lg)",
+            boxShadow: "var(--shadow-pop)",
+          }}
+        />
       </Reveal>
     </main>
   );

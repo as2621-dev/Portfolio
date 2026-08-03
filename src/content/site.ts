@@ -113,8 +113,6 @@ export interface SiteContent {
   role_line: string;
   hero_headline: string;
   hero_subline: string;
-  /** The deliberate-choice line — heaviest strategic lifting on the page. */
-  home_deliberate_line: string;
   /** TODO: confirm location + "open to" wording — undefined renders a CONFIRM chip in staging. */
   home_location_chip?: string;
   location_text?: string;
@@ -138,12 +136,10 @@ export const site: SiteContent = {
   wordmark_text: "Ashesh Srivastava",
   primary_email: "ashesh.srivastava1234@gmail.com", // TODO: confirm this is the address to expose publicly
 
-  role_line: "AI Product Manager · Builder",
-  hero_headline: "I turn frontier models into products people pay for.",
+  role_line: "Builder · Tinkerer · Manager",
+  hero_headline: "I would like to devote my life to working on something that feels like a sport.",
   hero_subline:
-    "Two-time founder — ecommerce operator turned AI builder. I've shipped image platforms, ranking engines, and agents, and learned firsthand what model progress does to moats.",
-  home_deliberate_line:
-    "After years of running everything — ops, growth, hiring, product — I'm deliberately going deep on one thing: product. A strong team, a defined scope, and the craft I kept coming back to anyway.",
+    "Two-time founder — ecommerce operator turned AI tinkerer. I live at the capability overhang: figuring out interesting use cases, discovering what just became possible, learning as I go — and having fun along the way.",
   home_location_chip: undefined, // TODO: confirm location + "open to" statement
   location_text: undefined,
 
@@ -329,22 +325,22 @@ export const site: SiteContent = {
     {
       project_title: "Marketplace automation",
       project_description:
-        "Built the custom platform and ~35-person ops team behind 77 US marketplace stores (QEG Automation · EZECOMM).",
+        "Built the custom platform and ~35-person ops team behind 77 US marketplace stores (QEG Automation).",
       project_tags: ["Ecommerce", "Ops at scale"],
       project_stat: "$593K",
       project_stat_label: "peak monthly GMV",
       project_category: "Founder era",
       project_media_image: "/mascot/mascot-dig.png",
-      href: "/about#journey",
+      href: "/work/marketplace-automation",
     },
     {
-      project_title: "Amazon India brands",
+      project_title: "Ecommerce consumer brands",
       project_description:
-        "Built two consumer brands — A Baby Cherry and Decor & More — sourcing from China and Vietnam, selling on amazon.in, Flipkart, and beyond.",
-      project_tags: ["DTC", "Amazon India"],
+        "Built two private-label consumer brands — A Baby Cherry® and Decor & More® — sourced from factories in China, Vietnam, and India, sold on Amazon.",
+      project_tags: ["DTC", "Amazon", "Private Label"],
       project_category: "Founder era",
       project_media_image: "/mascot/mascot-inspect.png",
-      href: "/about#journey",
+      href: "/work/ecommerce-brands",
     },
   ],
 
@@ -372,14 +368,14 @@ export const site: SiteContent = {
     },
     {
       experience_period: "2025",
-      experience_role: "Cofounder & CEO",
+      experience_role: "Co-founder",
       experience_org: "Shutter Labs",
       experience_summary:
         "Self-serve AI product photography: 2D→3D capture plus per-product LoRAs for exact label fidelity; enterprise POC with a Fortune-500 retailer.",
     },
     {
       experience_period: "2022 — 2024",
-      experience_role: "Founder & CEO",
+      experience_role: "Founder",
       experience_org: "QuicSnap",
       experience_summary:
         "Bootstrapped AI product-photography service — 15-SKU catalog, offshore 3D production pipeline, clients across the US, EU, and Middle East.",
@@ -390,22 +386,15 @@ export const site: SiteContent = {
       experience_role: "Founder — consumer brands",
       experience_org: "A Baby Cherry · Decor & More",
       experience_summary:
-        "Two Amazon India consumer brands, sourced from China and Vietnam, run with an 8-person team.",
+        "Two private-label consumer brands on Amazon, sourced from factories in China, Vietnam, and India, run with an 8-person team.",
     },
     {
-      // TODO: confirm start year — operation peaked Aug 2021.
-      experience_period: "20xx — 2021",
+      // Founder-supplied years (2026-08-02); file artifacts date Aug 2021 – Feb 2022.
+      experience_period: "2022 — 2023",
       experience_role: "Founder — marketplace automation",
-      experience_org: "QEG Automation · EZECOMM",
+      experience_org: "QEG Automation",
       experience_summary:
         "US marketplace automation at scale: 77 client stores, a custom platform, ~35-person ops team.",
-    },
-    {
-      // TODO: confirm exact title.
-      experience_period: "2014 — 2016",
-      experience_role: "Engineering program management",
-      experience_org: "Oil & Gas (SET)",
-      experience_summary: "Mozambique gas project — HAZOP studies, manhour estimation, delivery planning.",
     },
   ],
 };

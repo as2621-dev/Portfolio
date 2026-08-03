@@ -11,6 +11,8 @@ export type { SectionHeaderProps } from "./portfolio/SectionHeader";
 export { SectionHeader } from "./portfolio/SectionHeader";
 export type { SkillChipProps } from "./portfolio/SkillChip";
 export { SkillChip } from "./portfolio/SkillChip";
+export type { SkillPillProps } from "./portfolio/SkillPill";
+export { SkillPill } from "./portfolio/SkillPill";
 export type { TimelineItemProps } from "./portfolio/TimelineItem";
 export { TimelineItem } from "./portfolio/TimelineItem";
 export type { BadgeProps, BadgeTone } from "./ui/Badge";

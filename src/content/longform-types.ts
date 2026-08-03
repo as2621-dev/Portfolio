@@ -30,7 +30,11 @@ export interface CtaLinkEntry {
 }
 
 /** Charts are first-class blocks; ids map to components in src/components/charts/. */
-export type LongformChartId = "quicsnap-monthly-revenue" | "company-timeline" | "bakeoff-comparison";
+export type LongformChartId =
+  | "quicsnap-monthly-revenue"
+  | "company-timeline"
+  | "bakeoff-comparison"
+  | "marketplace-pipeline";
 
 /** The discriminated union every long-form page is written in. */
 export type LongformBlock =
@@ -43,6 +47,7 @@ export type LongformBlock =
   | { block_kind: "table"; table_header: string[]; table_rows: string[][]; table_caption?: string }
   | { block_kind: "callout"; callout_tint: "orange" | "blue" | "sun"; callout_title?: string; callout_text: string }
   | { block_kind: "chart"; chart_id: LongformChartId; chart_caption?: string }
+  | { block_kind: "image"; image_src: string; image_alt: string; image_caption?: string }
   | { block_kind: "act_divider"; act_eyebrow: string; act_title: string; anchor_id?: string }
   | { block_kind: "media_slot"; slot_description: string }
   | { block_kind: "code"; code_text: string }

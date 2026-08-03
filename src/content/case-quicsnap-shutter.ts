@@ -17,23 +17,17 @@ export const quicsnapShutterArticle: LongformArticle = {
     {
       meta_label: "My role",
       meta_value:
-        "Founder → CEO. I owned strategy, pricing, GTM, fundraising, and the product decisions. My cofounders owned the research and engineering (more below).",
+        "Co-founder. I owned strategy, pricing, GTM, fundraising, and the product decisions. My cofounders owned the research and engineering.",
     },
     { meta_label: "Timeline", meta_value: "Oct 2022 – Nov 2025" },
     {
       meta_label: "Team",
       meta_value:
-        "Built from zero — production artists, art directors, an offshore 3D vendor, later two technical cofounders and a GTM team [CONFIRM: headcount summary]",
+        "Built from zero — production artists, art directors, later two technical cofounders and a GTM team [CONFIRM: headcount summary]",
     },
     {
       meta_label: "Numbers",
-      meta_value:
-        "~$85K total revenue — $61,187 of it through the self-serve channel, verifiable to the transaction · 41% of customers reordered · 25 sec / $0.16 per generated image vs ~$180 and weeks for a photoshoot",
-    },
-    {
-      meta_label: "The arc",
-      meta_value:
-        "Revenue with people and designers → pivot to a platform → a frontier-model release destroys the differentiator → what I learned.",
+      meta_value: "~$85K revenue",
     },
   ],
   blocks: [
@@ -41,7 +35,7 @@ export const quicsnapShutterArticle: LongformArticle = {
       block_kind: "paragraph",
       is_lede: true,
       paragraph_text:
-        "I spent three years solving one problem — photorealistic product imagery that preserves the exact fine print on the product — first with people, then with a platform. The service made real revenue: roughly $85K all-in, $61,187 of it through the self-serve channel alone, verifiable transaction by transaction. The platform bet was that base models would eventually solve fine-print fidelity, so we should own the workflow before that happened. We were right about the direction and wrong about the speed: on November 20, 2025, Google’s Nano Banana Pro shipped text preservation as a default capability, and the differentiator we’d built a company around became an API call. This is the story of both bets — the one that paid, and the one that got outrun.",
+        "I spent three years solving one problem — photorealistic product imagery that preserves the exact fine print on the product — first with people, then with a platform. The service made real revenue: roughly $85K all-in, $61,187 of it through the self-serve channel alone, verifiable transaction by transaction. Our bet was that it would take a long time for image models to preserve fine text on FMCG products — so we’d build a photorealistic 3D model of the product with tools like Blender, then use AI image pipelines to generate the environment around it. Later we automated the 3D-modeling step itself, using computer-vision techniques like Gaussian splatting, NeRFs, Depth Anything, and Open3D. We were right about the direction and wrong about the speed: on November 20, 2025, Google’s Nano Banana Pro shipped text preservation as a default capability, and the differentiator we’d built a company around became an API call. This is the story of both bets — the one that paid, and the one that got outrun.",
     },
 
     /* ── Act 1 ── */
@@ -86,13 +80,6 @@ export const quicsnapShutterArticle: LongformArticle = {
       paragraph_text:
         "The hallucination-prone part of the image (the product) was handled deterministically; the expensive part of traditional photography (the set, the location, the props, the models) was handled generatively. That split *was* the company.",
     },
-    {
-      block_kind: "pull_quote",
-      quote_text:
-        "Generating product ready images just by using AI alone is not possible with current tech, so we plan train and perfect our workflow using manual intervention.",
-      quote_attribution:
-        "our June 2024 Executive Summary, verbatim — dated evidence of the founding assumption [SLOT: image of the actual document]",
-    },
     { block_kind: "heading", heading_level: 3, heading_text: "The go-to-market machine", anchor_id: "gtm" },
     {
       block_kind: "paragraph",
@@ -107,45 +94,6 @@ export const quicsnapShutterArticle: LongformArticle = {
         "**Instantly.ai and Waalaxy** for sequencing and delivery.",
         "**50+ sending domains, three inboxes per domain** [FOUNDER], warmed and rotated, with deliverability tracked as a first-class metric. Cold email dies in the spam folder; we treated inbox placement as an engineering problem — and deliverability was our guardrail metric long before anyone asked us for one.",
       ],
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "Alongside it: a scripted personalized-video motion (screen-recording a prospect’s own listings next to competitors’), localized invoicing in German and French for EU clients, and an Instagram presence. The machine worked — it filled a production pipeline that served clients across the US, EU, and Middle East.",
-    },
-    { block_kind: "heading", heading_level: 3, heading_text: "The team behind the service" },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "“Full-service” means people. I hired and ran the production side — 3D artists, art directors, client-facing staff — plus an offshore production vendor on monthly invoicing, and later a CMO recruited on an equity package because cash was tight and I said so openly [CONFIRM: how much of the team story to tell; offer-letter archive exists but letters ≠ headcount]. Managing creative throughput against an unlimited-revisions promise taught me more about operational leverage than any book: every difficult client converts a marketing promise into an uncapped cost.",
-    },
-    { block_kind: "heading", heading_level: 3, heading_text: "What the numbers said", anchor_id: "numbers" },
-    { block_kind: "paragraph", paragraph_text: "This is where the story stops being a highlight reel." },
-    {
-      block_kind: "bullet_list",
-      list_items: [
-        "Self-serve revenue over 17 months: **$61,187** across 320 transactions and 153 customers — the number I can prove to the transaction. Enterprise/ACH contracts took the total to roughly **$85K**.",
-        "**41% of customers reordered, and repeat customers were 70% of revenue.** The service genuinely solved the problem for the people who used it.",
-        "Monthly revenue lived in a **flat $2.5K–$6.3K band the entire time**. No breakout month, ever.",
-        "The unit economics had a structural ceiling: August 2023’s offshore production bill was **$5,600** against **$4,045** of self-serve revenue that month. Enterprise contracts (at roughly 10x self-serve per-product rates) carried the margin [CONFIRM: was the business profitable in any period? “Profitable from day one” appears in the exec summary but the files don’t support it — resolve or cut].",
-        "Growth was purchased with labor: every new order consumed 3D-artist hours. Revenue scaled linearly with headcount, and the entry-level $19 SKU was *designed* to lose money as a loss-leader (our own pre-launch model computed it at negative margin — deliberately).",
-      ],
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "On attribution, to be precise about what I owned: the self-serve revenue line, pricing, and the repeat-rate were mine — I set the catalog, the prices, and the service promises that drove them. Enterprise closes were relationship wins I led but landed with the production team’s output carrying the pitch.",
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "Seventeen flat months is a demand signal and a margin trap at the same time. The clients loved it; the model couldn’t compound.",
-    },
-    {
-      block_kind: "chart",
-      chart_id: "quicsnap-monthly-revenue",
-      chart_caption:
-        "Monthly self-serve revenue from the verified transaction export (research corpus, Metrics §A). Sep 2024 is partial — the export ends Sep 12.",
     },
 
     /* ── Act 2 ── */
@@ -176,12 +124,6 @@ export const quicsnapShutterArticle: LongformArticle = {
       paragraph_text:
         "Two months earlier I had written “AI alone is not possible with current tech” in our own executive summary. Changing your mind in public, with your team’s paychecks attached to the old position, is harder than any pitch deck makes it look.",
     },
-    { block_kind: "heading", heading_level: 3, heading_text: "The people I had to convince" },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "A pivot is only a strategy after other people bet on it. The two people who mattered most were my technical cofounders: Astitva — a childhood friend, then finishing a PhD in 3D computer vision — and Pranav, a generative-deep-learning engineer. Neither reported to me; both had better-paying alternatives to joining a founder whose service business had just printed seventeen flat months. What I had was the evidence: the revenue export I’d pulled two weeks after the last recorded transaction, the reorder data proving demand, and the Flux trajectory argument. They joined in September 2024 on the strength of that case, and we formalized it in February 2025 — with engineering and research decisions theirs, not mine. [CONFIRM: framing — this is the influence-without-authority beat; adjust to how it actually felt]",
-    },
     { block_kind: "heading", heading_level: 3, heading_text: "What we built (Shutter Labs)" },
     {
       block_kind: "paragraph",
@@ -191,9 +133,14 @@ export const quicsnapShutterArticle: LongformArticle = {
     {
       block_kind: "numbered_list",
       list_items: [
-        "**2D→3D product capture.** Upload a couple of photos of your product; we reconstruct a 3D asset from them. What our Blender artists used to build by hand, automated at intake. The user gets full 3D control — rotate the product, position it anywhere in the scene, set the camera.",
+        "**2D→3D product capture.** Upload a couple of photos of your product; we reconstruct a 3D asset from them — a computer-vision stack built on Gaussian splatting, NeRFs, monocular depth estimation (Depth Anything), and Open3D for geometry processing. What our Blender artists used to build by hand, automated at intake. The user gets full 3D control — rotate the product, position it anywhere in the scene, set the camera.",
         "**Product-specific LoRAs.** For each product (in production: a new fine-tune per ~20 SKUs), we trained a LoRA whose job was to lock the fine print — label text, logos, materials — while the base model generated everything else: backgrounds, environments, lighting, human models.",
       ],
+    },
+    {
+      block_kind: "paragraph",
+      paragraph_text:
+        "Under the hood, generation was never a single prompt-to-image call. The production pipeline extracted product features from the input shot (color, texture, hem, fit), segmented a posed human from our model library, and merged both via IP-Adapter into a **category-specific fine-tuned diffusion model** — apparel, furniture, sports, and outdoor each had their own fine-tune — conditioned by a **per-brand LoRA** that locked the client’s brand guidelines and style. An agentic feedback loop then critiqued each generation and drove a refiner pass, with an upscaler finishing the output. Feature fidelity lived in the trained weights; composition lived in the workflow.",
     },
     {
       block_kind: "paragraph",

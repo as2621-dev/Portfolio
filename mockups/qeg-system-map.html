@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marketplace Automation Platform — System Map</title>
+<style>
+  :root {
+    --bg: #F7F6F3;
+    --card: #FFFFFF;
+    --surface: #F2F0EA;
+    --stage: #FBFAF7;
+    --ink: #23262B;
+    --muted: #6D6A62;
+    --line: #E0DCD2;
+    --border: #D8D4C8;
+    --out: #1B62B5;
+    --in: #2E7D52;
+    --data: #B07818;
+    --danger: #BE3B2E;
+    --danger-bg: rgba(190, 59, 46, 0.07);
+    --hot-bg: rgba(190, 59, 46, 0.08);
+    --chip-bg: #F4F2EC;
+    --wm-blue: #0071CE;
+    --wm-yellow: #FFC220;
+    --amz-orange: #FF9900;
+    --display: "Avenir Next", Avenir, "Segoe UI", system-ui, sans-serif;
+    --body: system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #16171A;
+      --card: #1F2126;
+      --surface: #1B1D21;
+      --stage: #24272D;
+      --ink: #E9E7E1;
+      --muted: #9A968C;
+      --line: #33363C;
+      --border: #383B42;
+      --out: #6FA8E8;
+      --in: #5FBF8B;
+      --data: #D9A84E;
+      --danger: #E0685A;
+      --danger-bg: rgba(224, 104, 90, 0.10);
+      --hot-bg: rgba(224, 104, 90, 0.12);
+      --chip-bg: #26292F;
+      --wm-blue: #7AB7F0;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #16171A;
+    --card: #1F2126;
+    --surface: #1B1D21;
+    --stage: #24272D;
+    --ink: #E9E7E1;
+    --muted: #9A968C;
+    --line: #33363C;
+    --border: #383B42;
+    --out: #6FA8E8;
+    --in: #5FBF8B;
+    --data: #D9A84E;
+    --danger: #E0685A;
+    --danger-bg: rgba(224, 104, 90, 0.10);
+    --hot-bg: rgba(224, 104, 90, 0.12);
+    --chip-bg: #26292F;
+    --wm-blue: #7AB7F0;
+  }
+  :root[data-theme="light"] {
+    --bg: #F7F6F3;
+    --card: #FFFFFF;
+    --surface: #F2F0EA;
+    --stage: #FBFAF7;
+    --ink: #23262B;
+    --muted: #6D6A62;
+    --line: #E0DCD2;
+    --border: #D8D4C8;
+    --out: #1B62B5;
+    --in: #2E7D52;
+    --data: #B07818;
+    --danger: #BE3B2E;
+    --danger-bg: rgba(190, 59, 46, 0.07);
+    --hot-bg: rgba(190, 59, 46, 0.08);
+    --chip-bg: #F4F2EC;
+    --wm-blue: #0071CE;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { background: var(--bg); color: var(--ink); }
+  body { font-family: var(--body); margin: 0; font-size: 14px; }
+
+  .page {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 48px 28px 64px;
+  }
+
+  header.masthead { margin-bottom: 26px; }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin: 0 0 10px;
+  }
+  h1 {
+    font-family: var(--display);
+    font-size: clamp(26px, 4vw, 36px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.12;
+    margin: 0 0 12px;
+    text-wrap: balance;
+  }
+  .dek {
+    font-size: 15.5px;
+    line-height: 1.55;
+    color: var(--muted);
+    max-width: 62ch;
+    margin: 0;
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px 22px;
+    margin: 22px 0 14px;
+    padding: 12px 16px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--card);
+  }
+  .legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+  .legend-item svg { display: block; }
+  .cron-chip {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+    background: var(--chip-bg);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 5px 12px;
+    white-space: nowrap;
+  }
+  .cron-chip b { color: var(--danger); font-weight: 700; }
+
+  .diagram-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--card);
+  }
+  .diagram-wrap svg {
+    display: block;
+    width: 100%;
+    min-width: 1160px;
+    height: auto;
+  }
+
+  /* ---------- SVG semantic styles ---------- */
+  .f-out   { fill: var(--out); }
+  .f-in    { fill: var(--in); }
+  .f-data  { fill: var(--data); }
+  .f-mut   { fill: var(--muted); }
+  .f-amz   { fill: var(--amz-orange); }
+
+  .l-out  { stroke: var(--out);  stroke-width: 1.6; fill: none; }
+  .l-in   { stroke: var(--in);   stroke-width: 1.6; fill: none; }
+  .l-data { stroke: var(--data); stroke-width: 1.6; fill: none; }
+  .l-mut  { stroke: var(--muted); stroke-width: 1.5; fill: none; }
+  .dashed { stroke-dasharray: 5 5; }
+
+  .box-platform { fill: var(--surface); stroke: var(--border); stroke-width: 1.5; }
+  .stage        { fill: var(--stage);   stroke: var(--border); stroke-width: 1.2; }
+  .card         { fill: var(--card);    stroke: var(--border); stroke-width: 1.2; }
+  .chip         { fill: var(--chip-bg); stroke: var(--line);   stroke-width: 1; }
+  .badge        { fill: var(--chip-bg); stroke: var(--line); stroke-width: 1; }
+  .badge-hot    { fill: var(--hot-bg);  stroke: var(--danger); stroke-width: 1; }
+
+  svg text { font-family: var(--body); fill: var(--ink); }
+  .mid       { text-anchor: middle; }
+  .t-title   { font-family: var(--display); font-size: 18px; font-weight: 700; }
+  .t-sub     { font-size: 11.5px; fill: var(--muted); }
+  .t-eyebrow { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; fill: var(--muted); }
+  .t-stage   { font-size: 14px; font-weight: 600; }
+  .t-cap     { font-size: 11px; fill: var(--muted); }
+  .t-lab     { font-size: 10.5px; }
+  .lab-out   { fill: var(--out); }
+  .lab-in    { fill: var(--in); }
+  .lab-data  { fill: var(--data); }
+  .lab-mut   { fill: var(--muted); }
+  .t-badge   { font-family: var(--mono); font-size: 9px; letter-spacing: 0.05em; fill: var(--muted); }
+  .t-badge-hot { font-family: var(--mono); font-size: 9px; letter-spacing: 0.05em; fill: var(--danger); font-weight: 700; }
+  .t-card    { font-size: 13px; font-weight: 600; }
+  .t-card-sub{ font-size: 10.5px; fill: var(--muted); }
+  .t-chiptxt { font-family: var(--mono); font-size: 10.5px; fill: var(--ink); }
+  .t-mono    { font-family: var(--mono); font-size: 11px; fill: var(--ink); }
+  .t-num     { font-family: var(--mono); font-size: 22px; font-weight: 700; fill: var(--data); }
+  .t-wm      { font-family: var(--display); font-size: 24px; font-weight: 700; fill: var(--wm-blue); }
+  .t-amz     { font-family: var(--display); font-size: 30px; font-weight: 700; letter-spacing: -0.03em; }
+
+  .stack {
+    margin-top: 26px;
+    padding: 18px 20px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--card);
+  }
+  .stack h2 {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+    margin: 0 0 12px;
+  }
+  .stack-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .stack-chips span {
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 6px 13px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--chip-bg);
+    color: var(--ink);
+    white-space: nowrap;
+  }
+
+  .footnote {
+    margin-top: 20px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <header class="masthead">
+    <p class="eyebrow">Marketplace automation · system map</p>
+    <h1>Catalog to cash, on a cron</h1>
+    <p class="dek">One custom PHP platform ran the full Amazon-to-Walmart pipeline — catalog ingestion, identifier resolution, enrichment, listing, repricing, inventory, orders, and tracking — orchestrated by fourteen cron jobs, four of them firing every single minute.</p>
+  </header>
+
+  <div class="legend">
+    <span class="legend-item">
+      <svg width="36" height="10" aria-hidden="true"><line x1="0" y1="5" x2="27" y2="5" class="l-out"></line><path d="M27 1 L36 5 L27 9 Z" class="f-out"></path></svg>
+      platform → marketplace (push)
+    </span>
+    <span class="legend-item">
+      <svg width="36" height="10" aria-hidden="true"><line x1="0" y1="5" x2="27" y2="5" class="l-in"></line><path d="M27 1 L36 5 L27 9 Z" class="f-in"></path></svg>
+      marketplace → platform (pull)
+    </span>
+    <span class="legend-item">
+      <svg width="36" height="10" aria-hidden="true"><line x1="0" y1="5" x2="27" y2="5" class="l-data"></line><path d="M27 1 L36 5 L27 9 Z" class="f-data"></path></svg>
+      database &amp; internal data
+    </span>
+    <span class="legend-item">
+      <svg width="36" height="10" aria-hidden="true"><line x1="0" y1="5" x2="27" y2="5" class="l-in dashed"></line><path d="M27 1 L36 5 L27 9 Z" class="f-in"></path></svg>
+      fallback · out-of-band
+    </span>
+    <span class="cron-chip">14 cron jobs · <b>4 × every minute</b></span>
+  </div>
+
+  <div class="diagram-wrap">
+    <svg viewBox="0 0 1260 1060" role="img" aria-label="Architecture diagram: custom PHP platform between Amazon supply side and Walmart marketplace, with eight pipeline stages, cron cadences, MySQL diff columns, and the ASIN-UPC dataset">
+      <defs>
+        <marker id="mOut" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0 0 L9 4 L0 8 Z" class="f-out"></path></marker>
+        <marker id="mIn" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0 0 L9 4 L0 8 Z" class="f-in"></path></marker>
+        <marker id="mData" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0 0 L9 4 L0 8 Z" class="f-data"></path></marker>
+        <marker id="mMut" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0 0 L9 4 L0 8 Z" class="f-mut"></path></marker>
+        <marker id="mAmz" markerWidth="9" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0 L9 4 L0 8 Z" class="f-amz"></path></marker>
+      </defs>
+
+      <!-- ================= CENTER: PLATFORM ================= -->
+      <rect x="400" y="100" width="440" height="798" rx="14" class="box-platform"></rect>
+      <text x="420" y="132" class="t-title">Custom PHP automation platform</text>
+      <text x="420" y="152" class="t-sub">one codebase · MySQL · short-lived HTTP workers</text>
+
+      <!-- group 1: listing pipeline -->
+      <text x="420" y="178" class="t-eyebrow">LISTING PIPELINE</text>
+
+      <rect x="420" y="184" width="400" height="70" rx="10" class="stage"></rect>
+      <text x="436" y="214" class="t-stage">1 · Catalog ingestion</text>
+      <text x="436" y="236" class="t-cap">supplier ASIN lists → staging tables</text>
+      <rect x="760" y="193" width="48" height="17" rx="8" class="badge"></rect>
+      <text x="784" y="205" class="t-badge mid">CRON</text>
+
+      <rect x="420" y="272" width="400" height="70" rx="10" class="stage"></rect>
+      <text x="436" y="302" class="t-stage">2 · ASIN → UPC resolution</text>
+      <text x="436" y="324" class="t-cap">two vendors in series — neither alone had coverage</text>
+      <rect x="760" y="281" width="48" height="17" rx="8" class="badge"></rect>
+      <text x="784" y="293" class="t-badge mid">CRON</text>
+
+      <rect x="420" y="360" width="400" height="70" rx="10" class="stage"></rect>
+      <text x="436" y="390" class="t-stage">3 · Product enrichment</text>
+      <text x="436" y="412" class="t-cap">Amazon MWS Products API — titles, brands, images</text>
+      <rect x="760" y="369" width="48" height="17" rx="8" class="badge"></rect>
+      <text x="784" y="381" class="t-badge mid">CRON</text>
+
+      <rect x="420" y="448" width="400" height="70" rx="10" class="stage"></rect>
+      <text x="436" y="478" class="t-stage">4 · Listing feed builder</text>
+      <text x="436" y="500" class="t-cap">item-setup feeds to Walmart, diff-gated</text>
+      <rect x="760" y="457" width="48" height="17" rx="8" class="badge"></rect>
+      <text x="784" y="469" class="t-badge mid">CRON</text>
+
+      <!-- pipeline order arrows -->
+      <line x1="620" y1="254" x2="620" y2="266" class="l-mut" marker-end="url(#mMut)"></line>
+      <line x1="620" y1="342" x2="620" y2="354" class="l-mut" marker-end="url(#mMut)"></line>
+      <line x1="620" y1="430" x2="620" y2="442" class="l-mut" marker-end="url(#mMut)"></line>
+      <line x1="720" y1="518" x2="720" y2="548" class="l-mut dashed" marker-end="url(#mMut)"></line>
+
+      <!-- group 2: steady-state loops -->
+      <text x="420" y="548" class="t-eyebrow">STEADY-STATE LOOPS — 1-MIN CRONS</text>
+
+      <rect x="420" y="554" width="400" height="70" rx="10" class="stage"></rect>
+      <text x="436" y="584" class="t-stage">5 · Competitive repricer</text>
+      <text x="436" y="606" class="t-cap">watermark sweep — day + hour buckets, no row twice per cycle</text>
+      <rect x="716" y="563" width="92" height="17" rx="8" class="badge-hot"></rect>
+      <text x="762" y="575" class="t-badge-hot mid">CRON · 1-MIN</text>
+
+      <rect x="420" y="640" width="400" height="70" rx="10" class="stage"></rect>
+      <text x="436" y="670" class="t-stage">6 · Inventory sync</text>
+      <text x="436" y="692" class="t-cap">source stock → Walmart quantity, diff-gated</text>
+      <rect x="716" y="649" width="92" height="17" rx="8" class="badge-hot"></rect>
+      <text x="762" y="661" class="t-badge-hot mid">CRON · 1-MIN</text>
+
+      <rect x="420" y="726" width="400" height="70" rx="10" class="stage"></rect>
+      <text x="436" y="756" class="t-stage">7 · Order pull</text>
+      <text x="436" y="778" class="t-cap">new Walmart orders → local order tables</text>
+      <rect x="716" y="735" width="92" height="17" rx="8" class="badge-hot"></rect>
+      <text x="762" y="747" class="t-badge-hot mid">CRON · 1-MIN</text>
+
+      <rect x="420" y="812" width="400" height="70" rx="10" class="stage"></rect>
+      <text x="436" y="842" class="t-stage">8 · Tracking injection</text>
+      <text x="436" y="864" class="t-cap">carrier + tracking number pushed back to Walmart</text>
+      <rect x="716" y="821" width="92" height="17" rx="8" class="badge-hot"></rect>
+      <text x="762" y="833" class="t-badge-hot mid">CRON · 1-MIN</text>
+
+      <!-- ================= LEFT: SUPPLY SIDE ================= -->
+      <rect x="30" y="189" width="250" height="60" rx="10" class="card"></rect>
+      <text x="155" y="214" class="t-card mid">Supplier catalogs</text>
+      <text x="155" y="233" class="t-card-sub mid">ASIN lists · category exports</text>
+      <line x1="280" y1="219" x2="414" y2="219" class="l-in" marker-end="url(#mIn)"></line>
+      <text x="350" y="211" class="t-lab lab-in mid">ASINs</text>
+
+      <rect x="30" y="262" width="250" height="48" rx="10" class="card"></rect>
+      <text x="155" y="283" class="t-card mid">UPC vendor #1</text>
+      <text x="155" y="301" class="t-card-sub mid">primary resolver</text>
+
+      <rect x="30" y="330" width="250" height="48" rx="10" class="card"></rect>
+      <text x="155" y="351" class="t-card mid">UPC vendor #2</text>
+      <text x="155" y="369" class="t-card-sub mid">series fallback</text>
+
+      <line x1="420" y1="294" x2="286" y2="286" class="l-out" marker-end="url(#mOut)"></line>
+      <text x="350" y="280" class="t-lab lab-out mid">① UPC lookup</text>
+      <path d="M 280 302 C 304 312, 304 328, 286 340" class="l-mut dashed" marker-end="url(#mMut)"></path>
+      <text x="308" y="325" class="t-lab lab-mut">miss ②</text>
+      <line x1="280" y1="354" x2="414" y2="332" class="l-in" marker-end="url(#mIn)"></line>
+      <text x="352" y="356" class="t-lab lab-in mid">combined UPC coverage</text>
+
+      <!-- Amazon card -->
+      <rect x="30" y="400" width="250" height="170" rx="12" class="card"></rect>
+      <text x="155" y="424" class="t-eyebrow mid">SUPPLY SIDE</text>
+      <text x="155" y="460" class="t-amz mid">amazon</text>
+      <path d="M 116 468 Q 155 484 188 467" fill="none" stroke="var(--amz-orange)" stroke-width="3.4" stroke-linecap="round" marker-end="url(#mAmz)"></path>
+      <rect x="65" y="486" width="180" height="26" rx="7" class="chip"></rect>
+      <text x="155" y="503" class="t-chiptxt mid">MWS Products API</text>
+      <rect x="65" y="522" width="180" height="26" rx="7" class="chip"></rect>
+      <text x="155" y="539" class="t-chiptxt mid">retail price &amp; stock</text>
+
+      <line x1="420" y1="382" x2="286" y2="426" class="l-out" marker-end="url(#mOut)"></line>
+      <text x="350" y="394" class="t-lab lab-out mid">ASIN batch lookups</text>
+      <line x1="280" y1="450" x2="414" y2="406" class="l-in" marker-end="url(#mIn)"></line>
+      <text x="350" y="444" class="t-lab lab-in mid">titles · images · attrs</text>
+
+      <!-- source price/stock elbow into repricer + inventory sync -->
+      <path d="M 155 570 L 155 665 Q 155 675 165 675 L 414 675" class="l-in" marker-end="url(#mIn)"></path>
+      <line x1="155" y1="589" x2="414" y2="589" class="l-in" marker-end="url(#mIn)"></line>
+      <circle cx="155" cy="589" r="3" class="f-in"></circle>
+      <text x="330" y="581" class="t-lab lab-in mid">landed cost</text>
+      <text x="330" y="667" class="t-lab lab-in mid">source stock &amp; price</text>
+
+      <!-- fulfillment tracking numbers (out of band) -->
+      <path d="M 75 570 L 75 837 Q 75 847 85 847 L 414 847" class="l-in dashed" marker-end="url(#mIn)"></path>
+      <text x="250" y="839" class="t-lab lab-in mid">supplier shipment tracking #s</text>
+
+      <!-- ================= RIGHT: WALMART ================= -->
+      <rect x="980" y="180" width="250" height="120" rx="12" class="card"></rect>
+      <g transform="translate(1105,224)">
+        <rect x="-4" y="-21" width="8" height="15" rx="4" fill="var(--wm-yellow)"></rect>
+        <rect x="-4" y="-21" width="8" height="15" rx="4" fill="var(--wm-yellow)" transform="rotate(60)"></rect>
+        <rect x="-4" y="-21" width="8" height="15" rx="4" fill="var(--wm-yellow)" transform="rotate(120)"></rect>
+        <rect x="-4" y="-21" width="8" height="15" rx="4" fill="var(--wm-yellow)" transform="rotate(180)"></rect>
+        <rect x="-4" y="-21" width="8" height="15" rx="4" fill="var(--wm-yellow)" transform="rotate(240)"></rect>
+        <rect x="-4" y="-21" width="8" height="15" rx="4" fill="var(--wm-yellow)" transform="rotate(300)"></rect>
+      </g>
+      <text x="1105" y="270" class="t-wm mid">Walmart</text>
+      <text x="1105" y="289" class="t-card-sub mid">Sales channel · Marketplace API</text>
+
+      <line x1="1105" y1="300" x2="1105" y2="823" class="l-mut dashed" opacity="0.55"></line>
+
+      <rect x="995" y="459" width="220" height="48" rx="10" class="card"></rect>
+      <text x="1105" y="487" class="t-card mid">Items feed API</text>
+      <rect x="995" y="565" width="220" height="48" rx="10" class="card"></rect>
+      <text x="1105" y="593" class="t-card mid">Price feed API</text>
+      <rect x="995" y="651" width="220" height="48" rx="10" class="card"></rect>
+      <text x="1105" y="679" class="t-card mid">Inventory feed API</text>
+      <rect x="995" y="737" width="220" height="48" rx="10" class="card"></rect>
+      <text x="1105" y="765" class="t-card mid">Orders API</text>
+      <rect x="995" y="823" width="220" height="48" rx="10" class="card"></rect>
+      <text x="1105" y="851" class="t-card mid">Shipping / tracking API</text>
+
+      <!-- stage 4 <-> items feed -->
+      <line x1="840" y1="471" x2="989" y2="471" class="l-out" marker-end="url(#mOut)"></line>
+      <text x="918" y="463" class="t-lab lab-out mid">item setup feeds</text>
+      <line x1="995" y1="495" x2="846" y2="495" class="l-in dashed" marker-end="url(#mIn)"></line>
+      <text x="918" y="509" class="t-lab lab-in mid">feed acks</text>
+
+      <!-- stage 5 <-> price feed -->
+      <line x1="840" y1="577" x2="989" y2="577" class="l-out" marker-end="url(#mOut)"></line>
+      <text x="918" y="569" class="t-lab lab-out mid">price pushes · Δ-only</text>
+      <line x1="995" y1="601" x2="846" y2="601" class="l-in" marker-end="url(#mIn)"></line>
+      <text x="918" y="615" class="t-lab lab-in mid">competitive prices</text>
+
+      <!-- stage 6 <-> inventory feed -->
+      <line x1="840" y1="663" x2="989" y2="663" class="l-out" marker-end="url(#mOut)"></line>
+      <text x="918" y="655" class="t-lab lab-out mid">qty pushes · Δ-only</text>
+      <line x1="995" y1="687" x2="846" y2="687" class="l-in dashed" marker-end="url(#mIn)"></line>
+      <text x="918" y="701" class="t-lab lab-in mid">feed acks</text>
+
+      <!-- stage 7 <-> orders -->
+      <line x1="995" y1="749" x2="846" y2="749" class="l-in" marker-end="url(#mIn)"></line>
+      <text x="918" y="741" class="t-lab lab-in mid">new orders</text>
+      <line x1="840" y1="773" x2="989" y2="773" class="l-out" marker-end="url(#mOut)"></line>
+      <text x="918" y="787" class="t-lab lab-out mid">order acknowledgement</text>
+
+      <!-- stage 8 -> shipping -->
+      <line x1="840" y1="847" x2="989" y2="847" class="l-out" marker-end="url(#mOut)"></line>
+      <text x="918" y="839" class="t-lab lab-out mid">carrier + tracking #</text>
+
+      <!-- ================= BOTTOM: DATA LAYER ================= -->
+      <line x1="515" y1="898" x2="515" y2="926" class="l-data" marker-end="url(#mData)"></line>
+      <line x1="545" y1="932" x2="545" y2="904" class="l-data" marker-end="url(#mData)"></line>
+      <text x="562" y="919" class="t-lab lab-data">every job reads / writes</text>
+      <line x1="790" y1="898" x2="790" y2="926" class="l-data" marker-end="url(#mData)"></line>
+      <text x="802" y="919" class="t-lab lab-data">resolved pairs accrue</text>
+
+      <rect x="340" y="932" width="300" height="100" rx="12" class="card"></rect>
+      <ellipse cx="600" cy="956" rx="15" ry="5.5" fill="none" stroke="var(--data)" stroke-width="1.5"></ellipse>
+      <path d="M 585 956 L 585 976 A 15 5.5 0 0 0 615 976 L 615 956" fill="none" stroke="var(--data)" stroke-width="1.5"></path>
+      <text x="364" y="964" class="t-card">MySQL — listing table · 200k rows</text>
+      <text x="364" y="990" class="t-mono">price_pushed ≠ price → dirty</text>
+      <text x="364" y="1010" class="t-mono">qty_pushed ≠ qty → dirty</text>
+
+      <rect x="680" y="932" width="300" height="100" rx="12" class="card"></rect>
+      <text x="704" y="962" class="t-card">ASIN ↔ UPC dataset</text>
+      <text x="704" y="996" class="t-num">481,310 <tspan font-size="13" fill="var(--muted)" font-weight="400">pairs</tspan></text>
+      <text x="704" y="1018" class="t-card-sub">owned by-product — nobody set out to build it</text>
+    </svg>
+  </div>
+
+  <div class="stack">
+    <h2>Stack &amp; integrations</h2>
+    <div class="stack-chips">
+      <span>Custom PHP</span>
+      <span>MySQL · generated columns</span>
+      <span>14 cron jobs</span>
+      <span>short-lived HTTP workers</span>
+      <span>Amazon MWS API</span>
+      <span>Walmart Marketplace API</span>
+      <span>2 × UPC vendor APIs</span>
+    </div>
+  </div>
+
+  <p class="footnote">MWS = Amazon Marketplace Web Service, the official seller API of the era. Arrows show direction of data flow; dashed lines are fallbacks or out-of-band flows. Four of the fourteen cron jobs — repricing, inventory, orders, tracking — ran on a one-minute cadence.</p>
+</div>
+
+</body>
+</html>

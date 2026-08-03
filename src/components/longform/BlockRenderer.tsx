@@ -1,12 +1,12 @@
 import type React from "react";
 import { BakeoffComparisonChart } from "@/components/charts/BakeoffComparisonChart";
 import { CompanyTimelineStrip } from "@/components/charts/CompanyTimelineStrip";
+import { MarketplacePipelineDiagram } from "@/components/charts/MarketplacePipelineDiagram";
 import { QuicsnapRevenueChart } from "@/components/charts/QuicsnapRevenueChart";
 import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import type { LongformBlock, LongformChartId } from "@/content/longform-types";
-import { SHOW_PENDING_MARKERS } from "@/content/publish-state";
 import { InlineText } from "./InlineText";
 
 export interface BlockRendererProps {
@@ -24,6 +24,7 @@ const CHARTS: Record<LongformChartId, React.ComponentType> = {
   "quicsnap-monthly-revenue": QuicsnapRevenueChart,
   "company-timeline": CompanyTimelineStrip,
   "bakeoff-comparison": BakeoffComparisonChart,
+  "marketplace-pipeline": MarketplacePipelineDiagram,
 };
 
 /** Heavier visual blocks get a scroll reveal; plain prose renders statically. */
@@ -264,6 +265,35 @@ export function BlockRenderer({ blocks }: BlockRendererProps) {
             );
           }
 
+          case "image":
+            return withReveal(
+              <figure style={{ margin: 0 }}>
+                {/* Static proof screenshots live in /public; plain img keeps them
+                    out of the next/image optimizer, which they don't need. */}
+                <img
+                  src={block.image_src}
+                  alt={block.image_alt}
+                  style={{
+                    display: "block",
+                    width: "100%",
+                    height: "auto",
+                    border: "2px solid var(--ink)",
+                    borderRadius: "var(--radius-md)",
+                    boxShadow: "var(--shadow-pop-sm)",
+                    background: "var(--paper)",
+                  }}
+                />
+                {block.image_caption && (
+                  <figcaption
+                    style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--ink-3)", marginTop: 8 }}
+                  >
+                    <InlineText text={block.image_caption} />
+                  </figcaption>
+                )}
+              </figure>,
+              key,
+            );
+
           case "act_divider":
             return (
               <div
@@ -291,35 +321,11 @@ export function BlockRenderer({ blocks }: BlockRendererProps) {
             );
 
           case "media_slot":
-            if (!SHOW_PENDING_MARKERS) return null;
-            return (
-              <div
-                key={key}
-                style={{
-                  aspectRatio: "16/9",
-                  border: "2px dashed var(--border-soft)",
-                  borderRadius: "var(--radius-lg)",
-                  background: "var(--paper)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: 24,
-                }}
-              >
-                <span
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 12.5,
-                    color: "var(--ink-3)",
-                    textAlign: "center",
-                    maxWidth: "44ch",
-                    lineHeight: 1.6,
-                  }}
-                >
-                  📷 asset slot — {block.slot_description}
-                </span>
-              </div>
-            );
+            // Ash (2026-08-02): asset-slot frames are retired site-wide along
+            // with the SLOT chips — hidden regardless of staging mode. Assets
+            // get placed directly when they exist ({block.slot_description}
+            // still documents what belongs here, in the content module).
+            return null;
 
           case "code":
             return (
