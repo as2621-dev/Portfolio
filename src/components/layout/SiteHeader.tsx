@@ -55,9 +55,6 @@ export function SiteHeader() {
           <Link href="/projects" style={{ color: "var(--ink-2)", textDecoration: "none" }}>
             projects
           </Link>
-          <Link href="/library" style={{ color: "var(--ink-2)", textDecoration: "none" }}>
-            library
-          </Link>
           <Link href="/about" style={{ color: "var(--ink-2)", textDecoration: "none" }}>
             about
           </Link>

@@ -186,7 +186,6 @@ export const jobfairyArticle: LongformArticle = {
   ],
   article_footer_links: [
     { cta_label: "All projects →", href: "/projects", cta_variant: "primary" },
-    { cta_label: "The PRD, in the library", href: "/library", cta_variant: "outline" },
     { cta_label: "Email me", href: "mailto:ashesh.srivastava1234@gmail.com", cta_variant: "outline" },
   ],
 };

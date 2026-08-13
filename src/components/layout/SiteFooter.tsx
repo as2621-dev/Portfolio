@@ -4,7 +4,6 @@ import { site } from "@/content/site";
 const FOOTER_LINKS = [
   { footer_label: "work", href: "/#work" },
   { footer_label: "projects", href: "/projects" },
-  { footer_label: "library", href: "/library" },
   { footer_label: "about", href: "/about" },
 ];
 
