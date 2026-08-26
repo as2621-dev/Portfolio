@@ -1,0 +1,80 @@
+<!doctype html>
+<!--
+  Viewer shell ONLY — presentational scaling for the portfolio article column.
+  The artifact is ./stitch-creator-studio-ide.html, embedded below VERBATIM —
+  the "Creator Studio IDE" Google Stitch concept committed to the Canvas repo
+  on 23 Mar 2026 (archive/stitch-screens/creator-studio-ide.html, commit
+  52a9cff). It loads its own Tailwind CDN script, Google Fonts, and
+  Stitch-hosted placeholder images over the network, exactly as generated.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Creator Studio IDE — Stitch concept (verbatim, scaled to fit)</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #131313;
+        overflow: hidden;
+      }
+      .capture_note {
+        display: none;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        color: #9a9a9a;
+        background: #161616;
+        border-bottom: 1px solid #2a2a2a;
+        padding: 7px 12px;
+        text-transform: uppercase;
+      }
+      @media (min-width: 900px) {
+        .capture_note {
+          display: block;
+        }
+      }
+      .scale_stage {
+        position: relative;
+        height: 100%;
+        overflow: hidden;
+      }
+      .scale_frame {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 1440px;
+        height: 900px;
+        border: 0;
+        background: #131313;
+        transform-origin: center center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="capture_note">
+      verbatim artifact — stitch-creator-studio-ide.html · google stitch concept, repo commit 52a9cff, 23 mar 2026 ·
+      scaled to fit
+    </div>
+    <div class="scale_stage" id="scale_stage">
+      <iframe class="scale_frame" id="scale_frame" src="./stitch-creator-studio-ide.html" title="Creator Studio IDE, Stitch concept"></iframe>
+    </div>
+    <script>
+      (function fit_artifact_to_viewport() {
+        var design_width = 1440;
+        var design_height = 900;
+        var stage_node = document.getElementById("scale_stage");
+        var frame_node = document.getElementById("scale_frame");
+        function apply_scale() {
+          var scale_factor = Math.min(stage_node.clientWidth / design_width, stage_node.clientHeight / design_height);
+          frame_node.style.transform =
+            "translate(-50%, -50%) scale(" + scale_factor.toFixed(4) + ")";
+        }
+        window.addEventListener("resize", apply_scale);
+        apply_scale();
+      })();
+    </script>
+  </body>
+</html>

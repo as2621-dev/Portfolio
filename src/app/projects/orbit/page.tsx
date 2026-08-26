@@ -5,7 +5,7 @@ import { orbitArticle } from "@/content/project-orbit";
 export const metadata: Metadata = {
   title: "Orbit — a personal feed ranker for 804 sources · Ashesh Srivastava",
   description:
-    "A local-first CLI that reads 804 YouTube and X sources, classifies on two independent axes, and emails one 7am digest — surfacing the ~3% worth reading.",
+    "Orbit reads 804 YouTube and X sources, ranks every new item on two independent axes, and emails a 7am digest with timestamped video summaries — jump to the exact moment, or talk it through with Claude in voice mode.",
 };
 
 export default function OrbitProjectPage() {

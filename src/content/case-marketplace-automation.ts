@@ -14,10 +14,10 @@ import type { LongformArticle } from "./longform-types";
  */
 export const marketplaceAutomationArticle: LongformArticle = {
   article_eyebrow: "Founder era",
-  article_title: "The machine that ran 77 storefronts",
+  article_title: "QEG Automation — the machine that ran 77 storefronts",
   article_subtitle:
-    "QEG Automation — a managed-service business running US Walmart marketplace stores for client owners, fulfilled from Amazon, on a custom platform I had built and a ~35-person ops team hired in eight weeks.",
-  article_tags: ["Ecommerce", "Ops at scale", "Automation"],
+    "A managed-service business running US Walmart marketplace stores for client owners, fulfilled from Amazon, on a custom platform I had built and a ~35-person ops team hired in eight weeks.",
+  article_tags: ["Founder", "Ops at scale", "Internal platform", "Hiring machine"],
   article_meta: [
     { meta_label: "Role", meta_value: "Founder — platform, team, operations, client economics." },
     {
@@ -25,10 +25,15 @@ export const marketplaceAutomationArticle: LongformArticle = {
       meta_value:
         "2022 — 2023 [FOUNDER — founder-supplied years; file artifacts (production DB, client invoices) date Aug 2021 – Feb 2022. Reconcile before publish.]",
     },
+    {
+      meta_label: "Status",
+      meta_value: "Sold [FOUNDER — the sale is founder-recalled; the files record the wind-down].",
+    },
     { meta_label: "Scale", meta_value: "77 client stores · 204,559 live listings · ~35-person ops team." },
     {
-      meta_label: "Ending",
-      meta_value: "Sold [FOUNDER — the sale is founder-recalled; the files record the wind-down].",
+      meta_label: "Tech",
+      meta_value:
+        "Custom PHP + MySQL platform · Amazon MWS + Walmart Marketplace APIs · competitive repricer · 14 cron jobs · order & tracking automation.",
     },
   ],
   article_stats: [

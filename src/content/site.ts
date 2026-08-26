@@ -10,8 +10,8 @@
  * Numbers policy: every figure here traces to the research corpus
  * (~/"Portfolio "/research/) or is owner-supplied; fields marked `TODO`
  * still await confirmation. Do not invent or round numbers beyond what the
- * source supports. $61,187 self-serve is the only file-verified revenue
- * figure; ~$85K total is founder-confirmed and appears only in narrative.
+ * source supports. Revenue is stated only as ~$85K total (founder-confirmed);
+ * never break out the self-serve figure in copy.
  *
  * Voice reminder (from the design system): playful, punchy, first person,
  * sentence case. Numbers concrete. Emoji sparing.
@@ -44,7 +44,7 @@ export interface ProjectEntry {
   project_title: string;
   project_description: string;
   project_tags: string[];
-  /** Optional headline stat, e.g. "~3%". */
+  /** Optional headline stat, e.g. "804". */
   project_stat?: string;
   /** Label after the stat, e.g. "of items surfaced". */
   project_stat_label?: string;
@@ -117,6 +117,8 @@ export interface SiteContent {
   home_location_chip?: string;
   location_text?: string;
   primary_email: string;
+  /** Public path of the résumé PDF (served from /public). */
+  resume_pdf_href: string;
   hero_stats: HeroStat[];
   social_links: SocialLink[];
   link_tiles: LinkTileEntry[];
@@ -131,10 +133,13 @@ export interface SiteContent {
   experience: ExperienceEntry[];
 }
 
+const RESUME_PDF_HREF = "/Ashesh_Srivastava_Resume_PM.pdf";
+
 export const site: SiteContent = {
   owner_name: "Ashesh Srivastava",
   wordmark_text: "Ashesh Srivastava",
   primary_email: "ashesh.srivastava1234@gmail.com", // TODO: confirm this is the address to expose publicly
+  resume_pdf_href: RESUME_PDF_HREF,
 
   role_line: "Builder · Tinkerer · Manager",
   hero_headline: "I would like to devote my life to working on something that feels like a sport.",
@@ -143,11 +148,11 @@ export const site: SiteContent = {
   home_location_chip: undefined, // TODO: confirm location + "open to" statement
   location_text: undefined,
 
-  // Verified: $61,187 self-serve revenue export (enterprise on top); $593,653 peak
+  // Verified: ~$85K total revenue (founder-confirmed); $593,653 peak
   // monthly GMV (Aug 2021, production DB); 7 = QuicSnap platform, Shutter Labs app,
-  // Canvas, Orbit, blip, ElectricityBillSaved, JobFairy.
+  // Canvas, Orbit, blip, Astrape, JobFairy.
   hero_stats: [
-    { stat_value: "$61K+", stat_label: "bootstrapped AI revenue" },
+    { stat_value: "~$85K", stat_label: "bootstrapped AI revenue" },
     { stat_value: "$593K", stat_label: "peak monthly GMV operated" },
     { stat_value: "7", stat_label: "AI products shipped end to end" },
   ],
@@ -178,7 +183,7 @@ export const site: SiteContent = {
     {
       tile_title: "Download résumé",
       tile_emoji: "📄",
-      href: "#", // TODO: add the résumé PDF
+      href: RESUME_PDF_HREF,
     },
   ],
 
@@ -188,7 +193,7 @@ export const site: SiteContent = {
       card_description:
         "I built an AI product-photography company twice: a service with real revenue, then a platform — until one Google model release absorbed the category. The full story, numbers and all.",
       card_tags: ["AI imaging", "Pivot", "Post-mortem"],
-      card_stat: "$61K+",
+      card_stat: "~$85K",
       card_stat_label: "bootstrapped revenue",
       href: "/work/quicsnap-shutter-labs",
       card_tint: "orange",
@@ -215,7 +220,7 @@ export const site: SiteContent = {
     {
       competency_label: "Prioritization & decisions",
       competency_proof: "A 1,528-line PRD with 59 numbered decisions and six documented reversals",
-      href: "/projects/jobfairy#decisions",
+      href: "/projects/jobfairy",
       link_label: "JobFairy",
     },
     {
@@ -239,8 +244,8 @@ export const site: SiteContent = {
     {
       competency_label: "Data-driven problem solving",
       competency_proof: "A utility-bill model validated to within $0.17 of the real bill",
-      href: "/projects/electricitybillsaved",
-      link_label: "ElectricityBillSaved",
+      href: "/projects/astrape",
+      link_label: "Astrape",
     },
     {
       competency_label: "Teams & stakeholders",
@@ -281,10 +286,10 @@ export const site: SiteContent = {
     {
       project_title: "Orbit",
       project_description:
-        "Personal feed ranker that ingests 800+ sources I actually follow and surfaces the ~3% worth reading. Dogfooded daily for 42 days.",
-      project_tags: ["Ranking", "CLI", "SQLite"],
-      project_stat: "~3%",
-      project_stat_label: "of items surfaced",
+        "Personal feed ranker that ingests 800+ sources I actually follow and turns each morning into one ranked 7am digest — X noise dropped, videos demoted but never deleted, and one tap away from a Claude voice conversation. Dogfooded daily for 42 days.",
+      project_tags: ["Agentic architecture", "Claude agents", "Ranking", "RAG", "Python", "SQLite"],
+      project_stat: "804",
+      project_stat_label: "sources → one daily digest",
       project_category: "Agents & tools",
       project_media_image: "/mascot/mascot-radio.png",
       href: "/projects/orbit",
@@ -303,7 +308,7 @@ export const site: SiteContent = {
     {
       project_title: "JobFairy",
       project_description:
-        "Job-search copilot over 31,926 H-1B-sponsoring companies — including a head-to-head browser-agent bake-off with real cost and latency data.",
+        "A job-search copilot for any candidate — verified H-1B sponsor filter, agent research on every role, tailored resumes, agent-filled applications, and outreach that lands in inboxes.",
       project_tags: ["Browser agents", "Next.js"],
       project_stat: "$0.02",
       project_stat_label: "vs $1.14 per task",
@@ -312,7 +317,7 @@ export const site: SiteContent = {
       href: "/projects/jobfairy",
     },
     {
-      project_title: "ElectricityBillSaved",
+      project_title: "Astrape",
       project_description:
         "A usage model for a Texas bill-credit electricity plan, validated to within $0.17 of the real bill — and a 999 vs 1,000 kWh paradox worth the read.",
       project_tags: ["Modeling", "Energy"],
@@ -320,7 +325,7 @@ export const site: SiteContent = {
       project_stat_label: "model vs real bill",
       project_category: "Agents & tools",
       project_media_image: "/mascot/mascot-measure.png",
-      href: "/projects/electricitybillsaved",
+      href: "/projects/astrape",
     },
     {
       project_title: "Marketplace automation",
@@ -367,18 +372,11 @@ export const site: SiteContent = {
       is_current: true,
     },
     {
-      experience_period: "2025",
-      experience_role: "Co-founder",
-      experience_org: "Shutter Labs",
+      experience_period: "2022 — 2025",
+      experience_role: "Founder → Co-founder",
+      experience_org: "QuicSnap → Shutter Labs",
       experience_summary:
-        "Self-serve AI product photography: 2D→3D capture plus per-product LoRAs for exact label fidelity; enterprise POC with a Fortune-500 retailer.",
-    },
-    {
-      experience_period: "2022 — 2024",
-      experience_role: "Founder",
-      experience_org: "QuicSnap",
-      experience_summary:
-        "Bootstrapped AI product-photography service — 15-SKU catalog, offshore 3D production pipeline, clients across the US, EU, and Middle East.",
+        "AI product photography, built twice: a bootstrapped service (15-SKU catalog, offshore 3D production pipeline, clients across the US, EU, and Middle East), then the platform pivot — 2D→3D capture plus per-product LoRAs for exact label fidelity, enterprise POC with a Fortune-500 retailer.",
     },
     {
       // TODO: confirm start/end years — no dated records on disk yet.

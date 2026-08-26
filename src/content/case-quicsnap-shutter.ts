@@ -2,32 +2,72 @@ import type { LongformArticle } from "./longform-types";
 
 /**
  * Flagship case study — QuicSnap → Shutter Labs.
- * Source of truth: ~/"Portfolio "/copy/02-case-study-quicsnap-shutter.md (v2.1).
- * Numbers policy: $61,187 self-serve is the only file-verified revenue figure
- * and is always labeled as such; ~$85K total is founder-confirmed. Firm rule:
- * the enterprise POC retailer is never named — "a Fortune 500 retailer".
+ * v9 (2026-08-09, owner-directed): headline pattern sitewide — project name
+ * leads the title, descriptor follows; name prefix dropped from the dek.
+ * v8 (2026-08-05, owner-directed): Act 3 collapsed to a single paragraph —
+ * Nano Banana Pro named as the release that ended it (overrides v4's
+ * no-model-names rule at owner request); investor-memo pull quote and the
+ * two long "category got absorbed" paragraphs cut. Lost momentum → died →
+ * straight into Act 4 learnings.
+ * v7 (2026-08-05, owner-directed): Fortune 500 section reframed — inbound
+ * approach off the strength of the work, paid POC, finalist, then project
+ * shelved with no decision; deal-shaping tactics (their-numbers pricing,
+ * volume ladder, de-risked entry, ownership conceded, responsibility split)
+ * recast as the plays used to keep the shelved account alive. Honest ending:
+ * it never closed.
+ * v6 (2026-08-05, owner-directed): self-serve app shots (Create + Edit) cut;
+ * technical pipeline slide (deck-pipeline-jack-daniels) inserted after the
+ * two-pillar list — shows 3D placement of the product in a scene → generation.
+ * v5 (2026-08-05, owner-directed): revenue chart truncated to May 2023 –
+ * Apr 2024 (table toggle removed in the component); GTM outbound diagram
+ * restored under #gtm; explicit pivot-to-Shutter-Labs bridge added after the
+ * chart so Act 1 hands off to Act 2 by name.
+ * v4 (2026-08-04, owner-directed rewrite): tighter, ~5–6 min read, reframed so
+ * the smart move (reading the model curve and pivoting early) leads, not the
+ * losing bet. Timeline compressed to the business's operating life, May 2023 –
+ * Nov 2024: services with real revenue → shut down → platform pivot. The
+ * models-caught-up ending stays as the closing lesson but drops specific model
+ * names/dates so it reads human, not over-researched. Editorial chips and all
+ * "verified / as pitched" caption language removed. App visuals are the
+ * self-serve web app only (Create + Edit); the enterprise-portal shots and the
+ * output galleries are cut. Assets in /public/proof/quicsnap-shutter/.
+ *
+ * Numbers policy: revenue is stated only as ~$85K total — never break out the
+ * self-serve figure in copy. Firm rule: the enterprise POC retailer is never
+ * named — "a Fortune 500 retailer".
+ *
+ * Anchor contract (linked from site.ts competency rows): #act-1, #act-2, #gtm,
+ * #fortune-500, #act-3, #act-4 must keep their current meanings.
  */
 export const quicsnapShutterArticle: LongformArticle = {
-  article_eyebrow: "Case study · Flagship",
-  article_title: "Betting against the models — and losing well",
+  article_eyebrow: "Case study",
+  article_title: "QuicSnap → Shutter Labs — AI product photography, racing the model curve",
   article_subtitle:
-    "QuicSnap → Shutter Labs, 2022–2025. A services-to-platform pivot, a frontier-model extinction event, and what I'd do differently.",
-  article_tags: ["AI imaging", "Pivot", "Post-mortem"],
+    "I built an AI product-photography business to real revenue, then pivoted to a platform ahead of the frontier models — and learned exactly how fast the curve moves.",
+  article_tags: ["Founder", "0→1 twice", "GTM & pricing", "Pivot decision"],
   article_meta: [
     {
-      meta_label: "My role",
+      meta_label: "Role",
       meta_value:
         "Co-founder. I owned strategy, pricing, GTM, fundraising, and the product decisions. My cofounders owned the research and engineering.",
     },
-    { meta_label: "Timeline", meta_value: "Oct 2022 – Nov 2025" },
+    { meta_label: "Timeline", meta_value: "May 2023 – Nov 2024" },
+    {
+      meta_label: "Status",
+      meta_value: "Wound down — the frontier models shipped the capability we sold.",
+    },
     {
       meta_label: "Team",
       meta_value:
-        "Built from zero — production artists, art directors, later two technical cofounders and a GTM team [CONFIRM: headcount summary]",
+        "Built it twice — production artists and art directors for the service, then two technical cofounders and a small GTM team for the platform.",
     },
     {
       meta_label: "Numbers",
       meta_value: "~$85K revenue",
+    },
+    {
+      meta_label: "Tech",
+      meta_value: "Fine-tuned diffusion models · LoRAs · depth maps · NeRFs · the 3D-to-diffusion stack.",
     },
   ],
   blocks: [
@@ -35,130 +75,125 @@ export const quicsnapShutterArticle: LongformArticle = {
       block_kind: "paragraph",
       is_lede: true,
       paragraph_text:
-        "I spent three years solving one problem — photorealistic product imagery that preserves the exact fine print on the product — first with people, then with a platform. The service made real revenue: roughly $85K all-in, $61,187 of it through the self-serve channel alone, verifiable transaction by transaction. Our bet was that it would take a long time for image models to preserve fine text on FMCG products — so we’d build a photorealistic 3D model of the product with tools like Blender, then use AI image pipelines to generate the environment around it. Later we automated the 3D-modeling step itself, using computer-vision techniques like Gaussian splatting, NeRFs, Depth Anything, and Open3D. We were right about the direction and wrong about the speed: on November 20, 2025, Google’s Nano Banana Pro shipped text preservation as a default capability, and the differentiator we’d built a company around became an API call. This is the story of both bets — the one that paid, and the one that got outrun.",
+        "For about eighteen months I chased one stubborn problem in ecommerce: photorealistic product imagery that keeps the exact fine print on the product — the label text, the logo, the regulatory small print. I solved it first with people, then with software. The service made real money, roughly $85K bootstrapped. The part I'm actually proud of, though, is the call I made next: I could see the frontier image models coming for the exact thing we charged for, so I pivoted the company to get ahead of them — before that capability turned into an API call.",
     },
 
     /* ── Act 1 ── */
     {
       block_kind: "act_divider",
-      act_eyebrow: "Act 1 · 2022–2024",
-      act_title: "Selling pixels made by people",
+      act_eyebrow: "Act 1 · 2023–2024",
+      act_title: "Build the team, sell the pixels",
       anchor_id: "act-1",
     },
-    { block_kind: "heading", heading_level: 3, heading_text: "The problem I couldn’t stop having" },
+    { block_kind: "heading", heading_level: 3, heading_text: "The idea" },
     {
       block_kind: "paragraph",
       paragraph_text:
-        "I came to this problem as a customer before I was a founder. Running my own ecommerce businesses, I sat through more than 80 product photoshoots. The pattern never changed: book a studio, ship the product, wait weeks, get images back that didn’t match the brief, enter revision purgatory. For a product listing that might live three months before the next seasonal refresh.",
+        "I came to this as a customer. Running my own ecommerce brands, I sat through 80+ product photoshoots — book a studio, ship the product, wait weeks, get images that miss the brief, then grind through revisions. QuicSnap was the productized fix: **send images of your product, and a team I built from scratch — production artists, art directors, an offshore 3D pipeline — delivers photorealistic listing imagery without a studio.** Fixed prices, an art director on every order, unlimited revisions.",
     },
+    { block_kind: "heading", heading_level: 3, heading_text: "Why humans were load-bearing" },
     {
       block_kind: "paragraph",
       paragraph_text:
-        "QuicSnap was the productized fix: send us your product — physically ship it to us — and our team produces photorealistic listing imagery without a studio. Fixed prices per image type, an art director per order, unlimited revisions.",
+        "We were an AI company from day one, so why the people? Because most of our clients were FMCG and personal-care brands, and for them **the label *is* the product** — ingredient lists, dosage text, regulatory fine print. That was exactly what image models mangled, and an image with garbled label text isn't 90% right, it's unusable. So we split the job:",
     },
-    { block_kind: "heading", heading_level: 3, heading_text: "Why humans were load-bearing: the fine-print problem" },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "The obvious question even in 2023 was: why not just use AI? We were an AI company from day one — the answer is more specific than “AI wasn’t good enough.”",
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "Our clients were overwhelmingly FMCG and personal-care brands — perfumes, cosmetics, supplements, beverages. (The production folders read like a beauty-aisle shelf.) These are products where **the label is the product**. Ingredient lists, dosage text, regulatory fine print, embossed logos. And fine text was precisely what image models hallucinated. A generated image with mangled label text isn’t 90% right — it’s 100% unusable, and in some categories it’s a compliance problem.",
-    },
-    { block_kind: "paragraph", paragraph_text: "So we built the pipeline around that constraint:" },
     {
       block_kind: "numbered_list",
       list_items: [
-        "**Model the product in 3D** (Blender) — geometry, label art, materials, exactly right, because a human put them there.",
-        "**Generate everything around it with AI** — scenes, backgrounds, lighting contexts, indoor and outdoor environments, humans in the frame.",
+        "**Model the product in 3D by hand** (Blender) — geometry, label art, materials, exactly right.",
+        "**Generate everything around it with AI** — scenes, lighting, indoor and outdoor sets, models in the frame.",
       ],
+    },
+    {
+      block_kind: "image",
+      image_src: "/proof/quicsnap-shutter/deck-showcase-jack-daniels.png",
+      image_alt:
+        "Generated lifestyle shot from the customer deck: a Jack Daniel's bottle on a wooden desk in a warm study set with a whiskey glass, cigar, books, and dice — every line of the label fine print crisp and legible.",
+      image_caption:
+        "The split in one frame, from the deck we showed customers: the product stays exactly right while the set, lighting, and props around it are generated. Zoom into the label — every line survives, down to the proof line.",
     },
     {
       block_kind: "paragraph",
       paragraph_text:
-        "The hallucination-prone part of the image (the product) was handled deterministically; the expensive part of traditional photography (the set, the location, the props, the models) was handled generatively. That split *was* the company.",
+        "The hallucination-prone part was handled deterministically; the expensive part of a real photoshoot — the set, the props, the talent — was handled generatively. That split *was* the company.",
     },
-    { block_kind: "heading", heading_level: 3, heading_text: "The go-to-market machine", anchor_id: "gtm" },
+    { block_kind: "heading", heading_level: 3, heading_text: "How we found customers", anchor_id: "gtm" },
     {
       block_kind: "paragraph",
       paragraph_text:
-        "Demand didn’t walk in the door; we built an outbound engine that I’m still proud of as a system [FOUNDER — first-person recollection; Apollo & Waalaxy corroborated by the May 2025 task board]:",
+        "Demand didn't walk in the door; I built the outbound engine. Vetted prospects from Apollo, a research step so every first email opened with something specific and true about that brand instead of a mail-merge token, and tooling to keep deliverability high across warmed domains. It's still the cleanest go-to-market system I've built.",
     },
     {
-      block_kind: "bullet_list",
-      list_items: [
-        "**Apollo** for prospecting — pulling verified emails for ecommerce brand operators.",
-        "**Perplexity** in the personalization loop — researching each brand so that every email opened with something true and specific about *their* products, not a mail-merge token.",
-        "**Instantly.ai and Waalaxy** for sequencing and delivery.",
-        "**50+ sending domains, three inboxes per domain** [FOUNDER], warmed and rotated, with deliverability tracked as a first-class metric. Cold email dies in the spam folder; we treated inbox placement as an engineering problem — and deliverability was our guardrail metric long before anyone asked us for one.",
-      ],
+      block_kind: "chart",
+      chart_id: "gtm-outbound",
+      chart_caption:
+        "Apollo for prospecting, a Perplexity research step for personalization, Instantly + Waalaxy for sequencing — all running on 50+ sending domains, three inboxes each, warmed and rotated through Instantly to keep the deliverability score high, tracked daily as the guardrail metric.",
+    },
+    { block_kind: "heading", heading_level: 3, heading_text: "What the money looked like" },
+    {
+      block_kind: "chart",
+      chart_id: "quicsnap-monthly-revenue",
+      chart_caption:
+        "Most months looked the same. Real demand, strong repeat business — but flat, because revenue tracked artist-hours one-for-one. A service can prove a problem is real; it can't compound on its own.",
+    },
+    {
+      block_kind: "paragraph",
+      paragraph_text:
+        "The chart stops in April 2024 because that's where this chapter stops. Rather than grind out more flat months, I stopped selling artist-hours and pivoted the company to **Shutter Labs** — the same fidelity promise, rebuilt as a platform the customer drives. The rest of this story is that bet.",
     },
 
     /* ── Act 2 ── */
     {
       block_kind: "act_divider",
-      act_eyebrow: "Act 2 · mid-2024 → mid-2025",
-      act_title: "The bet flips",
+      act_eyebrow: "Act 2 · 2024",
+      act_title: "The bet I updated in public",
       anchor_id: "act-2",
     },
-    { block_kind: "heading", heading_level: 3, heading_text: "Watching the moat melt" },
     {
       block_kind: "paragraph",
       paragraph_text:
-        "On August 1, 2024, Black Forest Labs shipped Flux.1. I remember the specific feeling of testing it: text rendering was still imperfect — but it was *dramatically* better than the generation before, which had been dramatically better than the one before that. [FOUNDER]",
+        "Then the image models started getting dramatically better, fast — each release rendered text noticeably cleaner than the one before. That didn't disprove our founding assumption — *models mangle fine print, so our humans-plus-3D pipeline exists.* It did something worse: it put an expiry date on it. If what you sell is a workaround for a model limitation, model progress is a countdown clock.",
     },
     {
       block_kind: "paragraph",
       paragraph_text:
-        "The founding assumption of QuicSnap was “models hallucinate fine print, and that’s why our humans-plus-Blender pipeline exists.” Flux didn’t disprove that assumption. It did something worse: it put an expiry date on it. Extrapolate the curve and the conclusion was uncomfortable — **fine-print fidelity was going to be solved by the base models. The question was when, not whether.**",
+        "So I made the call: stop selling the workaround, start selling the workflow. The service was still making money when I shut it down and pivoted from a model where *we* do everything to a platform where **the customer does it themselves** — and I wanted to be there before the capability became a commodity. Two months earlier I had written “AI alone isn't possible with today's tech” in our own executive summary. Changing your mind in public, with your team's paychecks riding on the old position, is harder than any deck makes it look.",
     },
     {
-      block_kind: "paragraph",
-      paragraph_text:
-        "If the thing you charge for is a workaround for a model limitation, model progress is a countdown clock. We decided to stop selling the workaround and start selling the workflow: pivot from a service where *we* do everything to a platform where **the customer does everything themselves** — and get there before the capability became a commodity.",
+      block_kind: "image",
+      image_src: "/proof/quicsnap-shutter/deck-team.png",
+      image_alt:
+        "Team slide: Ash (CEO), Astitva (CTO, PhD in 3D Vision & Graphics, Google PhD Fellowship, ex-Meta/Google/Stability AI), Pranav (Head of Engineering, 3D deep-learning researcher).",
+      image_caption:
+        "The pivot started with people. I brought on two technical cofounders — a 3D-vision PhD as CTO and a 3D deep-learning researcher leading engineering — the horsepower a platform needs that a services team doesn't.",
     },
+    { block_kind: "heading", heading_level: 3, heading_text: "What we built" },
     {
       block_kind: "paragraph",
-      paragraph_text:
-        "Two months earlier I had written “AI alone is not possible with current tech” in our own executive summary. Changing your mind in public, with your team’s paychecks attached to the old position, is harder than any pitch deck makes it look.",
-    },
-    { block_kind: "heading", heading_level: 3, heading_text: "What we built (Shutter Labs)" },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "The platform had two technical pillars, both aimed at the same fidelity problem we’d previously solved with people:",
+      paragraph_text: "Two pillars, both aimed at the fidelity problem we used to solve by hand:",
     },
     {
       block_kind: "numbered_list",
       list_items: [
-        "**2D→3D product capture.** Upload a couple of photos of your product; we reconstruct a 3D asset from them — a computer-vision stack built on Gaussian splatting, NeRFs, monocular depth estimation (Depth Anything), and Open3D for geometry processing. What our Blender artists used to build by hand, automated at intake. The user gets full 3D control — rotate the product, position it anywhere in the scene, set the camera.",
-        "**Product-specific LoRAs.** For each product (in production: a new fine-tune per ~20 SKUs), we trained a LoRA whose job was to lock the fine print — label text, logos, materials — while the base model generated everything else: backgrounds, environments, lighting, human models.",
+        "**2D→3D product capture.** Upload a few photos and reconstruct a 3D asset — Gaussian splatting, monocular depth estimation, NeRFs, Open3D for geometry. What our Blender artists did by hand, automated at intake — and the user gets full 3D control: rotate the product, place it, set the camera.",
+        "**Product-specific LoRAs.** A fine-tune per handful of SKUs whose only job was to lock the fine print — label text, logos, materials — while the base model generated everything else.",
       ],
     },
     {
-      block_kind: "paragraph",
-      paragraph_text:
-        "Under the hood, generation was never a single prompt-to-image call. The production pipeline extracted product features from the input shot (color, texture, hem, fit), segmented a posed human from our model library, and merged both via IP-Adapter into a **category-specific fine-tuned diffusion model** — apparel, furniture, sports, and outdoor each had their own fine-tune — conditioned by a **per-brand LoRA** that locked the client’s brand guidelines and style. An agentic feedback loop then critiqued each generation and drove a refiner pass, with an upscaler finishing the output. Feature fidelity lived in the trained weights; composition lived in the workflow.",
+      block_kind: "image",
+      image_src: "/proof/quicsnap-shutter/deck-pipeline-jack-daniels.png",
+      image_alt:
+        "Pipeline slide: input photos of a whiskey bottle train a small per-product neural net while its features are extracted; the bottle's 3D model is posed on a wireframe grid for precise orientation and position control; final photorealistic outputs show the bottle in a snowy evening scene.",
+      image_caption:
+        "How a shot actually gets made: a few product photos train the per-product fine-tune and feed feature extraction, the product's 3D model is posed in the scene — orientation, position, camera — and the model renders the final image around it, fine print intact.",
     },
     {
-      block_kind: "paragraph",
-      paragraph_text:
-        "Traditional photoshoot: ~$180 per image, weeks of lead time. Our pipeline: ~25 seconds and $0.16 of compute per generation. The economics weren’t an improvement; they were a different category of thing.",
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "We ran the company like the countdown was real. In seven months we went from incorporation to: a live web app (create/edit flows, credit system), a managed-service portal for enterprise (batch upload → per-SKU review → annotate-and-revise), an API integration spec, a YC application, an investor memo, a financial model, five GTM hires — and three deliberate strategy narrowings, each visible in the deck diffs:",
-    },
-    {
-      block_kind: "bullet_list",
-      list_items: [
-        "**Three AI agents collapsed into one pipeline.** The launch framing was an Art Director, a Stylist, and a Photographer agent. Within weeks the deck had retreated to the single capability that actually worked — feature-preserving generation with camera control. We cut the story to fit the product, not the product to fit the story.",
-        "**All-of-ecommerce narrowed to furniture brands.** Furniture is where traditional photography hurts most: the products are bulky and expensive to ship to a studio, and staging a single shoot runs $5K–$20K a day before anyone presses a shutter. Our per-image economics were most violently better exactly there — and the 2025 tariff squeeze on furniture importers’ margins added urgency (our own marketing plan says it plainly: “with tariffs involved, furniture companies are most impacted”).",
-        "**Self-serve SaaS subordinated to an enterprise managed service** when a Fortune 500 retailer engaged us for a paid POC.",
-      ],
+      block_kind: "image",
+      image_src: "/proof/quicsnap-shutter/deck-label-fidelity.png",
+      image_alt:
+        "Comparison of generated whiskey-bottle scenes with the label zoomed in: our output shows legible label text; the popular alternatives show garbled, illegible label text.",
+      image_caption:
+        "The whole thesis in one frame: same bottle, our pipeline versus the popular alternatives — zoom into the label. The fine print survives only on the left.",
     },
     {
       block_kind: "heading",
@@ -169,62 +204,25 @@ export const quicsnapShutterArticle: LongformArticle = {
     {
       block_kind: "paragraph",
       paragraph_text:
-        "The enterprise motion is where I learned what influence without authority actually costs. You don’t win a Fortune 500 POC by asserting your roadmap; you win it by out-arguing the customer’s own alternatives with their numbers. Our POC deck priced *their* build-in-house option — $2M in startup cost and $87 per image at their design-team throughput — against our managed service at $29. When procurement pushed, we restructured rather than discounted blindly: a volume ladder, a de-risked $47K entry (setup + 1,000 images in one category), perpetual image ownership conceded, responsibilities split line-by-line — they owned brand guidelines and approvals, we owned model training and generation. Earlier, chasing a different enterprise anchor, I’d cut price 64% in a concession chain ($39 → $25.20 → $14) that bought a logo at near-zero margin. The Fortune 500 negotiation was me applying that lesson: restructure the deal’s shape, don’t just lower its number.",
-    },
-    {
-      block_kind: "chart",
-      chart_id: "company-timeline",
-      chart_caption: "Model release dates verified against the public record, 2026-08-02.",
-    },
-    { block_kind: "heading", heading_level: 3, heading_text: "The risk we named and misjudged" },
-    {
-      block_kind: "paragraph",
-      paragraph_text: "Our March 2025 investor memo has a Risks section. It says, verbatim:",
-    },
-    {
-      block_kind: "pull_quote",
-      quote_text:
-        "Competition – While major players like OpenAI or Meta could release text-preserving image models, our fine-tuned diffusion models will deliver superior results for our niche.",
-      quote_attribution: "our investor memo, March 2025",
+        "The strongest validation of the work arrived inbound: a Fortune 500 retailer, impressed by what we were shipping, approached *us* and engaged us for a paid POC. An account that size was far above our weight class. We delivered the POC anyway, presented the results, and finished as one of the finalists in their evaluation.",
     },
     {
       block_kind: "paragraph",
       paragraph_text:
-        "Read that again. We identified the exact mechanism that would kill the company, in writing, in our own memo — and dismissed it with the standard startup incantation: *big labs optimize for broad markets; we’ll stay ahead in our niche.*",
+        "Then they shelved the project — no rejection, no green light, just a pause that never ended. I refused to let it die quietly and tried every play I knew to restart it. We priced *their* build-in-house option against our managed service, using their own numbers. When procurement pushed back, I restructured the deal instead of cutting the price: a volume ladder, a de-risked entry, image ownership conceded, responsibilities split line by line. An earlier deal had taught me that the hard way, after I'd chained discounts down to near-zero margin just to land a logo — this time I changed the deal's shape, not just its number. It still didn't close. Some deals die of no decision, and this one did — but I'd rather lose an account being flexible on structure than desperate on price.",
     },
-    { block_kind: "paragraph", paragraph_text: "We even got the lab wrong. It wasn’t OpenAI or Meta." },
 
     /* ── Act 3 ── */
     {
       block_kind: "act_divider",
-      act_eyebrow: "Act 3 · late 2025",
-      act_title: "Nano Banana Pro",
+      act_eyebrow: "Act 3",
+      act_title: "The models caught up",
       anchor_id: "act-3",
     },
     {
       block_kind: "paragraph",
       paragraph_text:
-        "On August 26, 2025, Google shipped Nano Banana (Gemini 2.5 Flash Image) — image editing with character and product consistency good enough to go viral. We were mid-flight on the enterprise motion, iterating the Fortune 500 POC.",
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "Then, on November 20, 2025, Nano Banana Pro arrived, and the countdown hit zero. Legible, accurate, *reliable* fine text — ingredient lists, logos, label typography — generated directly by a general-purpose model, no 3D reconstruction, no per-product LoRA, no pipeline. The capability we trained a fine-tune per 20 SKUs to deliver was now the default behavior of a model anyone could call for cents.",
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "Our pitch had been “we preserve what the models get wrong.” The models stopped getting it wrong. There is no version of that pitch that survives.",
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "What made it stark was the asymmetry: it didn’t matter how well we’d executed — the differentiator was structural, and it evaporated for every company positioned on it simultaneously. We weren’t out-competed. The category was **absorbed**.",
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "The ending wasn’t an announcement; it was a trajectory call — the same extrapolation that had triggered the pivot fourteen months earlier, except this time the curve had already arrived. I tested the release against our own demo set, saw the answer, and stopped. Not a fire sale, not a dramatic all-hands: the in-flight conversations — fundraising, enterprise deals — simply stopped mattering, and we let them wind down. When the premise dies, the respectable move is to say so out loud and stop spending other people’s money and time on it. [CONFIRM: final wording — written from your “basically, stopped” account; adjust the texture if it reads differently from how it felt]",
+        "While we were still building, **Nano Banana Pro** launched — and it could simply generate and render all the text: ingredient lists, logos, label typography, directly out of the model, no 3D reconstruction, no per-product fine-tune. The exact capability we'd built the company to guarantee was now a default setting. That was it. We lost momentum, and the company died.",
     },
 
     /* ── Act 4 ── */
@@ -237,59 +235,32 @@ export const quicsnapShutterArticle: LongformArticle = {
     {
       block_kind: "heading",
       heading_level: 3,
-      heading_text: "1. “Never” is a forecast with an expiry date, not a fact.",
+      heading_text: "1. AI moves in bulk — be ready to catch the jumps.",
     },
     {
       block_kind: "paragraph",
       paragraph_text:
-        "Our founding assumption — models will always hallucinate fine print — was true for every model that existed when we wrote it, and it had a shelf life of roughly two years. When a business premise depends on a capability *not* arriving, write down the date you’d expect it to arrive if you’re wrong, and re-underwrite the company every time a major model ships.",
+        "The capability curve isn't smooth. It moves in bulk: a big leap, then a plateau where little changes, then another leap. The edge doesn't go to whoever predicts the exact date — it goes to whoever is set up to ship the moment the curve lurches. Build so that a sudden jump is a tailwind you can catch, not a wave that lands on you.",
     },
     {
       block_kind: "heading",
       heading_level: 3,
-      heading_text: "2. Distinguish “hard for today’s models” from “structurally hard.”",
+      heading_text: "2. Build on the overhang — and own something the next model can't.",
     },
     {
       block_kind: "paragraph",
       paragraph_text:
-        "Fine-print fidelity had no data moat, no integration moat, no network effect protecting it. It was a pure capability gap — exactly the kind of gap that scaling laws and lab roadmaps close. The durable value was never the fidelity trick; it was workflow, distribution, and customer relationships. We knew that in the abstract and still let fidelity carry the pitch.",
+        "There's an enormous overhang in these models — things they can *almost* do, rough edges nobody has smoothed yet. That's where the opportunity is: find the rough edges and build on top of them. But a capability edge alone is rented. To keep it, you have to accumulate something the next release can't hand out for free — memory and data of your own customers, aggregated over time. Without that, the next model eats your moat. So work on genuinely hard problems: if you win, you win big; if you lose, you learn big. I lost this one, and I learned a lot — image generation, denoising, LoRAs, depth maps, NeRFs, the whole 3D-to-diffusion stack. That knowledge keeps compounding even though the company didn't.",
     },
     {
       block_kind: "heading",
       heading_level: 3,
-      heading_text:
-        "3. A services phase is a great demand instrument and a terrible growth engine — know which mode you’re in.",
+      heading_text: "3. Losing to the curve doesn't mean the read was wrong.",
     },
     {
       block_kind: "paragraph",
       paragraph_text:
-        "Seventeen flat months told us two things at once: the problem was real (41% reorder rate, 70% of revenue from repeat customers) and the model couldn’t compound (revenue tracked artist-hours linearly). The mistake isn’t running a service; it’s not pre-deciding the metric and the date on which you stop.",
-    },
-    {
-      block_kind: "heading",
-      heading_level: 3,
-      heading_text:
-        "4. When your risk register names the thing that can kill you, don’t answer it with an incantation.",
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "“Big labs optimize for broad markets” was doing an enormous amount of unexamined work in our memo. The honest mitigations were: position on top of frontier models instead of against them, or hold an asset (proprietary data, distribution, workflow lock-in) that survives the capability becoming free. We had the second option available — we had enterprise workflow and relationships — and under-weighted it. [CONFIRM: agree with this framing? It’s the most self-critical line in the piece]",
-    },
-    {
-      block_kind: "heading",
-      heading_level: 3,
-      heading_text: "5. Losing to the curve doesn’t mean the read was wrong.",
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "The pivot thesis — customers will self-serve once fidelity is solved — was *correct*. That’s exactly what customers do now; they just don’t need us to do it.",
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "And the honest counterfactual: if we had never pivoted, the service would have died the same death a year later, with less learned and more spent — the pivot didn’t cause the ending, it compressed it. What the pivot *bought* was the platform skills, the enterprise playbook, and the model-curve scar tissue that everything I’ve built since runs on. Being early on the right trajectory and getting outrun by its speed is still a loss — but it’s a loss you can carry into the next product. Every image tool I’ve built since [Canvas](/work/canvas) is built *on* frontier models, not against them. The pricing table of my current image workspace includes Nano Banana Pro — at ₹11 a generation, the model that ended Shutter Labs is now a line item in my product.",
+        "The pivot thesis — customers will self-serve once fidelity is solved — was right. It's exactly what they do now; they just don't need us to do it. Everything I've built since [Canvas](/work/canvas) sits *on top* of frontier models instead of against them — and the model class that ended Shutter Labs is now a line item in its pricing table. Same read of the curve, opposite side of the trade.",
     },
   ],
   article_footer_links: [

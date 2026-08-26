@@ -42,3 +42,14 @@ next-env.d.ts
 
 # ─── Misc ─────────────────────────────────────────────────
 *.pem
+
+# ─── Local working artifacts (not part of the deployed site) ─
+PORTFOLIO-TRANSCRIPT.md
+openmemory.md
+design-export/
+undefined/
+
+# OpenMemory - IDE/Assistant specific rules
+.cursor/rules/openmemory.mdc
+CLAUDE.md
+AGENTS.md

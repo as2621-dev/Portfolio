@@ -3,9 +3,9 @@ import { ArticleLayout } from "@/components/longform/ArticleLayout";
 import { jobfairyArticle } from "@/content/project-jobfairy";
 
 export const metadata: Metadata = {
-  title: "JobFairy — one application, two browser agents, $1.15 · Ashesh Srivastava",
+  title: "JobFairy — a job-search copilot with agent research, tailored resumes, and outreach · Ashesh Srivastava",
   description:
-    "A job-search copilot over 31,926 verified H-1B sponsor companies — and a head-to-head browser-agent bake-off with real cost, latency, and reliability data.",
+    "A job-search copilot for any candidate: filters including a verified H-1B sponsor filter over 31,926 companies, agent research on every role, in-place resume tailoring, agent-filled applications, and personalized outreach through Instantly and Waalaxy.",
 };
 
 export default function JobfairyProjectPage() {

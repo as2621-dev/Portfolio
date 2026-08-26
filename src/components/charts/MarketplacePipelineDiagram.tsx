@@ -235,9 +235,11 @@ export function MarketplacePipelineDiagram() {
   const isRevealed = useChartReveal(containerRef);
 
   return (
-    /* Breakout: wider than the 680px article column, same treatment as the
-       timeline strip, so the three-actor layout keeps its proportions. */
-    <div style={{ width: "min(92vw, 940px)", marginLeft: "calc(50% - min(46vw, 470px))" }}>
+    /* Fits the article column (owner request 2026-08-09; was a 940px breakout).
+       The SVG scales down to the column width with a 560px floor — below that
+       (phones) it pans horizontally instead of shrinking further. Same
+       treatment as CanvasArchitectureDiagram. */
+    <div style={{ width: "100%" }}>
       <Card padding={24}>
         <div ref={containerRef}>
           <div
@@ -253,7 +255,13 @@ export function MarketplacePipelineDiagram() {
             Amazon → platform → Walmart
           </div>
           <div
-            style={{ fontFamily: "var(--font-display)", fontWeight: 800, fontSize: 20, color: "var(--ink)", marginTop: 4 }}
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 800,
+              fontSize: 20,
+              color: "var(--ink)",
+              marginTop: 4,
+            }}
           >
             The dropshipping loop, end to end
           </div>
@@ -292,7 +300,7 @@ export function MarketplacePipelineDiagram() {
           <div style={{ overflowX: "auto" }}>
             <svg
               viewBox="0 0 880 544"
-              style={{ width: "100%", minWidth: 860, height: "auto", display: "block" }}
+              style={{ width: "100%", minWidth: 560, height: "auto", display: "block" }}
               role="img"
               aria-label="Workflow diagram of the dropshipping loop. Listing pipeline, running continuously on cron: the platform pulls the Amazon catalog, resolves ASINs to UPCs through two vendors in series, enriches products via the Amazon MWS API, then pushes listing feeds to 77 Walmart stores repriced 30 to 40 percent higher, with inventory kept in sync. Order loop, fired per order: a US customer orders on Walmart, the platform pulls the confirmed order every minute, places the same order on Amazon, Amazon ships directly to the customer, and the tracking number is injected back into Walmart."
             >
@@ -397,7 +405,12 @@ export function MarketplacePipelineDiagram() {
                           x={arrow.label_x}
                           y={(arrow.label_y ?? 0) + 10}
                           textAnchor="middle"
-                          style={{ fontFamily: "var(--font-mono)", fontSize: 9, fontWeight: 600, letterSpacing: "0.05em" }}
+                          style={{
+                            fontFamily: "var(--font-mono)",
+                            fontSize: 9,
+                            fontWeight: 600,
+                            letterSpacing: "0.05em",
+                          }}
                           fill={FLOW_LABEL_COLORS[arrow.flow_kind]}
                         >
                           {arrow.arrow_label}

@@ -1,212 +1,209 @@
 import type { LongformArticle } from "./longform-types";
 
 /**
- * Case study #2 — Canvas, the post-Shutter-Labs image workspace.
- * Source of truth: ~/"Portfolio "/copy/03-case-study-canvas.md.
- * Commit/test counts are deliberately omitted until reconciled (VERIFY tags
- * inline); no usage metrics exist and the copy says so plainly.
+ * Case study #2 — Canvas, the image-generation IDE.
+ * Rewritten 2026-08-04 to Ash's brief, then tightened same day to a 5–6 minute
+ * read: bullets over prose, no meta-verification voice ("git-verified",
+ * "counted directly"), captions trimmed. Structure: Higgsfield origin →
+ * three panels → two zooms into the app snapshot → comparison → learnings.
+ * Prices/counts quoted from the capture (7¢/10¢/63¢). Shutter Labs is a
+ * cross-link only.
+ * v2 (2026-08-05, owner-directed): status → open-sourced; stat band cut;
+ * "three workspaces" phrasing dropped everywhere (workspaces are unbounded);
+ * main snapshot swapped for the interactive app-live-demo.html (workspace +
+ * research tabs clickable, populated with real generations pulled from the
+ * app's Supabase DB into /proof/canvas/gallery/); research-panel-demo.html
+ * embed added under the three-modes list; batch-API 50%-discount line added;
+ * both markup-walkthrough code blocks and their commentary cut.
+ * v3 (2026-08-05, owner-directed): "What I can't show you" section removed;
+ * the cheaper-lane / client-state / solo-review learnings cut as wrong; a
+ * bullet linking the homepage "Principles of building" section (/#principles)
+ * added in their place.
+ * v4 (2026-08-05, owner-directed): Decisions and How-it-compares tables cut;
+ * replaced by two short prose paragraphs under "Decisions" (tree on the left,
+ * research on the right, cost at every decision point, comparison folded in).
+ * v5 (2026-08-05, owner-directed): app-live-demo reworked to show the three
+ * workspaces side by side with image thumbnails in the project tree; both
+ * Zoom sections (composer, project tree) removed as redundant; CC-licensed
+ * husky reference photos added for the research panel and Inspiration folder
+ * (credits in /proof/canvas/gallery/CREDITS.md).
+ * v6 (2026-08-05, owner-directed): "Case study" eyebrow removed (field made
+ * optional in longform-types + ArticleLayout); the one-decision callout box
+ * demoted to a plain paragraph.
+ * v7 (2026-08-09, owner-directed): standard meta card rolled out site-wide —
+ * Role / Timeline / Status / Tech; GitHub link added to Status; tags re-cut
+ * to signal FDE / AI-PM fit (tech names live in the Tech row now).
  */
 export const canvasArticle: LongformArticle = {
-  article_eyebrow: "Case study",
-  article_title: "The model that killed my startup is a line item in my pricing table",
+  article_title: "Canvas — an IDE for image generation",
   article_subtitle:
-    "Canvas — a self-hosted image-generation workspace with three parallel lanes, six models, and the price printed on the button before you press it.",
-  article_tags: ["0→1", "Multi-model routing", "Solo build"],
+    "A three-panel workspace where generations run side by side, research happens next to the prompt, and the price shows up before you hit Enter.",
+  article_tags: ["0→1", "Solo build", "Cost-aware UX", "AI product engineering"],
   article_meta: [
     { meta_label: "Role", meta_value: "Designed, built, and shipped solo." },
-    { meta_label: "Timeline", meta_value: "23 March to 26 July 2026, both commits git-verified." },
+    { meta_label: "Timeline", meta_value: "March to July 2026." },
     {
       meta_label: "Status",
-      meta_value: "My daily driver; prepped for open-source release, repo not yet public [CONFIRM: repo URL].",
+      meta_value: "Open-sourced: [github.com/as2621-dev/Canvas](https://github.com/as2621-dev/Canvas)",
     },
-    { meta_label: "Lineage", meta_value: "Pigment (Feb–Mar 2026), then Canvas." },
-  ],
-  article_stats: [
-    { stat_value: "252", stat_label: "TypeScript source files · 28 Postgres migrations" },
-    { stat_value: "19", stat_label: "unique working days across four months" },
-    { stat_value: "½", stat_label: "batch lane price vs instant — ₹5.70 vs ₹11.39" },
+    {
+      meta_label: "Tech",
+      meta_value:
+        "Next.js + TypeScript · Supabase (Postgres) · Trigger.dev job queue · multi-model routing (Gemini + fal.ai) · half-price batch lane · cost reservation & settlement.",
+    },
   ],
   blocks: [
     {
       block_kind: "paragraph",
       is_lede: true,
       paragraph_text:
-        "`nano_banana_pro` sits in the pricing table at `canvas/src/lib/pricing.ts:34`, quoted at ₹11.39 an image instant, ₹5.70 batch. It’s also the model that ended Shutter Labs — Google shipped fine-print-preserving product imagery inside a general-purpose model, which was the entire thing my company sold. [Read the flagship story →](/work/quicsnap-shutter-labs)",
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "Canvas is what I built after. Same domain, inverted posture: I stopped betting against frontier models and built the workspace that routes to them.",
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "The stat band above is counted directly — file and migration counts match the planning docs, and working days are distinct commit dates, not an effort estimate. Commit and test counts are omitted until reconciled [VERIFY: commits 185/190/187 across sources; tests 422/471/480 in docs, 471–730 by scan]. No usage metrics exist at all — see Results.",
+        "Canvas is what an IDE looks like when it's built for image generation instead of code: your library on the left, generation workspaces in the middle, a research panel on the right, and the price of every run printed on the button before you press it.",
     },
 
-    { block_kind: "heading", heading_level: 2, heading_text: "The problem" },
+    { block_kind: "heading", heading_level: 2, heading_text: "Where the idea came from" },
     {
       block_kind: "paragraph",
       paragraph_text:
-        "The user is me, then about thirty or forty people I know [CONFIRM: Ash-supplied, never instrumented].",
+        "I used to generate images with Higgsfield almost daily, then turn the good ones into video. The loop never changed: type a prompt, wait, switch to ChatGPT to fix the next prompt, switch back, run again. References in a downloads folder, drafts somewhere else, one generation at a time. The waiting was the whole experience.",
     },
     {
       block_kind: "paragraph",
       paragraph_text:
-        "I generate images daily — a habit, not an experiment. Higgsfield generated, ChatGPT sat in a second tab rewriting prompts that didn’t land, and nothing held the project itself: reference shots, versions, the thread of what I was trying. It broke on a deadline. I needed video, one generation could run at a time, so work went single-file — start it, wait, switch tabs, rework, switch back, rerun. The round trip *was* the cost.",
+        "Developers don't write code in a chat box. They get an IDE — files on the left, editors in the middle, docs on the right, one window. Generating images is work in exactly the same way. So why was I doing it through a prompt box and four tabs?",
     },
     {
       block_kind: "paragraph",
-      paragraph_text:
-        "Four frictions, none of them the model. **Idle waiting** — one prompt, one queue, and the watching is time the next direction never gets. **Credits vanish blind** — cost lands after the decision, in a unit the tool invented, and a failed generation can still take the credit with it (Adobe bug 1558296: 200 credits burned by failures). **Assets scatter** — a week later the image is in a download folder, indexed by nothing but when it was made. **Ideation lives in another tab** — the tool starts at the prompt box, so the looking happens elsewhere and comes back as screenshots.",
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "Existing tools take two shapes and both miss. Krea, Midjourney’s web app, Leonardo: a prompt box above a scrolling feed. ComfyUI and the node canvases offer real parallelism but charge pipeline literacy for it — you build the wiring before you get the concurrency. Both are built around the *output*; I wanted one built around the *work*.",
-    },
-    {
-      block_kind: "callout",
-      callout_tint: "orange",
-      callout_text:
-        "I picked this problem because being wrong about it is cheap. Shutter Labs needed a capability gap to persist. Canvas gets better every time a model ships.",
+      paragraph_text: "The whole product is one decision: treat image generation as work, not as chat.",
     },
 
-    { block_kind: "heading", heading_level: 2, heading_text: "Process" },
+    { block_kind: "heading", heading_level: 2, heading_text: "One window, three panels" },
     {
       block_kind: "paragraph",
       paragraph_text:
-        "**Pigment came first, and I killed it.** An internal AI content studio for a three-person ecommerce team, spec’d as a 714-line PRD at v3.0 — two personas, eight user stories, a nine-table schema, a risk register, eleven phases — and shipped in 53 commits. The personas were specific enough to design against: *“Technical comfort: Intermediate — comfortable with web apps, not with APIs or prompt engineering… manages 1-5 active projects, generates 10-50 images/day.”* [SLOT: pull one verbatim user story, US-1…US-8, from the Pigment PRD]",
+        "What's below is a live, clickable demo of the whole platform — three workspaces running side by side, the library's folders showing their images on the left, the research panel's modes on the right. Poke around. The generations in it are real outputs from the app's own database. Read it like an IDE:",
     },
     {
-      block_kind: "paragraph",
-      paragraph_text:
-        "Canvas’s first commit lands **two days** after Pigment’s last. What I gave up was the ecommerce specificity — brand guidelines, shot lists, admin analytics — because the narrow version needed a three-person team to justify it and I only had the workflow.",
+      block_kind: "html_embed",
+      embed_src: "/proof/canvas/app-live-demo.html",
+      embed_title: "Canvas — live interactive demo of the app",
+      embed_height: 360,
+      embed_caption:
+        "A project mid-flight: three workspaces side by side — NBPro on the batch lane, NB2, and Kling3 on video — each with its own prompt, settings, and price on the Generate button. Everything is clickable.",
     },
     {
-      block_kind: "table",
-      table_header: ["Decision", "Rejected alternative", "Why it lost"],
-      table_rows: [
-        [
-          "Three workspaces in parallel",
-          "Prompt, generate, wait",
-          "That wait is dead time. Three at once means always producing — batch in one, refinement in another, video isolated so it blocks nothing.",
-        ],
-        [
-          "Planning as a conversation",
-          "Separate search and prompt-enhance tabs",
-          "Two one-shot tools left the user as the integration layer. A thread produces prompts and reference rows together.",
-        ],
-        [
-          "Live price on the Generate button",
-          "Show cost once the run completes",
-          "The estimate has to be readable *before* the run, not only after.",
-        ],
-        [
-          "Generation as a background job",
-          "Generate inline in the API request",
-          "Keeps the route fast, gets retries free. It also forces the harder question: a job that dies hard runs neither its success nor its failure path, so the reservation needs a sweeper.",
-        ],
+      block_kind: "bullet_list",
+      list_items: [
+        "**Left — the library.** Every project and its images, in folders. The file explorer.",
+        "**Middle — workspaces.** Each generates and reviews with its own model and settings. The editors.",
+        "**Right — the research panel.** Web search, prompt help, and agentic image search. The docs pane.",
       ],
-      table_caption:
-        "A fifth row got cut in review because its only source was the page’s own PRD — circular. That became a rule: a decision-table row must cite a document that predates the decision.",
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "**The redesign.** Canvas began as a Stitch prototype, “Creator Studio IDE” — INSTANT column, BATCH and QUEUED lanes, an inspiration panel. I graded my own prototype: seven things right, ten wrong, including *“9px, 10px, 11px fonts make the interface feel like a developer tool, not a creative tool.”* The shift I wrote down: *from IDE-density developer tool, to minimal creative studio with IDE power underneath.* Shipped, the BATCH/QUEUED lanes became three named colour-coded workspaces and the single search became a three-mode planning panel.",
-    },
-    {
-      block_kind: "media_slot",
-      slot_description: "before → after — Stitch concept beside the shipped three-panel app",
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "**The reversal.** I shipped generation wrong first: asking for three images fanned out three independent client calls, each polled against a five-minute ceiling. The row was inserted *before* the Trigger.dev call, so an offline worker left it at `queued` forever while the catch block returned a 500 and never updated it — spinners that never terminated. My diagnosis: *the client holds in-flight UI state the server can’t authoritatively contradict.* The rebuild made it job-as-aggregate — one submission, one job row, N child outputs, client subscribes to the job and never the children.",
     },
 
-    { block_kind: "heading", heading_level: 2, heading_text: "What shipped" },
-    { block_kind: "media_slot", slot_description: "hero — full three-panel app, three workspaces mid-generation" },
+    { block_kind: "heading", heading_level: 2, heading_text: "Left: the library" },
     {
       block_kind: "paragraph",
-      paragraph_text:
-        "**Left, the project tree.** Every project opens with the same three folders: Raw, Inspiration, Finalized — the separation source control already makes between inputs, references, and outputs, and the one taxonomy that survives a project getting big. Everything drags; a feed can only be scrolled.",
+      paragraph_text: "Every project opens with the same three folders — the split source control already makes:",
+    },
+    {
+      block_kind: "bullet_list",
+      list_items: [
+        "**Raw images** — where generations land.",
+        "**Inspiration** — references and things found elsewhere.",
+        "**Finalized** — what you'd actually ship.",
+      ],
     },
     {
       block_kind: "paragraph",
       paragraph_text:
-        "**Centre, three parallel workspaces**, each with its own model and settings — one on a heavy batch, one refining, one on video, which is slow enough it would otherwise block everything. Green, purple, amber answers the only question you ask when you look up: which one was I in. Three is a starting setup, not a ceiling.",
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "**Multi-model routing.** Six models behind one type-checked union — three image, three video. A single `MODEL_KIND_MAP` is the source of truth every pricing and UI branch reads, so adding a model is a table row, not a refactor. Model choice lives *inside* each workspace, making aggregation a way to compare models rather than a count of logos.",
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        '**Two lanes, honestly priced.** Batch runs at exactly half price, and the trade-off is enforced in code: batch is capped at 1K, because that’s all Gemini’s batch API renders. `getAvailableSizes()` returns `["1K"]` for batch rather than offering a 4K option the API would reject. The cheap lane costs you resolution, and you find that out before paying.',
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "**Bring your own keys and infrastructure.** Self-hosted against your own Gemini and fal.ai accounts. `MARKUP_PCT = 0` — and the constant survives rather than being deleted, because `generation_costs.markup_pct` is `NOT NULL` and still records the rate applied. Stripe came out entirely; the cost chip stayed, reframed from “what we charge you” to “what your provider account is about to be charged.”",
-    },
-    { block_kind: "media_slot", slot_description: "Generate-button price chip, macro crop" },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "**Right, the planning panel** — Plan, Ask, Search. Results render inside the panel and drag straight into a prompt or the Inspiration folder. Nothing leaves the window.",
+        "Every folder is a live drop target, so filing an image is one drag. My old system was a downloads folder sorted by date.",
     },
 
-    { block_kind: "heading", heading_level: 2, heading_text: "Results" },
+    { block_kind: "heading", heading_level: 2, heading_text: "Middle: parallel workflows" },
     {
-      block_kind: "callout",
-      callout_tint: "blue",
-      callout_text: "**I have engineering evidence and no product evidence, and I won’t blur the difference.**",
+      block_kind: "paragraph",
+      paragraph_text:
+        "The panel that exists because of all that waiting. Every workspace has its own model, settings, and queue — in the demo above:",
+    },
+    {
+      block_kind: "bullet_list",
+      list_items: [
+        "**Workspace A** — NBPro on the batch lane at 1K: broad, cheap exploration.",
+        "**Workspace B** — NB2 at 2K: refining the keeper.",
+        "**Workspace C** — Kling3 video at 720p: slow, so it's isolated where it blocks nothing.",
+      ],
     },
     {
       block_kind: "paragraph",
       paragraph_text:
-        "Real: 252 source files, 28 migrations, 19 working days, and a defect trail from adversarial self-review — including an SSRF guard that classified private addresses by string shape, so the plain cloud-metadata address was blocked and its IPv4-mapped IPv6 form wasn’t. Findings I didn’t fix are written down in the repo, not dropped.",
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "Absent: time-to-first-good-image, cost per usable image, retention, sessions, conversion. Not “not yet measured” — never instrumented. My own PRD pre-authorised this in writing: *“Only falsifiable numbers… If Q5 yields no numbers, product-impact claims stay qualitative and personal.”*",
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "What I’d instrument first: **time from project open to first kept image**, the only number that can falsify the parallel-workspace thesis; **spend per kept image by lane**, because batch is half price only if the cheaper output is good enough to keep; and **whether the third workspace gets used**, because if the median session touches two, three was my ergonomics rather than a principle.",
+        "When one lane is generating, you move to the next instead of watching. Each header keeps its own count and running cost (`Workspace A — 0 imgs · 0¢`), tabs are color-coded, and you can open as many workspaces as you need. Since each workspace picks its own model, parallel lanes double as model comparison: same prompt, two models, side by side. And for images that don't need to land right now, there's a batch-processing API — slower runs, at a 50% discount.",
     },
 
-    { block_kind: "heading", heading_level: 2, heading_text: "Learnings" },
+    { block_kind: "heading", heading_level: 2, heading_text: "Right: research without leaving" },
     {
       block_kind: "paragraph",
-      paragraph_text:
-        "**Naming a risk is not mitigating it.** A March 2025 memo of mine says a major lab could release text-preserving image models, then concludes fine-tuned models would still win the niche. The register was right, the mitigation was wrong, and I had the wrong lab — I watched OpenAI and Meta while Google shipped it. It needed a trigger and a pre-committed response, not a reassuring sentence.",
+      paragraph_text: "The third panel exists to kill the second tab. Three modes:",
+    },
+    {
+      block_kind: "bullet_list",
+      list_items: [
+        "**Search** — the web, inside the panel.",
+        "**Ask** — a model rewrites or expands your prompt.",
+        "**Plan** — an agentic mode that goes and finds reference images for you.",
+      ],
+    },
+    {
+      block_kind: "html_embed",
+      embed_src: "/proof/canvas/research-panel-demo.html",
+      embed_title: "Canvas — research panel with Search, Ask, and Plan tabs, interactive",
+      embed_height: 560,
+      embed_caption:
+        "The panel itself — click between Search, Ask, and Plan to see each mode, including the agent conversation that goes and finds references.",
     },
     {
       block_kind: "paragraph",
       paragraph_text:
-        "**Pick problems where model progress is a tailwind.** Shutter Labs monetised a capability gap, so every frontier release was an existential threat. Canvas sits above the models and monetises nothing, so every release makes it better. Nano Banana Pro shipping was a new row in a price table instead of a funeral.",
+        "Results drag straight into a prompt or into Inspiration. Before this, I was the integration layer: search in a browser, screenshot, paste into ChatGPT, carry it all back by hand.",
+    },
+
+    { block_kind: "heading", heading_level: 2, heading_text: "The price is on the button" },
+    {
+      block_kind: "paragraph",
+      paragraph_text:
+        "Every run shows its price before you start it — the button itself reads `7¢`, and it updates as you change model, quality, or count. Credits that arrive after the decision are what make generation feel like gambling; real money on the button is the fix. It's honest about quality too: the batch lane is half price but capped at 1K, so the size picker for batch simply doesn't offer 4K. The cheap lane tells you what it costs you at the same moment it tells you the price.",
+    },
+
+    { block_kind: "heading", heading_level: 2, heading_text: "How a generation actually runs" },
+    {
+      block_kind: "paragraph",
+      paragraph_text:
+        "Generate posts to an API route that writes a job row; Trigger.dev runs the work; the client subscribes to the job and renders outputs as they land. One submission is one job with N child outputs — the client never tracks images in flight, because client-held state the server can't contradict is how you get spinners that never stop. Cost is reserved at start, settled at completion, and a sweeper reclaims reservations from jobs that die. Self-hosted, on your own Gemini and fal.ai keys, with markup set to zero.",
+    },
+    {
+      block_kind: "chart",
+      chart_id: "canvas-architecture",
+      chart_caption:
+        "The full path: routes in canvas/src/app/api, task ids in canvas/src/trigger, prices in src/lib/pricing.ts. The dashed lane — reserve, poll, sweep — is the billing lifecycle.",
+    },
+
+    { block_kind: "heading", heading_level: 2, heading_text: "Decisions" },
+    {
+      block_kind: "paragraph",
+      paragraph_text:
+        "The layout is a handful of deliberate calls. The project tree lives on the left because that is where an IDE keeps its files, so the work you are keeping stays one glance away instead of buried in a feed. The research panel lives on the right so looking something up never means leaving the window where the prompt is. And cost shows up wherever a decision happens: every workspace header carries a running total and the average per image, and the Generate button prints the price of the run before you press it.",
     },
     {
       block_kind: "paragraph",
       paragraph_text:
-        "**A cheaper lane has to be honest about what it costs you.** Half-price batch sounds free until you notice it’s 1K-only. Encoding that in `getAvailableSizes()` puts the trade-off at decision time — the price-on-the-button principle applied to quality instead of money.",
+        "That combination is also why Canvas beats the alternatives for real work. Prompt box tools like Higgsfield and Midjourney make you wait in one queue and tell you what you spent afterwards, in credits. ComfyUI gives you real control, but you build the wiring before you get any of it. Canvas puts the files, the research, and the numbers in one window and lets the lanes run side by side. The existing shapes are built around the output. Canvas is built around the work.",
     },
+
+    { block_kind: "heading", heading_level: 2, heading_text: "What I learned" },
     {
-      block_kind: "paragraph",
-      paragraph_text:
-        "**Client-held state the server can’t contradict will always leak.** Every infinite-spinner bug I shipped reduced to that sentence, and it cost a full lifecycle rebuild to learn something that reads as obvious written down.",
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "**Solo doesn’t have to mean unreviewed.** Review became a process instead of a person: independent passes over merge candidates, each briefed to find what’s wrong. It caught the SSRF bypass, a per-user ordering race that survived being folded into one statement under READ COMMITTED, and a drag library’s ARIA attributes putting an unnamed button ahead of every image in the tab order. Not the same as a second engineer; much better than nothing.",
+      block_kind: "bullet_list",
+      list_items: [
+        "**Pick problems where model progress is a tailwind.** My last startup monetized a capability gap, and a frontier release erased it — [that story is its own case study](/work/quicsnap-shutter-labs). Canvas sits above the models, so every release makes it better.",
+        "**Start smaller than the vision.** I opened this build with a huge requirement doc and got lost inside it. The way out became my [five principles of building](/#principles) — question the requirement, delete, simplify, accelerate, and only then automate.",
+      ],
     },
   ],
   article_footer_links: [

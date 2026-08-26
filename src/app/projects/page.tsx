@@ -28,18 +28,6 @@ export default function ProjectsIndexPage() {
       }}
     >
       <header className="fp-rise" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-        <span
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: 12,
-            letterSpacing: "0.08em",
-            fontWeight: 600,
-            color: "var(--orange-600)",
-            textTransform: "uppercase",
-          }}
-        >
-          Projects
-        </span>
         <h1 style={{ fontSize: "clamp(32px, 5vw, 44px)", fontWeight: 800 }}>Things I've shipped</h1>
         <p style={{ fontSize: 17, lineHeight: 1.65, color: "var(--ink-2)", maxWidth: "68ch", margin: 0 }}>
           Every product here was designed, built, and shipped by me — solo. Each page tells you what I built, who it's

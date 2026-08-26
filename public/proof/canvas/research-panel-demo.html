@@ -1,0 +1,412 @@
+<!doctype html>
+<!--
+  Interactive demo of Canvas's research panel (the app's right-hand pane),
+  authored for the portfolio article at near-full size so the three modes are
+  readable. Copy and behavior mirror the real product; generations come from
+  the app's database, and the web-search results use real CC-licensed photos
+  (see ./gallery/CREDITS.md), served locally from ./gallery/.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Canvas — research panel, interactive demo</title>
+    <style>
+      :root {
+        --bg: #0d0d0d;
+        --panel: #111111;
+        --raised: #161616;
+        --raised-2: #1a1a1a;
+        --border: #2a2a2a;
+        --text: #ededed;
+        --muted: #a1a1a1;
+        --faint: #666666;
+        --accent: #4caf78;
+      }
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: var(--bg);
+        font-family: -apple-system, "SF Pro Text", "Segoe UI", system-ui, sans-serif;
+        color: var(--text);
+        -webkit-font-smoothing: antialiased;
+        overflow: hidden;
+      }
+      .panel_shell {
+        box-sizing: border-box;
+        height: 100%;
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+      }
+      .panel_frame {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--panel);
+        overflow: hidden;
+      }
+      .mono_label {
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 10px;
+        letter-spacing: 0.09em;
+        text-transform: uppercase;
+        color: var(--faint);
+      }
+      .panel_head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 14px 10px;
+      }
+      .panel_head .mono_label:first-child {
+        color: var(--muted);
+      }
+      .mode_tabs {
+        display: flex;
+        gap: 6px;
+        padding: 0 12px 12px;
+        border-bottom: 1px solid var(--border);
+      }
+      .mode_tab {
+        flex: 1;
+        border: 1px solid var(--border);
+        background: transparent;
+        color: var(--muted);
+        border-radius: 7px;
+        padding: 8px 0;
+        font-size: 13px;
+        cursor: pointer;
+        font-family: inherit;
+        transition:
+          background 0.12s,
+          color 0.12s;
+      }
+      .mode_tab:hover {
+        color: var(--text);
+        background: var(--raised-2);
+      }
+      .mode_tab.is_active {
+        background: var(--raised-2);
+        color: var(--text);
+        border-color: #3a3a3a;
+        font-weight: 600;
+      }
+      .mode_tab .tab_hint {
+        display: block;
+        font-family: ui-monospace, Menlo, monospace;
+        font-size: 8.5px;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--faint);
+        margin-top: 3px;
+        font-weight: 400;
+      }
+      .mode_body {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        padding: 14px;
+      }
+      .mode_view {
+        display: none;
+        flex-direction: column;
+        gap: 12px;
+        animation: fade_in 0.18s ease-out;
+      }
+      .mode_view.is_active {
+        display: flex;
+      }
+      @keyframes fade_in {
+        from {
+          opacity: 0;
+          transform: translateY(4px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .search_input_row {
+        display: flex;
+        gap: 8px;
+      }
+      .search_input {
+        flex: 1;
+        border: 1px solid var(--border);
+        background: var(--bg);
+        color: var(--text);
+        border-radius: 7px;
+        padding: 9px 11px;
+        font-size: 13px;
+        font-family: inherit;
+      }
+      .search_go {
+        border: 1px solid var(--border);
+        background: var(--raised);
+        color: var(--text);
+        border-radius: 7px;
+        padding: 0 14px;
+        font-size: 13px;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      .search_go:hover {
+        background: var(--raised-2);
+      }
+      .result_grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+      .result_tile {
+        position: relative;
+        border-radius: 7px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        aspect-ratio: 16/10;
+        cursor: grab;
+      }
+      .result_tile img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+        transition: transform 0.18s;
+      }
+      .result_tile:hover img {
+        transform: scale(1.04);
+      }
+      .result_tile .drag_hint {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: flex-end;
+        padding: 6px 8px;
+        background: linear-gradient(transparent 55%, rgba(0, 0, 0, 0.7));
+        font-family: ui-monospace, Menlo, monospace;
+        font-size: 8.5px;
+        letter-spacing: 0.05em;
+        color: #d8d8d8;
+        opacity: 0;
+        transition: opacity 0.15s;
+      }
+      .result_tile:hover .drag_hint {
+        opacity: 1;
+      }
+      .panel_footnote {
+        font-size: 12px;
+        color: var(--faint);
+        line-height: 1.5;
+      }
+      .chat_bubble {
+        border-radius: 9px;
+        padding: 10px 12px;
+        font-size: 13px;
+        line-height: 1.55;
+        max-width: 92%;
+      }
+      .chat_user {
+        align-self: flex-end;
+        background: var(--raised-2);
+        color: var(--text);
+        border: 1px solid var(--border);
+      }
+      .chat_agent {
+        align-self: flex-start;
+        background: var(--raised);
+        border: 1px solid var(--border);
+        color: var(--muted);
+      }
+      .chat_agent strong {
+        color: var(--text);
+      }
+      .agent_steps {
+        font-family: ui-monospace, Menlo, monospace;
+        font-size: 11px;
+        color: #8fd3ae;
+        line-height: 1.9;
+        padding: 0 2px;
+      }
+      .prompt_block {
+        border: 1px solid rgba(76, 175, 120, 0.35);
+        border-radius: 8px;
+        background: rgba(76, 175, 120, 0.06);
+        padding: 10px 12px;
+        font-size: 13px;
+        color: var(--text);
+        line-height: 1.6;
+      }
+      .action_row {
+        display: flex;
+        gap: 8px;
+      }
+      .action_btn {
+        border: 1px solid var(--border);
+        background: var(--raised);
+        color: var(--text);
+        border-radius: 7px;
+        padding: 7px 11px;
+        font-size: 12px;
+        cursor: pointer;
+        font-family: inherit;
+      }
+      .action_btn:hover {
+        background: var(--raised-2);
+      }
+      .mini_row {
+        display: flex;
+        gap: 8px;
+      }
+      .mini_thumb {
+        width: 108px;
+        height: 78px;
+        border-radius: 6px;
+        overflow: hidden;
+        border: 1px solid var(--border);
+        flex-shrink: 0;
+      }
+      .mini_thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+      }
+      .saved_chip {
+        align-self: flex-start;
+        font-family: ui-monospace, Menlo, monospace;
+        font-size: 10px;
+        letter-spacing: 0.06em;
+        color: #8fd3ae;
+        border: 1px dashed rgba(76, 175, 120, 0.45);
+        border-radius: 999px;
+        padding: 4px 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="panel_shell">
+      <div class="panel_frame">
+        <div class="panel_head">
+          <span class="mono_label">Research panel — the app's right pane</span>
+          <span class="mono_label">click a mode</span>
+        </div>
+        <div class="mode_tabs">
+          <button class="mode_tab is_active" type="button" data-view="search">
+            Search
+            <span class="tab_hint">the web, in the panel</span>
+          </button>
+          <button class="mode_tab" type="button" data-view="ask">
+            Ask
+            <span class="tab_hint">rewrite the prompt</span>
+          </button>
+          <button class="mode_tab" type="button" data-view="plan">
+            Plan
+            <span class="tab_hint">agent finds references</span>
+          </button>
+        </div>
+        <div class="mode_body">
+          <!-- Search -->
+          <div class="mode_view is_active" data-view="search">
+            <div class="search_input_row">
+              <input class="search_input" value="husky editorial poster, snow palette" />
+              <button class="search_go" type="button">Search</button>
+            </div>
+            <div class="result_grid">
+              <div class="result_tile">
+                <img src="./gallery/husky-poster.jpg" alt="Result — polar expedition husky magazine cover" />
+                <span class="drag_hint">drag into prompt</span>
+              </div>
+              <div class="result_tile">
+                <img src="./gallery/husky-kids-b.jpg" alt="Result — kids running with a husky at sunset" />
+                <span class="drag_hint">drag into prompt</span>
+              </div>
+              <div class="result_tile">
+                <img src="./gallery/husky-card.jpg" alt="Result — husky greeting card with script lettering" />
+                <span class="drag_hint">drag into prompt</span>
+              </div>
+              <div class="result_tile">
+                <img src="./gallery/husky-kids-c.jpg" alt="Result — husky with a red ball, children chasing" />
+                <span class="drag_hint">drag into prompt</span>
+              </div>
+              <div class="result_tile">
+                <img src="./gallery/husky-portrait.jpg" alt="Result — husky portrait with ice-blue eyes" />
+                <span class="drag_hint">drag into prompt</span>
+              </div>
+              <div class="result_tile">
+                <img src="./gallery/husky-sled-team.jpg" alt="Result — sled team cutting through fresh snow" />
+                <span class="drag_hint">drag into prompt</span>
+              </div>
+              <div class="result_tile">
+                <img src="./gallery/husky-puppies.jpg" alt="Result — three husky puppies looking up" />
+                <span class="drag_hint">drag into prompt</span>
+              </div>
+              <div class="result_tile">
+                <img src="./gallery/husky-puppy.jpg" alt="Result — husky puppy with a soccer ball" />
+                <span class="drag_hint">drag into prompt</span>
+              </div>
+            </div>
+            <div class="panel_footnote">
+              Results drag straight into a prompt or into the Inspiration folder — no browser tab, no screenshots.
+            </div>
+          </div>
+          <!-- Ask -->
+          <div class="mode_view" data-view="ask">
+            <div class="chat_bubble chat_user">Punch this up: kids chasing a husky with a red ball</div>
+            <div class="chat_bubble chat_agent"><strong>Rewritten for NB2</strong> — composition, light, and lens made explicit:</div>
+            <div class="prompt_block">
+              Golden-hour suburban street, red-and-white husky mid-stride carrying a red ball, two kids chasing behind, low
+              camera angle, shallow depth of field, warm rim light, photoreal — 3:2
+            </div>
+            <div class="action_row">
+              <button class="action_btn" type="button">Insert into Workspace C →</button>
+              <button class="action_btn" type="button">Try another take</button>
+            </div>
+          </div>
+          <!-- Plan -->
+          <div class="mode_view" data-view="plan">
+            <div class="chat_bubble chat_user">Find reference shots for the husky campaign — editorial covers and family scenes.</div>
+            <div class="agent_steps">
+              → search("husky magazine cover editorial")<br />
+              → search("family playing with husky, golden hour")<br />
+              → 14 results · ranking by palette match…
+            </div>
+            <div class="chat_bubble chat_agent">
+              <strong>Found these.</strong> The polar-expedition cover and the sled team match your palette; the portrait and
+              the sunset frames fit the family angle. Want me to pull more type-heavy covers?
+            </div>
+            <div class="mini_row">
+              <div class="mini_thumb"><img src="./gallery/husky-poster.jpg" alt="Agent reference — polar cover" /></div>
+              <div class="mini_thumb"><img src="./gallery/husky-sled-team.jpg" alt="Agent reference — sled team in snow" /></div>
+              <div class="mini_thumb"><img src="./gallery/husky-portrait.jpg" alt="Agent reference — husky portrait" /></div>
+              <div class="mini_thumb"><img src="./gallery/husky-kids-a.jpg" alt="Agent reference — family scene" /></div>
+              <div class="mini_thumb"><img src="./gallery/dogs-beach-sunset.jpg" alt="Agent reference — sunset beach run" /></div>
+            </div>
+            <span class="saved_chip">3 saved to Inspiration</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      (function research_panel_demo() {
+        var mode_tabs = document.querySelectorAll(".mode_tab");
+        mode_tabs.forEach((tab) => {
+          tab.addEventListener("click", () => {
+            mode_tabs.forEach((t) => {
+              t.classList.toggle("is_active", t === tab);
+            });
+            document.querySelectorAll(".mode_view").forEach((view) => {
+              view.classList.toggle("is_active", view.getAttribute("data-view") === tab.getAttribute("data-view"));
+            });
+          });
+        });
+      })();
+    </script>
+  </body>
+</html>

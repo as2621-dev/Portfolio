@@ -1,104 +1,198 @@
 import type { LongformArticle } from "./longform-types";
 
 /**
- * Project page — JobFairy, the H-1B job-search copilot and the browser-agent
- * bake-off. Source of truth: ~/"Portfolio "/copy/07-project-jobfairy.md.
- * Framing locked (Ash, 2026-08-02): build-and-evaluate — no outcome numbers.
+ * Project page — JobFairy, the job-search copilot (filters incl. the H-1B
+ * sponsor filter, agent research, in-place resume tailoring, agent-filled
+ * applications, Instantly/Waalaxy outreach).
+ *
+ * Reframed (Ash, 2026-08-12): JobFairy is for EVERY job seeker — the H-1B
+ * sponsor filter is a core feature inside the system, never the product's
+ * identity. Walkthrough-first structure, mostly screenshots. All
+ * `/proof/jobfairy/beta-2026-08-12/` images were captured from the live beta
+ * build (local run against the production Supabase) on 2026-08-12, signed in
+ * as the owner account, using data already in the database — no new research
+ * or tailoring runs were launched for the captures.
  */
 export const jobfairyArticle: LongformArticle = {
   article_eyebrow: "Project · Agents & tools",
-  article_title: "One application, two browser agents, $1.15 — and a provider decision that stuck",
+  article_title:
+    "JobFairy — a job-search copilot that researches every role, tailors the resume, fills the application, and reaches the hiring team",
   article_subtitle:
-    "A job-search copilot on top of 31,926 verified H-1B sponsor companies — and the part worth showing you is how I picked its browser-automation provider: one real ATS application, run head to head for real money. Browser Use burned $1.1356 over 4m 44s and never attached the resume. Browserbase + Stagehand finished in 9.3 seconds for $0.0196 with the file attached. I deleted an arm I had already built.",
-  article_tags: ["Browser agents", "Next.js", "Evals"],
-  article_meta: [
-    { meta_label: "Role", meta_value: "Designed, built, and shipped solo. [SLOT: GitHub link — CONFIRM repo URL]" },
+    "JobFairy is for anyone running a serious job search. You set your filters once — title, seniority, remote or a place, salary — and the system does the grind: it pulls live openings, researches each role, rewrites your resume for it, fills the application with a browser agent, and drafts personalized outreach to the people who will actually read it, sent through Instantly so it lands in the inbox and through Waalaxy on LinkedIn. The sharpest filter is the H-1B one: JobFairy carries five years of US Department of Labor filing data, so H-1B candidates can restrict the whole search to companies with a verified record of sponsoring — a filter inside the system, not the product itself.",
+  article_tags: [
+    "Job-search copilot",
+    "H-1B smart filter",
+    "Agent research",
+    "Resume tailoring",
+    "Agent-filled applications",
+    "Email + LinkedIn outreach",
+    "Solo build",
   ],
-  article_stats: [
-    { stat_value: "$0.02 vs $1.14", stat_label: "per task — same live Greenhouse posting, one run per provider" },
-    { stat_value: "31,926", stat_label: "sponsor companies from 2,630,454 LCA filings" },
-    { stat_value: "59", stat_label: "numbered PRD decisions, six of them reversals" },
+  article_meta: [
+    { meta_label: "Role", meta_value: "Designed, built, and shipped solo." },
+    {
+      meta_label: "Timeline",
+      meta_value: "[CONFIRM: build timeline — start/end dates are not in the copy or the PRD excerpts]",
+    },
+    {
+      meta_label: "Status",
+      meta_value:
+        "In beta testing — the multi-user build in these screenshots is live and iterating week to week. [SLOT: GitHub link — CONFIRM repo URL]",
+    },
+    {
+      meta_label: "Tech",
+      meta_value:
+        "TypeScript + Next.js · Supabase · Trigger.dev · Railway · research agents with a verifier gate · Browserbase fill agent · python-docx resume tailoring · DOL LCA data pipeline · TheirStack job ingest · Apollo.io, Instantly & Waalaxy outreach.",
+    },
   ],
   blocks: [
-    {
-      block_kind: "callout",
-      callout_tint: "blue",
-      callout_title: "How to read this piece",
-      callout_text:
-        "This is a build-and-evaluate story: the deliverable is the provider decision and the evidence behind it, not a job offer. I never instrumented my own search, so there is no applications-sent count, no reply rate, and no interview number in here. The one live application run ended at status `awaiting` and never reached `applied`. I’d rather say that plainly than dress up an engineering result as an outcome.",
-    },
-
-    { block_kind: "act_divider", act_eyebrow: "Act 1", act_title: "The product decision", anchor_id: "act-1" },
-    { block_kind: "heading", heading_level: 3, heading_text: "What I built" },
+    { block_kind: "act_divider", act_eyebrow: "Act 1", act_title: "The problem", anchor_id: "act-1" },
     {
       block_kind: "paragraph",
       paragraph_text:
-        "JobFairy turns raw US Department of Labor LCA disclosure filings into a list of companies that demonstrably sponsor H-1B visas, pulls live openings at those companies, then runs the pipeline per job: research on the company and role, in-place tailoring of my `.docx` resume, a browser agent that fills the actual ATS application, contact resolution, and a short personalized email. Roughly 20 ATS connectors sit behind the apply step.",
-    },
-    { block_kind: "heading", heading_level: 3, heading_text: "Who it’s for" },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "H-1B-dependent job seekers: people who can only accept an offer from a company willing to sponsor them. It’s an unusually sharp ICP, because the constraint is binary and invalidates most of the job market before they read a single description. I was user number one — first-person and falsifiable, and n=1. I later forked the engine into a multi-user version and never onboarded anyone, so I make no claims about another person’s search.",
-    },
-    { block_kind: "heading", heading_level: 3, heading_text: "Why this problem, and what I ruled out" },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "The market splits into two halves that never meet. Job boards have live feeds and no reliable sponsorship signal — the “visa sponsorship: yes” checkbox is self-reported and frequently wrong. H-1B lookup sites (MyVisaJobs, H1BGrader, Interstride) have real DOL filing data and no live jobs: they tell you who *filed* in 2023, not who is *hiring* today. Between them sit tools that each solve one adjacent slice — sponsorship filtering without verified contacts, contact lookup without sponsorship data, manual CRMs — and above them, human reverse-recruiting agencies at $500–$15,000 a month. My scan concluded “direct combined competitor: none,” which is usually a warning sign, so the wedge had to be narrower than a feature list.",
-    },
-    { block_kind: "heading", heading_level: 3, heading_text: "How it’s different: the data asset is the product" },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "I ingest the DOL OFLC disclosure files directly — bulk `.xlsx`, deliberately not scraped — and qualify a company on a stated rule: **at least 5 filings across 3 years in tech-adjacent SOC codes.** That yields **31,926 companies drawn from 2,630,454 filings**, of which **28,723** also carry live openings. That intersection is the product: a sponsorship signal from the government’s own filings, joined to jobs open today. I wrote down what the rule is *not*, too — five filings is a proxy for “has an engineering org,” not an industry claim, so it misses first-time sponsors and includes companies that stopped hiring.",
+        "This one started at home. My wife holds an H-1B, and I watched the job search eat her evenings for months. Anyone who has hunted for a job knows the loop; her visa just made every lap of it longer. The manual version goes like this:",
     },
     {
-      block_kind: "media_slot",
-      slot_description:
-        "stage2-company-list.png — the company list rendering “2,630,454 LCAs across 31,926 companies” (ready to place)",
-    },
-
-    { block_kind: "act_divider", act_eyebrow: "Act 2", act_title: "How it’s built", anchor_id: "act-2" },
-    { block_kind: "heading", heading_level: 3, heading_text: "Architecture" },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "TypeScript end to end on Next.js, Supabase for data, Trigger.dev for every long-running job, deployed to Railway. Two of those were arguments with myself. **Supabase over Convex**, because the data is relational with cross-table dedup queries and there’s no real-time multiplayer need — the thing Convex is actually good at. **TypeScript over Python for the agent layer**, contradicting my own default: a second runtime and deploy target for a handful of LLM calls was disproportionate scope. The one exception is resume tailoring — Python `python-docx` doing run-level edits inside a Trigger.dev task, because nothing in TypeScript edits a `.docx` in place without reflowing it.",
-    },
-    { block_kind: "heading", heading_level: 3, heading_text: "Where browser agents actually break" },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "A browser agent is a model that can see a page and act on it. The design question isn’t “can it,” it’s **how much of the task you let it decide** — and my two providers sat at opposite ends of that spectrum.",
-    },
-    {
-      block_kind: "bullet_list",
+      block_kind: "numbered_list",
       list_items: [
-        "**Browser Use is agent-driven.** Navigation *and* the file attach are the model’s judgment. If the model wanders, it takes the attach with it.",
-        "**Browserbase + Stagehand is code-driven.** My driver navigates, then attaches the resume deterministically over CDP `setInputFiles`. The model is asked only to do what code cannot.",
+        "Open LinkedIn and the job boards. Again. →",
+        "Stack the filters and scroll. →",
+        "Research each interesting company — does it actually sponsor H-1B? The “visa sponsorship: yes” checkbox is self-reported, the lookup sites carry stale data, and half the time you end up with partial information and no answer. →",
+        "Rewrite the resume for the role. There goes the evening. →",
+        "Fill the application form by hand, field by field. →",
+        "Hunt down the hiring manager and write something personal. →",
+        "Send it from a personal Gmail — where cold mail gets flagged fast and sits in spam.",
       ],
     },
     {
       block_kind: "paragraph",
       paragraph_text:
-        "Both sit behind one interface — `startFillRun(postingId, provider)` — returning a persisted run with status, duration, cost and a replay link. I built that seam before I knew which arm would win, which is the only reason the experiment was cheap to run.",
+        "Every step is manual, every step repeats for every single role, and the chain breaks anywhere. JobFairy runs that whole chain as one system — for any job seeker. The H-1B check becomes one filter inside it, answered from government filing data instead of guesswork.",
+    },
+
+    { block_kind: "act_divider", act_eyebrow: "Act 2", act_title: "The product, in screenshots", anchor_id: "act-2" },
+    { block_kind: "heading", heading_level: 3, heading_text: "Filters — set once" },
+    {
+      block_kind: "paragraph",
+      paragraph_text:
+        "Preferences hold the whole search: the titles you actually apply to, seniority, years of experience, remote or on-site, employment type, country, how fresh a posting has to be, and target salary. On top of them sits the H-1B sponsor filter — every company downstream carries verified sponsorship filings, not a self-reported checkbox.",
+    },
+    {
+      block_kind: "image",
+      image_src: "/proof/jobfairy/beta-2026-08-12/preferences-filters.png",
+      image_alt:
+        "JobFairy's Preferences screen: H-1B sponsor chips on top, then job titles, seniority, years of experience, work arrangement, employment type, country, posting age, and target salary filters.",
+      image_caption:
+        "real product — Preferences in the beta build, captured 2026-08-12: the H-1B sponsor filter above the profile filters that drive every scan.",
+    },
+    { block_kind: "heading", heading_level: 3, heading_text: "Jobs — everything live, in one place" },
+    {
+      block_kind: "paragraph",
+      paragraph_text:
+        "The Jobs tab is every live opening that matches your preferences across the tracked companies, deduped and freshest first. The beta adds a reveal step — titles come free, and a daily allowance of reveals goes to the ones worth a closer look, which is what keeps per-user data costs sane.",
+    },
+    {
+      block_kind: "image",
+      image_src: "/proof/jobfairy/beta-2026-08-12/jobs-tab.png",
+      image_alt:
+        "JobFairy's Jobs tab listing 307 matched product-management postings with posted dates and Reveal / Pass actions on each row.",
+      image_caption: "real product — the Jobs tab in beta, captured 2026-08-12: 307 matched postings, Reveal or Pass.",
+    },
+    { block_kind: "heading", heading_level: 3, heading_text: "Companies — each with its sponsorship record" },
+    {
+      block_kind: "paragraph",
+      paragraph_text:
+        "The Companies tab carries the H-1B filing history for every company in your search, filterable by filing volume. A company page puts its live jobs on top — and the people who matter underneath.",
+    },
+    {
+      block_kind: "image",
+      image_src: "/proof/jobfairy/beta-2026-08-12/companies-tab.png",
+      image_alt:
+        "JobFairy's Companies tab: thirteen companies with per-company LCA filing counts, pending/applied/passed job columns, and an LCA min/max filter bar.",
+      image_caption:
+        "real product — Companies in beta, captured 2026-08-12: each company with its LCA filing count, filterable by volume.",
+    },
+    {
+      block_kind: "image",
+      image_src: "/proof/jobfairy/beta-2026-08-12/company-realpage-top.png",
+      image_alt:
+        "A JobFairy company page for RealPage, Inc. showing a verified H-1B sponsor badge with 82 LCAs since 2021, two live product-management openings with salaries, and the top of a 138-person key-decision-makers list.",
+      image_caption:
+        "real product — a company page, captured 2026-08-12: the verified “H-1B sponsor · 82 LCAs since 2021” badge, live jobs with salary, and 138 key decision makers underneath, each one click from a workspace.",
+    },
+    { block_kind: "heading", heading_level: 3, heading_text: "Open a job — the homework is already done" },
+    {
+      block_kind: "paragraph",
+      paragraph_text:
+        "Click into a job and the agent research is waiting: what the ideal candidate looks like, company intel, interview intel — every bullet verified and cited before it is allowed to persist. A keyword scan shows what the posting asks for that your resume doesn't say yet, and the resume pane on the right is where tailoring lands: rewords stay fact-anchored, and you accept or reject each change.",
+    },
+    {
+      block_kind: "image",
+      image_src: "/proof/jobfairy/beta-2026-08-12/workspace-research.png",
+      image_alt:
+        "A researched job workspace for Product Manager, Billing at Omada Health: the job description and verified agent-research bullets with source links on the left, the resume.docx tailoring pane on the right.",
+      image_caption:
+        "real product — a researched job workspace, captured 2026-08-12: six verified ideal-candidate bullets plus company and interview intel, every one cited; the resume pane sits on the right.",
+    },
+    {
+      block_kind: "image",
+      image_src: "/proof/jobfairy/beta-2026-08-12/workspace-apply-slice.png",
+      image_alt:
+        "The same job workspace further down: a keyword gap showing 13 posting keywords missing from the resume, the Apply card, and the Fill-application-with-agent section with a provider comparison and a Fill via Browserbase button.",
+      image_caption:
+        "the same workspace, further down — the keyword gap, the Apply card, and the fill agent. The agent fills but never submits: you review, and the application is only marked Applied when a real confirmation email arrives.",
+    },
+    { block_kind: "heading", heading_level: 3, heading_text: "People — outreach that lands in the inbox" },
+    {
+      block_kind: "paragraph",
+      paragraph_text:
+        "Even a strong application can sit unread, so JobFairy works the human side too. Pick a person and the agent researches them first, then drafts the outreach: a three-touch email sequence and a LinkedIn note, personalized from cited findings and capped at lengths a human would actually write. Nothing sends without your approval. Email goes out through Instantly — because a personal Gmail blasting cold mail gets flagged within days, and deliverability infrastructure is the difference between an inbox and a spam folder. LinkedIn outreach runs through Waalaxy.",
+    },
+    {
+      block_kind: "image",
+      image_src: "/proof/jobfairy/beta-2026-08-12/person-amanda.png",
+      image_alt:
+        "A JobFairy person workspace: cited person-research findings on the left, and on the right a drafted Day 1/4/10 email sequence and a LinkedIn connection note, with Save for later and Schedule send buttons and the line “Nothing sends without your approval.”",
+      image_caption:
+        "real product — a person workspace, captured 2026-08-12: cited person research on the left; the drafted Day 1 / 4 / 10 email sequence and LinkedIn connection note on the right. “Nothing sends without your approval.”",
+    },
+    { block_kind: "heading", heading_level: 3, heading_text: "The H-1B data underneath" },
+    {
+      block_kind: "paragraph",
+      paragraph_text:
+        "The filter is built on the US Department of Labor's own LCA disclosure files: 2,630,454 filings distilled to 31,926 companies with at least five filings across the last three fiscal years in tech-adjacent roles. That's the difference between a checkbox that says “sponsors visas” and a public record that proves it.",
+    },
+    {
+      block_kind: "image",
+      image_src: "/proof/jobfairy/stage2-company-list.png",
+      image_alt:
+        "JobFairy's company list rendering 2,630,454 LCAs across 31,926 companies, with per-company H-1B filing counts for FY2021 through FY2025 and track buttons.",
+      image_caption:
+        "real output — the full asset: “2,630,454 LCAs across 31,926 companies,” per-company filings FY2021–FY2025 (Puppeteer capture from the 2026-07-18 verification pass).",
+    },
+
+    { block_kind: "act_divider", act_eyebrow: "Act 3", act_title: "How it's built", anchor_id: "act-3" },
+    {
+      block_kind: "paragraph",
+      paragraph_text:
+        "TypeScript end to end on Next.js, Supabase for data and auth, Trigger.dev for every long-running job, deployed on Railway. Jobs arrive through TheirStack, which watches the ATS platforms so I don't have to. The research agents run behind a verifier that gates every bullet before it persists. Resume tailoring is the one Python exception — python-docx doing run-level edits inside a Trigger.dev task, because nothing in TypeScript edits a `.docx` in place without reflowing it.",
+    },
+    {
+      block_kind: "chart",
+      chart_id: "jobfairy-pipeline",
+      chart_caption:
+        "Every box maps to the source tree: sourcing and job ingest build the data asset (blue); research, tailoring, the fill run and confirmation run once per application (orange). The dashed arrow is the honesty rule: a succeeded fill only writes `awaiting` — a matched confirmation email promotes it to `applied`.",
     },
     {
       block_kind: "heading",
       heading_level: 3,
-      heading_text: "The bake-off: two providers, one application, $1.15",
+      heading_text: "The browser-agent bake-off",
       anchor_id: "bakeoff",
     },
     {
       block_kind: "paragraph",
       paragraph_text:
-        "**Hypothesis.** A code-driven agent beats an agent-driven one on cost, latency *and* reliability for ATS form-filling — not because the model is better, but because the file attach shouldn’t depend on the model behaving.",
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "**Method.** One real run per provider against the same target: a live, public, login-free Greenhouse posting (Technical Product Manager at SupplyHouse Nevada LLC), the same 39 KB tailored `.docx`, launched through the real fill-run engine onto a real Trigger.dev worker. Caps in force: $2.00 max cost plus a 60-step poll-side cap on Browser Use; a 15-minute session and 40 fill steps on Browserbase. Every cost input persists to the database — `duration_ms`, `cost_usd numeric(10,4)`, a `cost_breakdown` blob — so the number is auditable, not asserted.",
+        "The fill step needed a browser agent, so I tested two providers head to head on the same live application — Browser Use and Browserbase + Stagehand — one real run each, through the real fill engine, with cost and step caps in force and every number persisted to the database. Browserbase won because it got the job done: the resume attached in one tool call, while Browser Use burned its entire step cap without ever attaching the file.",
     },
     {
       block_kind: "chart",
@@ -106,82 +200,24 @@ export const jobfairyArticle: LongformArticle = {
       chart_caption:
         "Read the multipliers as this run vs this run, not as a rate — one arm ran to its step cap, the other stopped after a single action. Total money that actually left the account: $1.1532.",
     },
-    {
-      block_kind: "table",
-      table_header: ["", "Browser Use", "Browserbase + Stagehand"],
-      table_rows: [
-        ["Status", "**failed** — hit the 60-step cap", "**succeeded**"],
-        ["Duration", "284,429 ms (4m 44s)", "9,295 ms"],
-        ["Cost", "**$1.1356** billed, provider-reported", "**$0.0196** computed ($0.0176 of it real token spend)"],
-        ["Tokens", "2,076,810 in / 10,027 out", "11,355 prompt / 63 completion"],
-        ["Resume attached?", "**No**", "**Yes**"],
-        ["Steps", "60 (the cap)", "1 tool call"],
-      ],
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "**Reading the result honestly.** The write-up records “~58× cheaper as recorded” and then immediately disciplines its own headline: *read those multipliers as this run vs this run, not as a rate.* One arm ran to its step cap; the other stopped after a single action. A fairer cap-to-cap comparison prices Browserbase’s 40-step ceiling at a modelled floor of ~$0.68 against Browser Use’s ~$1.14 — about **1.7×**, which still favours Browserbase and is far less dramatic. Two caveats went in the document, not a footnote: Browserbase publishes no cost endpoint, so $0.0196 is my formula, not a bill; and the base resume was still a 32-character stub, so the agent had almost nothing to type. “Succeeded” means the deterministic attach resolved and the agent self-reported success. It is **not** evidence that either arm can complete a multi-field screening form. I didn’t invent applicant contact details to make the runs look better.",
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "**The decision.** Browserbase became the sole fill provider and the Browser Use arm was deleted. The 58× was never the reason — the architecture was. Two Browser Use runs a week apart ended in the same off-script state (`Running Python code`), including one that cost **$5.55 across 163 steps.**",
-    },
-    {
-      block_kind: "heading",
-      heading_level: 3,
-      heading_text: "59 decisions, six reversals — and the one I argued hardest against myself",
-      anchor_id: "decisions",
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "Every decision in the PRD states what it rules out; six explicitly overturn an earlier one, and a “superseded / retained” section exists so the document can never hold two contradictory halves. The bake-off above only happened because of one of them — Decisions 42 and 44 de-scoped in-app fill entirely, and Decision 47 put it back on the critical path. But the reversal that taught me the most is a different one:",
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "**Decision 23 → Decision 48: I argued myself out of auto-submit, then reversed it and kept the strongest objection as a mechanism.** The original position had three good reasons. Workday’s and Greenhouse’s terms bar automated interaction, so the ToS risk lands on the *user’s* candidate account, not mine. Greenhouse ships invisible reCAPTCHA scoring mouse movement and typing patterns — exactly the signature an agent produces. And `submitted: true` from an agent is **the model’s opinion that it submitted**, which at the API boundary is indistinguishable from a hallucination.",
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "Decision 48 reversed the conclusion for runs the user explicitly launches, but that third objection never went away, so it became a control instead of a veto: a succeeded fill run only moves an application to `awaiting`. **Only a matched confirmation email promotes it to `applied`.** The agent isn’t allowed to be the witness to its own success.",
-    },
 
     { block_kind: "heading", heading_level: 2, heading_text: "What I learned" },
     {
       block_kind: "paragraph",
       paragraph_text:
-        "**A prompt sentence is not an enforcement mechanism.** I added an explicit line — “do NOT run or write code, do NOT open a terminal or a Python tool” — and the agent went off-script into Python anyway, twice, before and after the hardening. Constraints you want honoured live in code.",
+        "**Don't reinvent the wheel.** I spent the early weeks building job ingestion the hard way — going ATS by ATS, writing connectors and scrapers against roughly twenty vendors, fighting markup drift and rate limits, because most of them never expose a clean public API. Then I found TheirStack, which already aggregates live postings across the ATS world, and replaced my entire ingestion path with one integration. If someone has already solved the problem, build on top of them — the moat was never going to be the scraping.",
     },
     {
       block_kind: "paragraph",
       paragraph_text:
-        "**A cap that never engages is not a cap.** The $2.00 cost ceiling never fired; the 60-step ceiling did, at $1.1356. I’d instrumented the limit that felt like a safety net, not the one that binds.",
+        "**Don't let the agent grade its own homework.** A fill agent reporting `submitted: true` is the model's opinion, not a fact — at the API boundary it is indistinguishable from a hallucination. So the system never takes the agent's word: a finished fill run only moves an application to `awaiting`, and only a matching confirmation email in Gmail promotes it to `applied`. Any claim an agent makes about the world needs a verification path that doesn't run through the agent.",
     },
     {
-      block_kind: "paragraph",
-      paragraph_text:
-        "**Observability without a control is worth less than it looks.** I diagnosed the stall live at step 9, with $0.25 spent, then watched it burn **$0.89 more** because the live view had no stop button. The user story promised you could “step in if it stalls.” Exactly half of that was true.",
-    },
-    {
-      block_kind: "paragraph",
-      paragraph_text:
-        "**Discipline your own headline number.** “58× cheaper” was the fact I most wanted to be true, which is precisely why the 1.7× model had to be published beside it. A number that only survives its most flattering framing isn’t a result, it’s a slide.",
-    },
-
-    { block_kind: "heading", heading_level: 2, heading_text: "Honest status" },
-    {
-      block_kind: "bullet_list",
-      list_items: [
-        "**No real-search outcome data.** No applications-sent count, no reply rate, no interviews. The one live application run sits at `awaiting`.",
-        "**No demo of the agent filling a form** — the visceral part. Browser Use’s live-view recordings existed, but the replay URLs are presigned with a one-hour expiry and are now dead. A re-run is the only path to a GIF. [SLOT: demo GIF, requires re-run]",
-        "**12 real product screenshots exist** (puppeteer-captured, sample data only, no PII). [SLOT: stage3-research-outcome.png — per-job research output] [SLOT: stage6-resume-pane.png — the resume tailoring pane]",
-        "**The multi-field fill is still unproven,** and so is ATS-side acceptance of the attach. Both need a re-run against a real base resume.",
-        "**Zero external users** on the multi-user fork, and no user research beyond my own.",
-      ],
+      block_kind: "callout",
+      callout_tint: "sun",
+      callout_title: "Beta",
+      callout_text:
+        "JobFairy is in beta testing right now — the multi-user build in these screenshots is live, and the surface changes week to week.",
     },
   ],
   article_footer_links: [

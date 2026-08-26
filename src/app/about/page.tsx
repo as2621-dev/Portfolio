@@ -49,18 +49,6 @@ export default function AboutPage() {
       }}
     >
       <header className="fp-rise" style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-        <span
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: 12,
-            letterSpacing: "0.08em",
-            fontWeight: 600,
-            color: "var(--orange-600)",
-            textTransform: "uppercase",
-          }}
-        >
-          About
-        </span>
         <h1 style={{ fontSize: "clamp(32px, 5vw, 44px)", fontWeight: 800 }}>Customer, operator, founder, builder</h1>
         <p style={{ ...PARAGRAPH_STYLE, fontSize: 18 }}>{aboutIntroLine}</p>
       </header>
@@ -157,10 +145,9 @@ export default function AboutPage() {
         <SectionHeader eyebrow="RÉSUMÉ + CONTACT" title="Say hello" />
         <p style={PARAGRAPH_STYLE}>{aboutContactBody}</p>
         <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
-          <Button href="#" variant="outline" size="md">
+          <Button href={site.resume_pdf_href} variant="outline" size="md" target="_blank" rel="noopener">
             Download résumé
           </Button>
-          <PendingChip chip_kind="SLOT" chip_note="résumé PDF — to be produced from this copy set" />
           <Button href={`mailto:${site.primary_email}`} variant="primary" size="md">
             {site.primary_email}
           </Button>

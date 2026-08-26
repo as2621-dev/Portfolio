@@ -7,13 +7,13 @@ import { useChartReveal } from "./useChartReveal";
 /**
  * Monthly self-serve revenue, computed from the verified transaction export
  * (`all customer data.xlsx`, pulled 2024-09-27 — research/quicsnap.md §A).
- * Sep 2024 is partial: the export ends 2024-09-12.
+ * Shown through Apr 2024 — where the service chapter of the story ends and
+ * the Shutter Labs pivot takes over.
  */
 interface MonthlyRevenueEntry {
   month_label: string;
   revenue_usd: number;
   transaction_count: number;
-  is_partial?: boolean;
 }
 
 const MONTHLY_REVENUE: MonthlyRevenueEntry[] = [
@@ -29,11 +29,6 @@ const MONTHLY_REVENUE: MonthlyRevenueEntry[] = [
   { month_label: "Feb '24", revenue_usd: 6263.8, transaction_count: 34 },
   { month_label: "Mar '24", revenue_usd: 4117.5, transaction_count: 22 },
   { month_label: "Apr '24", revenue_usd: 3432.02, transaction_count: 14 },
-  { month_label: "May '24", revenue_usd: 3238.2, transaction_count: 17 },
-  { month_label: "Jun '24", revenue_usd: 3483.4, transaction_count: 20 },
-  { month_label: "Jul '24", revenue_usd: 4824.01, transaction_count: 30 },
-  { month_label: "Aug '24", revenue_usd: 2565.1, transaction_count: 21 },
-  { month_label: "Sep '24", revenue_usd: 2567.0, transaction_count: 9, is_partial: true },
 ];
 
 /* Palette validated with the dataviz six-checks script (single series → one hue). */
@@ -53,7 +48,7 @@ function yFor(value_usd: number): number {
 const USD_FORMAT = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
 
 /**
- * Chart slot 1 of the flagship case study: seventeen months of self-serve
+ * Chart slot 1 of the flagship case study: twelve months of self-serve
  * revenue in a flat $2.5K–$6.3K band — the demand-signal-and-margin-trap
  * picture in one figure. Column chart, single hue, band annotated.
  */
@@ -81,7 +76,7 @@ export function QuicsnapRevenueChart() {
             textTransform: "uppercase",
           }}
         >
-          Verified export · 320 transactions
+          The service, month by month
         </div>
         <div
           style={{
@@ -92,17 +87,17 @@ export function QuicsnapRevenueChart() {
             marginTop: 4,
           }}
         >
-          Seventeen flat months
+          Twelve flat months
         </div>
         <div style={{ fontSize: 13.5, color: "var(--ink-3)", marginTop: 2, marginBottom: 12 }}>
-          Self-serve revenue by month, May 2023 – Sep 2024 (USD)
+          Self-serve revenue by month, May 2023 – Apr 2024 (USD)
         </div>
 
         <svg
           viewBox={`0 0 ${PLOT.width} ${PLOT.height}`}
           style={{ width: "100%", height: "auto", display: "block" }}
           role="img"
-          aria-label="Column chart of QuicSnap monthly self-serve revenue, May 2023 to September 2024. Revenue stays inside a flat band between $2,500 and $6,300 for seventeen months, peaking at $6,264 in February 2024."
+          aria-label="Column chart of QuicSnap monthly self-serve revenue, May 2023 to April 2024. Revenue stays inside a flat band between $2,500 and $6,300 for twelve months, peaking at $6,264 in February 2024."
         >
           {/* Flat-band annotation behind everything */}
           <rect
@@ -172,7 +167,7 @@ export function QuicsnapRevenueChart() {
                       Q ${x + bar_width} ${bar_top} ${x + bar_width} ${bar_top + 4}
                       L ${x + bar_width} ${baseline_y} Z`}
                   fill={BAR_COLOR}
-                  opacity={entry.is_partial ? 0.4 : is_hovered ? 1 : 0.92}
+                  opacity={is_hovered ? 1 : 0.92}
                   style={{
                     transformBox: "fill-box",
                     transformOrigin: "bottom",
@@ -241,53 +236,10 @@ export function QuicsnapRevenueChart() {
               zIndex: 2,
             }}
           >
-            <strong>{hovered.month_label}</strong>
-            {hovered.is_partial ? " (to Sep 12)" : ""} · {USD_FORMAT.format(hovered.revenue_usd)} ·{" "}
+            <strong>{hovered.month_label}</strong> · {USD_FORMAT.format(hovered.revenue_usd)} ·{" "}
             {hovered.transaction_count} txns
           </div>
         )}
-
-        {/* Accessible table view of the same data */}
-        <details style={{ marginTop: 12 }}>
-          <summary style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--ink-3)", cursor: "pointer" }}>
-            View as table
-          </summary>
-          <div style={{ overflowX: "auto", marginTop: 8 }}>
-            <table style={{ borderCollapse: "collapse", fontSize: 13, fontVariantNumeric: "tabular-nums" }}>
-              <thead>
-                <tr>
-                  {["Month", "Revenue", "Transactions"].map((header) => (
-                    <th
-                      key={header}
-                      style={{
-                        textAlign: "left",
-                        padding: "4px 14px 4px 0",
-                        borderBottom: "1px solid var(--border-soft)",
-                        color: "var(--ink)",
-                      }}
-                    >
-                      {header}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {MONTHLY_REVENUE.map((entry) => (
-                  <tr key={entry.month_label}>
-                    <td style={{ padding: "3px 14px 3px 0", color: "var(--ink-2)" }}>
-                      {entry.month_label}
-                      {entry.is_partial ? " (partial, to Sep 12)" : ""}
-                    </td>
-                    <td style={{ padding: "3px 14px 3px 0", color: "var(--ink-2)" }}>
-                      {USD_FORMAT.format(entry.revenue_usd)}
-                    </td>
-                    <td style={{ padding: "3px 14px 3px 0", color: "var(--ink-2)" }}>{entry.transaction_count}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </details>
       </div>
     </Card>
   );

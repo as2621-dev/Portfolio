@@ -10,15 +10,23 @@ import type { LongformArticle } from "./longform-types";
  */
 export const ecommerceBrandsArticle: LongformArticle = {
   article_eyebrow: "Founder era",
-  article_title: "My first products came in a kraft box",
+  article_title: "A Baby Cherry® & Decor & More® — two consumer brands built on Amazon",
   article_subtitle:
-    "A Baby Cherry® & Decor & More® — two consumer brands, sourced from factories in China, Vietnam, and India, trademarked, listed, priced, reviewed, and returned. The full physical-product loop.",
-  article_tags: ["DTC", "Amazon", "FBA", "Private Label", "Sourcing", "PPC", "Inventory"],
+    "My first products came in a kraft box — sourced from factories in China, Vietnam, and India, trademarked, listed, priced, reviewed, and returned. The full physical-product loop.",
+  article_tags: ["Founder", "P&L owner", "Brand building", "A/B testing"],
   article_meta: [
     { meta_label: "Role", meta_value: "Founder — sourcing, listings, pricing, growth, and the P&L." },
     { meta_label: "Timeline", meta_value: "2018 — 2023 (documented activity; latest confirmed sale Nov 2023)." },
+    {
+      meta_label: "Status",
+      meta_value: "Wound down — the product-photography struggle became [QuicSnap](/work/quicsnap-shutter-labs).",
+    },
     { meta_label: "Team", meta_value: "8 people." },
-    { meta_label: "Marketplace", meta_value: "Amazon (FBA)." },
+    {
+      meta_label: "Tech",
+      meta_value:
+        "Amazon FBA · private-label sourcing · PPC campaign design · listing A/B testing · inventory planning.",
+    },
   ],
   article_stats: [
     { stat_value: "2", stat_label: "brands built, both trademarked" },

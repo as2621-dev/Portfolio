@@ -1,0 +1,120 @@
+<!doctype html>
+<!--
+  Viewer shell ONLY — presentational crop + zoom for the portfolio article column.
+  The product artifact is ./app-rendered-snapshot.html, embedded below VERBATIM
+  (self-contained render of the running Canvas app, captured via the project's
+  own scripts/snapshot-app-html.ts on 26 Jul 2026: stylesheets inlined, scripts
+  stripped). This shell magnifies one region of that file — the left project
+  tree, x0 y40 w216 h240 in the 1440x900 capture — and authors nothing inside it.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Canvas — project tree, zoomed from the verbatim snapshot</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        background: #0d0d0d;
+        overflow: hidden;
+      }
+      .capture_note {
+        display: none;
+        font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+        font-size: 11px;
+        letter-spacing: 0.06em;
+        color: #9a9a9a;
+        background: #161616;
+        border-bottom: 1px solid #2a2a2a;
+        padding: 7px 12px;
+        text-transform: uppercase;
+      }
+      @media (min-width: 700px) {
+        .capture_note {
+          display: block;
+        }
+      }
+      .crop_stage {
+        position: relative;
+        height: 100%;
+        overflow: hidden;
+      }
+      .crop_frame_wrap {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 1440px;
+        height: 900px;
+        transform-origin: 0 0;
+      }
+      .crop_frame {
+        width: 1440px;
+        height: 900px;
+        border: 0;
+        background: #0d0d0d;
+        /* Static magnifier: no interaction, so nested scrolling can't break the crop. */
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="capture_note">
+      zoom — project tree · same verbatim capture, magnified · app-rendered-snapshot.html, 26 jul 2026
+    </div>
+    <div class="crop_stage" id="crop_stage">
+      <div class="crop_frame_wrap" id="crop_frame_wrap">
+        <iframe
+          class="crop_frame"
+          src="./app-rendered-snapshot.html"
+          title="Canvas app snapshot, cropped to the project tree"
+        ></iframe>
+      </div>
+    </div>
+    <script>
+      (function fit_crop_to_viewport() {
+        /* Region of the 1440x900 capture to magnify: the left sidebar's top —
+           New project, filter, and the Raw / Inspiration / Finalized tree. */
+        var crop_x = 0;
+        var crop_y = 40;
+        var crop_width = 216;
+        var crop_height = 240;
+        var stage_node = document.getElementById("crop_stage");
+        var wrap_node = document.getElementById("crop_frame_wrap");
+        /* Dim the capture outside the crop so the region reads as a magnifier
+           over the full app, not as its own screen. Scrims live in unscaled
+           1440x900 coordinates and transform along with the artifact. */
+        var scrim_rects = [
+          { x: 0, y: 0, w: 1440, h: crop_y },
+          { x: 0, y: crop_y + crop_height, w: 1440, h: 900 - crop_y - crop_height },
+          { x: 0, y: crop_y, w: crop_x, h: crop_height },
+          { x: crop_x + crop_width, y: crop_y, w: 1440 - crop_x - crop_width, h: crop_height },
+        ];
+        scrim_rects.forEach((rect) => {
+          if (rect.w <= 0 || rect.h <= 0) return;
+          var scrim_node = document.createElement("div");
+          scrim_node.style.cssText =
+            "position:absolute;background:rgba(10,10,10,0.72);pointer-events:none;" +
+            "left:" + rect.x + "px;top:" + rect.y + "px;width:" + rect.w + "px;height:" + rect.h + "px;";
+          wrap_node.appendChild(scrim_node);
+        });
+        function apply_crop() {
+          var scale_factor = Math.min(stage_node.clientWidth / crop_width, stage_node.clientHeight / crop_height);
+          var offset_x = (stage_node.clientWidth - crop_width * scale_factor) / 2;
+          var offset_y = (stage_node.clientHeight - crop_height * scale_factor) / 2;
+          wrap_node.style.transform =
+            "translate(" +
+            (offset_x - crop_x * scale_factor).toFixed(2) +
+            "px, " +
+            (offset_y - crop_y * scale_factor).toFixed(2) +
+            "px) scale(" +
+            scale_factor.toFixed(4) +
+            ")";
+        }
+        window.addEventListener("resize", apply_crop);
+        apply_crop();
+      })();
+    </script>
+  </body>
+</html>

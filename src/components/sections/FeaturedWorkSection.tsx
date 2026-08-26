@@ -90,7 +90,7 @@ export function FeaturedWorkSection() {
         <Reveal delay_ms={160}>
           <LinkTile
             title="Four more shipped products"
-            meta="Orbit · blip · JobFairy · ElectricityBillSaved — each designed, built, and shipped solo, with the agent architectures and evals documented."
+            meta="Orbit · blip · JobFairy · Astrape — each designed, built, and shipped solo, with the agent architectures and evals documented."
             emoji="🛠️"
             href="/projects"
           />

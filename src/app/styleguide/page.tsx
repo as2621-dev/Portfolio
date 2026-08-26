@@ -79,17 +79,6 @@ export default function StyleguidePage() {
       }}
     >
       <header style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-        <span
-          style={{
-            fontFamily: "var(--font-mono)",
-            fontSize: 12,
-            letterSpacing: "0.08em",
-            fontWeight: 600,
-            color: "var(--orange-600)",
-          }}
-        >
-          FOLIO POP
-        </span>
         <h1 style={{ fontSize: "var(--text-hero)", fontWeight: 800 }}>Design system styleguide</h1>
         <p style={{ fontSize: 16, color: "var(--ink-2)", maxWidth: "60ch" }}>
           Every token and component wired into the Next.js scaffold. If it renders here, section-building can compose it

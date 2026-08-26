@@ -3,9 +3,9 @@ import { ArticleLayout } from "@/components/longform/ArticleLayout";
 import { canvasArticle } from "@/content/case-canvas";
 
 export const metadata: Metadata = {
-  title: "Building on the model that killed my startup — Canvas · Ashesh Srivastava",
+  title: "Canvas — an IDE for image generation · Ashesh Srivastava",
   description:
-    "Canvas: a self-hosted image-generation workspace with three parallel lanes, six models, and the price printed on the button — built on top of frontier models instead of against them.",
+    "Why I stopped generating images in a chat box and built a three-panel workspace instead: parallel workspaces, research beside the prompt, and the price on the button before every run.",
 };
 
 export default function CanvasCaseStudyPage() {

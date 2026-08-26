@@ -1,13 +1,24 @@
 import type React from "react";
+import { AstrapePipelineDiagram } from "@/components/charts/AstrapePipelineDiagram";
 import { BakeoffComparisonChart } from "@/components/charts/BakeoffComparisonChart";
+import { BlipPipelineDiagram } from "@/components/charts/BlipPipelineDiagram";
+import { CanvasArchitectureDiagram } from "@/components/charts/CanvasArchitectureDiagram";
 import { CompanyTimelineStrip } from "@/components/charts/CompanyTimelineStrip";
+import { GtmOutboundDiagram } from "@/components/charts/GtmOutboundDiagram";
+import { JobFairyPipelineDiagram } from "@/components/charts/JobFairyPipelineDiagram";
 import { MarketplacePipelineDiagram } from "@/components/charts/MarketplacePipelineDiagram";
+import { OrbitPipelineDiagram } from "@/components/charts/OrbitPipelineDiagram";
+import { OrbitTriageDiagram } from "@/components/charts/OrbitTriageDiagram";
+import { OrbitVoiceHandoff } from "@/components/charts/OrbitVoiceHandoff";
 import { QuicsnapRevenueChart } from "@/components/charts/QuicsnapRevenueChart";
+import { BlipReelPhoneDemo } from "@/components/demo/BlipReelPhoneDemo";
+import { PhoneDemoVideo } from "@/components/demo/PhoneDemoVideo";
 import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import type { LongformBlock, LongformChartId } from "@/content/longform-types";
 import { InlineText } from "./InlineText";
+import { ProofFrame } from "./ProofFrame";
 
 export interface BlockRendererProps {
   blocks: LongformBlock[];
@@ -23,8 +34,16 @@ const PARAGRAPH_STYLE: React.CSSProperties = {
 const CHARTS: Record<LongformChartId, React.ComponentType> = {
   "quicsnap-monthly-revenue": QuicsnapRevenueChart,
   "company-timeline": CompanyTimelineStrip,
+  "gtm-outbound": GtmOutboundDiagram,
   "bakeoff-comparison": BakeoffComparisonChart,
   "marketplace-pipeline": MarketplacePipelineDiagram,
+  "canvas-architecture": CanvasArchitectureDiagram,
+  "blip-pipeline": BlipPipelineDiagram,
+  "astrape-pipeline": AstrapePipelineDiagram,
+  "jobfairy-pipeline": JobFairyPipelineDiagram,
+  "orbit-pipeline": OrbitPipelineDiagram,
+  "orbit-triage": OrbitTriageDiagram,
+  "orbit-voice-handoff": OrbitVoiceHandoff,
 };
 
 /** Heavier visual blocks get a scroll reveal; plain prose renders statically. */
@@ -294,6 +313,85 @@ export function BlockRenderer({ blocks }: BlockRendererProps) {
               key,
             );
 
+          case "phone_demo":
+            return withReveal(
+              <figure style={{ margin: 0 }}>
+                <BlipReelPhoneDemo />
+                {block.demo_caption && (
+                  <figcaption
+                    style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--ink-3)", marginTop: 12 }}
+                  >
+                    <InlineText text={block.demo_caption} />
+                  </figcaption>
+                )}
+              </figure>,
+              key,
+            );
+
+          case "phone_video":
+            return withReveal(
+              <figure style={{ margin: 0 }}>
+                <PhoneDemoVideo
+                  video_src={block.video_src}
+                  video_poster_src={block.video_poster_src}
+                  video_aria_label={block.video_aria_label}
+                />
+                {block.video_caption && (
+                  <figcaption
+                    style={{ fontFamily: "var(--font-mono)", fontSize: 12, color: "var(--ink-3)", marginTop: 12 }}
+                  >
+                    <InlineText text={block.video_caption} />
+                  </figcaption>
+                )}
+              </figure>,
+              key,
+            );
+
+          case "html_embed":
+            return withReveal(
+              <figure style={{ margin: 0 }}>
+                <div
+                  style={{
+                    border: "2px solid var(--ink)",
+                    borderRadius: "var(--radius-md)",
+                    boxShadow: "var(--shadow-pop-sm)",
+                    background: "var(--paper)",
+                    overflow: "hidden",
+                  }}
+                >
+                  <ProofFrame
+                    embed_src={block.embed_src}
+                    embed_title={block.embed_title}
+                    frame_height={block.embed_height ?? 560}
+                    min_content_width={block.embed_min_content_width}
+                  />
+                </div>
+                <figcaption
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: 12,
+                    flexWrap: "wrap",
+                    fontFamily: "var(--font-mono)",
+                    fontSize: 12,
+                    color: "var(--ink-3)",
+                    marginTop: 8,
+                  }}
+                >
+                  <span>{block.embed_caption ? <InlineText text={block.embed_caption} /> : block.embed_title}</span>
+                  <a
+                    href={block.embed_src}
+                    target="_blank"
+                    rel="noreferrer"
+                    style={{ color: "var(--orange-600)", fontWeight: 600, whiteSpace: "nowrap" }}
+                  >
+                    open full page ↗
+                  </a>
+                </figcaption>
+              </figure>,
+              key,
+            );
+
           case "act_divider":
             return (
               <div
@@ -301,19 +399,8 @@ export function BlockRenderer({ blocks }: BlockRendererProps) {
                 id={block.anchor_id}
                 style={{ borderTop: "2px solid var(--ink)", paddingTop: 28, marginTop: 32, scrollMarginTop: 96 }}
               >
-                <div
-                  style={{
-                    fontFamily: "var(--font-mono)",
-                    fontSize: 12,
-                    letterSpacing: "0.08em",
-                    fontWeight: 600,
-                    color: "var(--orange-600)",
-                    textTransform: "uppercase",
-                    marginBottom: 6,
-                  }}
-                >
-                  {block.act_eyebrow}
-                </div>
+                {/* Ash (2026-08-12): orange eyebrow kickers are retired site-wide —
+                    act_eyebrow stays in the content modules but is not rendered. */}
                 <h2 style={{ fontSize: 30, fontWeight: 800, margin: 0 }}>
                   <InlineText text={block.act_title} />
                 </h2>
@@ -342,6 +429,10 @@ export function BlockRenderer({ blocks }: BlockRendererProps) {
                   fontSize: 13.5,
                   lineHeight: 1.6,
                   color: "var(--ink)",
+                  // Reason: code blocks carry prose-length artifacts (Orbit's
+                  // handoff prompt); pre-wrap keeps them readable instead of a
+                  // horizontal scroll strip, overflowX stays as the fallback.
+                  whiteSpace: "pre-wrap",
                   overflowX: "auto",
                 }}
               >

@@ -1,7 +1,10 @@
 import type React from "react";
 
 export interface SectionHeaderProps {
-  /** Small mono eyebrow above the title (ALL-CAPS by convention). */
+  /**
+   * Ash (2026-08-12): orange eyebrow kickers are retired site-wide. The prop is
+   * still accepted so call sites keep their labels in source, but it never renders.
+   */
   eyebrow?: string;
   title: string;
   /** Optional trailing node, e.g. a "View all →" button. */
@@ -10,13 +13,13 @@ export interface SectionHeaderProps {
 }
 
 /**
- * Section title block: a mono orange eyebrow, a chunky display heading, and an
- * optional right-aligned action.
+ * Section title block: a chunky display heading and an optional right-aligned
+ * action.
  *
  * @example
- * <SectionHeader eyebrow="SELECTED WORK" title="Things I've shipped" action={<Button size="sm">All</Button>} />
+ * <SectionHeader title="Things I've shipped" action={<Button size="sm">All</Button>} />
  */
-export function SectionHeader({ eyebrow, title, action, style }: SectionHeaderProps) {
+export function SectionHeader({ title, action, style }: SectionHeaderProps) {
   return (
     <div
       style={{
@@ -28,20 +31,6 @@ export function SectionHeader({ eyebrow, title, action, style }: SectionHeaderPr
       }}
     >
       <div>
-        {eyebrow && (
-          <div
-            style={{
-              fontFamily: "var(--font-mono)",
-              fontSize: 12,
-              letterSpacing: "0.08em",
-              fontWeight: 600,
-              color: "var(--orange-600)",
-              marginBottom: 6,
-            }}
-          >
-            {eyebrow}
-          </div>
-        )}
         <h2
           style={{
             fontFamily: "var(--font-display)",

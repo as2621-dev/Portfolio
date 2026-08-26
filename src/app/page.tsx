@@ -2,6 +2,7 @@ import type React from "react";
 import { MascotLogo } from "@/components/brand/MascotLogo";
 import { Reveal } from "@/components/motion/Reveal";
 import { JourneySection } from "@/components/sections/JourneySection";
+import { PrinciplesSection } from "@/components/sections/PrinciplesSection";
 import { SkillsSection } from "@/components/sections/SkillsSection";
 import { SocialLinksRow } from "@/components/sections/SocialLinksRow";
 import { Badge } from "@/components/ui/Badge";
@@ -16,8 +17,9 @@ function riseStyle(order: number): React.CSSProperties {
 /**
  * Home: survive the 7-second scan, then walk the reader through the journey.
  * Hero → credibility band → skills overview → journey blocks (venture blocks
- * with skill tags, then the own-products tiles) → sign-off GIF.
- * Journey content: src/content/journey.ts.
+ * with skill tags, then the own-products tiles) → principles of building →
+ * sign-off GIF. Journey content: src/content/journey.ts; principles content:
+ * src/content/principles.ts.
  */
 export default function HomePage() {
   return (
@@ -36,21 +38,6 @@ export default function HomePage() {
         <div className="fp-rise" style={riseStyle(0)}>
           <MascotLogo size={160} variant="cutout" />
         </div>
-
-        <span
-          className="fp-rise"
-          style={{
-            ...riseStyle(1),
-            fontFamily: "var(--font-mono)",
-            fontSize: 12,
-            letterSpacing: "0.08em",
-            fontWeight: 600,
-            color: "var(--orange-600)",
-            textTransform: "uppercase",
-          }}
-        >
-          {site.role_line}
-        </span>
 
         <h1 className="fp-rise" style={{ ...riseStyle(2), fontSize: "var(--text-hero)", fontWeight: 800 }}>
           {site.wordmark_text}
@@ -105,7 +92,7 @@ export default function HomePage() {
           style={{ ...riseStyle(7), display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center", marginTop: 8 }}
         >
           <Button href={`mailto:${site.primary_email}`}>Email me →</Button>
-          <Button variant="outline" href="#">
+          <Button variant="outline" href={site.resume_pdf_href} target="_blank" rel="noopener">
             Download résumé
           </Button>
         </div>
@@ -117,6 +104,7 @@ export default function HomePage() {
 
       <SkillsSection />
       <JourneySection />
+      <PrinciplesSection />
 
       {/* ── Sign-off ── */}
       <Reveal>

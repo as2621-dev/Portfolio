@@ -17,8 +17,8 @@ export interface SkillPillProps extends React.HTMLAttributes<HTMLSpanElement> {
  * blocks and product tiles that earned it.
  *
  * @example
- * <SkillPill skill_id="evals" />
- * <SkillPill skill_id="gtm" pill_size="sm" />
+ * <SkillPill skill_id="llm-evals" />
+ * <SkillPill skill_id="agent-architecture" pill_size="sm" />
  */
 export function SkillPill({ skill_id, pill_size = "md", style, ...rest }: SkillPillProps) {
   const [hovered, setHovered] = useState(false);

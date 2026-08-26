@@ -118,9 +118,11 @@ export function CompanyTimelineStrip() {
   const isRevealed = useChartReveal(containerRef);
 
   return (
-    /* Breakout: wider than the 680px article column so the right end of the
-       strip (the punchline) is visible without horizontal scroll on desktop. */
-    <div style={{ width: "min(92vw, 940px)", marginLeft: "calc(50% - min(46vw, 470px))" }}>
+    /* Fits the article column (owner request 2026-08-09; was a 940px breakout).
+       The strip scales down to the column width with a 560px floor, so the
+       right end (the punchline) is visible without horizontal scroll; below
+       560px (phones) it pans instead of shrinking further. */
+    <div style={{ width: "100%" }}>
       <Card padding={24}>
         <div ref={containerRef}>
           <div
@@ -184,7 +186,7 @@ export function CompanyTimelineStrip() {
           <div style={{ overflowX: "auto" }}>
             <svg
               viewBox={`0 0 ${STRIP.width} ${STRIP.height}`}
-              style={{ width: "100%", minWidth: 860, height: "auto", display: "block" }}
+              style={{ width: "100%", minWidth: 560, height: "auto", display: "block" }}
               role="img"
               aria-label="Timeline from 2022 to 2025. Below the line: QuicSnap launches October 2022; the June 2024 executive summary states AI alone is not possible; technical cofounders join September 2024; Shutter Labs incorporates February 2025; furniture narrowing and YC application May 2025; a Fortune 500 retailer POC mid-2025; we stop November 2025. Above the line: Flux.1 ships August 1 2024, Nano Banana August 26 2025, Nano Banana Pro November 20 2025."
             >

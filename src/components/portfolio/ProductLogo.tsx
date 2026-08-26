@@ -1,6 +1,6 @@
 import type React from "react";
 
-export type ProductLogoId = "canvas" | "orbit" | "blip" | "jobfairy" | "electricitybillsaved";
+export type ProductLogoId = "canvas" | "orbit" | "blip" | "jobfairy" | "astrape";
 
 export interface ProductLogoProps {
   logo_id: ProductLogoId;
@@ -9,70 +9,53 @@ export interface ProductLogoProps {
 }
 
 /**
- * Simple, unique logo marks for the solo-built products — drawn in the Folio
- * Pop language (ink outlines, palette fills) so the set reads as one family:
- * Canvas = stacked frames · Orbit = planet + ring · blip = reel + play ·
- * JobFairy = sparkle · ElectricityBillSaved = bolt. Rendered as a bordered
+ * Logo marks for the solo-built products, redrawn in the Folio Pop language
+ * (ink outlines, palette fills) so the set reads as one family. Canvas, blip
+ * and JobFairy are the ACTUAL product marks ported from their repos:
+ * Canvas = canvas frame + brush stroke (`canvas/src/components/brand/logo.tsx`,
+ * emerald accent → mint-500) · blip = the wordmark's radar-signal tittle, dot
+ * + 3 arcs at the verbatim 46° geometry (`News20/src/components/BlipLogo.tsx`,
+ * brand yellow → sun-400) · JobFairy = the four-point spark, exact app-nav
+ * path (`JobFairy/src/components/nav.tsx`, ember-500 → orange-500). Orbit has
+ * no product mark, so it gets a drawn-here orbit system (core + two ranked
+ * source dots); Astrape keeps its bolt. Rendered as a bordered
  * badge, same footprint as the LinkTile icon box. Decorative — the tile title
  * carries the name, so the badge is aria-hidden.
  */
 const LOGO_MARKS: Record<ProductLogoId, React.ReactNode> = {
   canvas: (
-    <g>
-      <rect x="8" y="4" width="12" height="12" rx="2.5" fill="var(--blue-100)" stroke="var(--ink)" strokeWidth="1.8" />
-      <rect
-        x="4"
-        y="8"
-        width="12"
-        height="12"
-        rx="2.5"
-        fill="var(--orange-500)"
-        stroke="var(--ink)"
-        strokeWidth="1.8"
-      />
+    <g fill="none" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="18" height="18" rx="4" stroke="var(--ink)" strokeWidth="1.8" />
+      <path d="M7 15 L11 9 L14 13 L17 8" stroke="var(--mint-500)" strokeWidth="2" />
     </g>
   ),
   orbit: (
     <g>
-      <ellipse
-        cx="12"
-        cy="12"
-        rx="10"
-        ry="4.2"
-        transform="rotate(-24 12 12)"
-        fill="none"
-        stroke="var(--ink)"
-        strokeWidth="1.6"
-      />
-      <circle cx="12" cy="12" r="4.6" fill="var(--orange-500)" stroke="var(--ink)" strokeWidth="1.8" />
-      <circle cx="20.2" cy="7.4" r="2" fill="var(--blue-700)" stroke="var(--ink)" strokeWidth="1.4" />
+      <circle cx="12" cy="12" r="9" fill="none" stroke="var(--ink)" strokeWidth="1.5" />
+      <circle cx="12" cy="12" r="5.6" fill="none" stroke="var(--ink)" strokeWidth="1.5" />
+      <circle cx="12" cy="12" r="2.6" fill="var(--orange-500)" stroke="var(--ink)" strokeWidth="1.6" />
+      <circle cx="18.1" cy="5.4" r="1.8" fill="var(--blue-700)" stroke="var(--ink)" strokeWidth="1.4" />
+      <circle cx="7.2" cy="14.8" r="1.5" fill="var(--sun-400)" stroke="var(--ink)" strokeWidth="1.3" />
     </g>
   ),
   blip: (
-    <g>
-      <rect x="7" y="3" width="10" height="18" rx="3" fill="var(--mint-100)" stroke="var(--ink)" strokeWidth="1.8" />
-      <path
-        d="M10.5 9 L15.5 12 L10.5 15 Z"
-        fill="var(--orange-500)"
-        stroke="var(--ink)"
-        strokeWidth="1.4"
-        strokeLinejoin="round"
-      />
+    <g fill="none" stroke="var(--ink)" strokeWidth="1.8" strokeLinecap="round">
+      <path d="M10.72 8.98 A4.2 4.2 0 0 1 10.72 15.02" />
+      <path d="M13.5 6.1 A8.2 8.2 0 0 1 13.5 17.9" opacity="0.85" />
+      <path d="M16.28 3.23 A12.2 12.2 0 0 1 16.28 20.77" opacity="0.7" />
+      <circle cx="7.8" cy="12" r="2.6" fill="var(--sun-400)" />
     </g>
   ),
   jobfairy: (
-    <g>
-      <path
-        d="M12 3 L13.8 10.2 L21 12 L13.8 13.8 L12 21 L10.2 13.8 L3 12 L10.2 10.2 Z"
-        fill="var(--coral-100)"
-        stroke="var(--ink)"
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-      />
-      <circle cx="18.8" cy="5.2" r="1.7" fill="var(--orange-500)" stroke="var(--ink)" strokeWidth="1.3" />
-    </g>
+    <path
+      d="M12 2l2.4 7.6L22 12l-7.6 2.4L12 22l-2.4-7.6L2 12l7.6-2.4Z"
+      fill="var(--orange-500)"
+      stroke="var(--ink)"
+      strokeWidth="1.8"
+      strokeLinejoin="round"
+    />
   ),
-  electricitybillsaved: (
+  astrape: (
     <path
       d="M13.5 2 L5 13.5 L10.8 13.5 L9.5 22 L19 10 L12.8 10 Z"
       fill="var(--sun-400)"

@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>blip — Gen-4 interview onboarding</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#020617;
+  --ink:#ffffff;
+  --muted:#A1A1AA;
+  --accent:#3B82F6;
+  --hiccup:#E8B7BC;
+  --line:rgba(255,255,255,.10);
+  --line-12:rgba(255,255,255,.12);
+  --line-15:rgba(255,255,255,.15);
+  --line-20:rgba(255,255,255,.20);
+  --fill:rgba(255,255,255,.05);
+  --fill-10:rgba(255,255,255,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;overflow:hidden}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+.app{max-width:480px;margin:0 auto;height:100%;display:flex;flex-direction:column}
+.progress-wrap{padding:22px 32px 0}
+.progress-track{height:3px;width:100%;border-radius:9999px;background:var(--fill-10);overflow:hidden}
+.progress-fill{height:100%;border-radius:9999px;background:var(--accent);width:0%;transition:width .3s ease}
+.scroll{flex:1;display:flex;flex-direction:column;gap:16px;overflow-y:auto;padding:24px}
+.bot{display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+.bot .eyebrow{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.05em;color:var(--muted)}
+.bot .bubble{max-width:88%;border:1px solid var(--line);background:var(--fill);border-radius:16px;padding:12px 16px;font-size:15px;line-height:1.375}
+.me{display:flex;flex-direction:column;gap:4px;align-items:flex-end}
+.me .bubble{max-width:85%;background:#fff;color:var(--bg);border-radius:16px;padding:10px 16px;font-size:14px;font-weight:500;text-align:right;line-height:1.4}
+.me .edit{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.05em;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border-radius:9999px;border:1px solid var(--line-15);background:var(--fill);padding:8px 16px;font-size:14px;color:var(--ink)}
+.chip:active{background:rgba(255,255,255,.15)}
+.chip.on{background:#fff;color:var(--bg);border-color:#fff;font-weight:500}
+.chip.skip{border-style:dashed;border-color:var(--line-20);color:var(--muted);font-size:13px;background:none}
+.controls{display:flex;flex-wrap:wrap;align-items:center;gap:12px}
+.done{border-radius:9999px;background:#fff;color:var(--bg);padding:10px 20px;font-size:14px;font-weight:600}
+.done:disabled{opacity:.4;cursor:default}
+.selcount{font-family:"JetBrains Mono",monospace;font-size:10px;letter-spacing:.05em;color:var(--muted)}
+.typing{display:flex;align-items:center;gap:6px;padding:8px 4px}
+.typing span{width:6px;height:6px;border-radius:9999px;background:rgba(255,255,255,.4);animation:pulse 1s ease-in-out infinite}
+.typing span:nth-child(2){animation-delay:.15s}
+.typing span:nth-child(3){animation-delay:.3s}
+@keyframes pulse{0%,100%{opacity:.3}50%{opacity:1}}
+.composer{display:flex;align-items:center;gap:8px;border-top:1px solid var(--line);padding:16px 24px}
+.composer input{flex:1;border-radius:16px;border:1px solid var(--line-15);background:var(--fill);padding:10px 16px;font-size:14px;font-family:inherit;color:var(--ink);outline:none}
+.composer input::placeholder{color:rgba(255,255,255,.35)}
+.composer input:focus{border-color:rgba(255,255,255,.4)}
+.composer input:disabled{opacity:.4}
+.composer .send{border-radius:16px;background:#fff;color:var(--bg);padding:10px 16px;font-size:14px;font-weight:600}
+.composer .send:disabled{opacity:.3;cursor:default}
+.card{display:flex;flex-direction:column;gap:12px;padding-top:4px}
+.card .eyebrow{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.05em;color:var(--muted)}
+.card h2{font-size:17px;font-weight:600;line-height:1.35}
+.card .gloss{font-size:13px;color:var(--muted);line-height:1.45}
+.card ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.card li{border-radius:16px;border:1px solid var(--line-12);background:var(--fill);padding:10px 16px;font-size:14px}
+.cta{width:100%;border-radius:9999px;background:#fff;color:var(--bg);padding:12px 16px;font-size:15px;font-weight:600;text-align:center}
+.cta:disabled{opacity:.4;cursor:default}
+.linkish{font-size:13px;color:var(--muted);text-decoration:underline;text-underline-offset:4px;align-self:center}
+.budget-status{display:flex;align-items:center;justify-content:space-between;font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.05em}
+.budget-status .total{color:var(--accent)}
+.sumrow{display:flex;align-items:center;justify-content:space-between;gap:12px;border-radius:16px;border:1px solid var(--line-12);background:var(--fill);padding:10px 16px;font-size:14px}
+.sumrow .n{font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--accent)}
+.toast{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#fff;color:var(--bg);font-family:"JetBrains Mono",monospace;font-size:11px;padding:8px 14px;border-radius:9999px;opacity:0;pointer-events:none;transition:opacity .25s ease;max-width:90%;text-align:center}
+.toast.show{opacity:1}
+@media (prefers-reduced-motion: reduce){
+  .progress-fill{transition:none}
+  .typing span{animation:none}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="progress-wrap" aria-hidden="true"><div class="progress-track"><div class="progress-fill" id="progress"></div></div></div>
+  <div class="scroll" id="scroll"></div>
+  <div class="composer" id="composer">
+    <input id="input" type="text" maxlength="200" placeholder="Type your own…" autocomplete="off">
+    <button class="send" id="send" type="button">Send</button>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* Replica of the shipped Gen-4 interview (agents/interview/*, InterviewChat.tsx).
+   The state machine, turn order, and all deterministic copy are verbatim from the
+   repo. Layer-2 questions and chips are LLM-generated in production; here they are
+   canned, using the labels recorded in the 2026-07-26 persona runs where captured.
+   The closing screen reflects the post-2026-07-07 build: the YouTube/X source
+   integration was removed, so the 30 divides across the sections you picked. */
+
+const SKIP_LABEL = "Not really / skip";
+const TYPE_OWN_LABEL = "Something else — type it";
+const WHO_NOTHING_LABEL = "Nothing specific →";
+const CATEGORY_SKIP_ACCEPT = "Skip this topic for now";
+const CATEGORY_SKIP_DECLINE = "Show me some options";
+const BUILD_FEED_ACCEPT = "Just build my feed";
+const BUILD_FEED_DECLINE = "Keep exploring";
+const MAX_WHO_DRILLS = 8;
+const TAP_TARGET = 15;
+
+const ROOTS = [
+  { slug: "ai", label: "AI" },
+  { slug: "geopolitics", label: "Geopolitics" },
+  { slug: "business", label: "Business" },
+  { slug: "environment", label: "Environment" },
+  { slug: "politics", label: "Politics" },
+  { slug: "tech", label: "Tech" },
+  { slug: "sport", label: "Sport" },
+  { slug: "arts", label: "Arts" },
+];
+
+/* In production these come from Gemini live, worded from what you tapped or typed.
+   Labels marked with the persona runs are the ones actually recorded. */
+const SUBNICHE = {
+  ai: { q: "What areas of AI are you most interested in following?",
+        chips: ["Generative AI & LLMs", "Foundation Models", "AI doom & safety debates", "AI chip stocks", "Robotics & agents", "Open-source models"] },
+  geopolitics: { q: "Which areas of geopolitics do you want to follow closely?",
+        chips: ["Chip export controls", "US–China", "Middle East", "Europe & NATO", "India & neighbours", "Trade & sanctions"] },
+  business: { q: "What kind of business news do you actually read?",
+        chips: ["Tech Startups & IPOs", "Venture Capital & Startup Funding", "Markets & earnings", "Deals & M&A", "Energy & commodities", "Retail & consumer"] },
+  environment: { q: "Which parts of the environment story matter to you?",
+        chips: ["Climate policy", "Extreme weather", "Energy transition", "Oceans & wildlife", "Clean tech"] },
+  politics: { q: "What in politics do you want to keep up with?",
+        chips: ["Elections", "Policy & lawmaking", "Courts & justice", "Local politics"] },
+  tech: { q: "Which corners of tech pull you in?",
+        chips: ["Developer Tools", "Database Tech", "Chip Tech & Hardware", "Consumer tech reviews", "Tech industry insider views"] },
+  sport: { q: "Which sports do you follow the most?",
+        chips: ["Cricket", "Formula 1", "Football", "Tennis", "NBA", "Olympics"] },
+  arts: { q: "What kind of arts coverage do you enjoy?",
+        chips: ["Film & TV", "Music", "Books", "Design & architecture", "Museums & exhibitions"] },
+};
+
+const ANGLE_OPTIONS = ["Breaking developments", "Analysis & context", "Human stories", "Numbers & data"];
+
+/* ---------- state ---------- */
+const state = {
+  answeredTurns: 0,
+  litRoots: [],            // tap order, slugs
+  rootIndex: 0,            // next root to sub-niche
+  selections: [],          // { root, label }
+  consecutiveCategorySkips: 0,
+  pendingOffer: null,      // 'category_skip' | 'build_feed'
+  offerRoot: null,
+  whoQueue: null,          // built after sub-niche phase; items {kind:'single'|'folded', selections:[...]}
+  whoIndex: 0,
+  whoAnswers: [],          // { selection(s), names:[] }
+  tuneQueue: null,         // roots with >=1 selection
+  tuneIndex: 0,
+  tuneStep: "angle",       // 'angle' | 'mute'
+  angles: {}, mutes: {},
+  activeTurn: null,
+  tapped: [],              // labels tapped on the active turn
+};
+
+/* ---------- dom helpers ---------- */
+const scroller = document.getElementById("scroll");
+const composer = document.getElementById("composer");
+const input = document.getElementById("input");
+const sendBtn = document.getElementById("send");
+const progress = document.getElementById("progress");
+const toastEl = document.getElementById("toast");
+let toastTimer = null;
+
+function el(tag, cls, text) {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  if (text !== undefined) n.textContent = text;
+  return n;
+}
+function pin() { scroller.scrollTop = scroller.scrollHeight; }
+function toast(msg) {
+  toastEl.textContent = msg;
+  toastEl.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2600);
+}
+function setProgress(closing) {
+  const pct = closing ? 100 : Math.min(state.answeredTurns / TAP_TARGET, 0.92) * 100;
+  progress.style.width = pct + "%";
+}
+function botBubble(text) {
+  const wrap = el("div", "bot");
+  wrap.appendChild(el("span", "eyebrow", "blip"));
+  wrap.appendChild(el("div", "bubble", text));
+  scroller.appendChild(wrap);
+  pin();
+}
+function meBubble(text) {
+  const wrap = el("div", "me");
+  wrap.appendChild(el("div", "bubble", text));
+  const edit = el("button", "edit", "EDIT ›");
+  edit.type = "button";
+  edit.addEventListener("click", () => toast("IN THE APP, EDIT REOPENS THIS TURN"));
+  wrap.appendChild(edit);
+  scroller.appendChild(wrap);
+  pin();
+}
+function summarize(taps, typed) {
+  const parts = [...taps];
+  if (typed) parts.push("“" + typed + "”");
+  return parts.length ? parts.join(" · ") : "Skipped";
+}
+function typingThen(fn) {
+  const t = el("div", "typing");
+  t.appendChild(el("span")); t.appendChild(el("span")); t.appendChild(el("span"));
+  scroller.appendChild(t); pin();
+  setTimeout(() => { t.remove(); fn(); }, 650);
+}
+function slugify(text) {
+  return text.toLowerCase().replace(/&/g, "and").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 40);
+}
+
+/* ---------- turn rendering ---------- */
+/* turn: { prompt, options[], multi, allowSkip(label), allowTypeOwn, onSubmit(taps, typed) } */
+function presentTurn(turn) {
+  state.activeTurn = turn;
+  state.tapped = [];
+  botBubble(turn.prompt);
+
+  const zone = el("div");
+  zone.style.display = "flex";
+  zone.style.flexDirection = "column";
+  zone.style.gap = "12px";
+
+  const chips = el("div", "chips");
+  turn.options.forEach((label) => {
+    const c = el("button", "chip", label);
+    c.type = "button";
+    c.setAttribute("aria-pressed", "false");
+    c.addEventListener("click", () => {
+      if (!turn.multi) { finishTurn([label], ""); return; }
+      const i = state.tapped.indexOf(label);
+      if (i >= 0) { state.tapped.splice(i, 1); c.classList.remove("on"); c.setAttribute("aria-pressed", "false"); }
+      else { state.tapped.push(label); c.classList.add("on"); c.setAttribute("aria-pressed", "true"); }
+      refreshControls();
+    });
+    chips.appendChild(c);
+  });
+  if (turn.skipLabel) {
+    const s = el("button", "chip skip", turn.skipLabel);
+    s.type = "button";
+    s.addEventListener("click", () => finishTurn([], "", true));
+    chips.appendChild(s);
+  }
+  if (turn.allowTypeOwn) {
+    const t = el("button", "chip skip", TYPE_OWN_LABEL);
+    t.type = "button";
+    t.addEventListener("click", () => input.focus());
+    chips.appendChild(t);
+  }
+  zone.appendChild(chips);
+
+  let doneBtn = null, counter = null;
+  if (turn.multi) {
+    const controls = el("div", "controls");
+    doneBtn = el("button", "done", "Done →");
+    doneBtn.type = "button";
+    doneBtn.disabled = true;
+    doneBtn.addEventListener("click", () => finishTurn(state.tapped, input.value.trim()));
+    counter = el("span", "selcount", "");
+    counter.style.display = "none";
+    controls.appendChild(doneBtn);
+    controls.appendChild(counter);
+    zone.appendChild(controls);
+  }
+
+  function refreshControls() {
+    if (!doneBtn) return;
+    const n = state.tapped.length;
+    doneBtn.disabled = n === 0 && input.value.trim() === "";
+    counter.style.display = n ? "" : "none";
+    counter.textContent = n + " SELECTED";
+  }
+  turn._refresh = refreshControls;
+  turn._zone = zone;
+
+  scroller.appendChild(zone);
+  pin();
+
+  input.disabled = !turn.allowTypeOwn && !turn.allowFreeText;
+  input.placeholder = turn.allowTypeOwn || turn.allowFreeText ? TYPE_OWN_LABEL : "Pick from the chips above";
+  input.value = "";
+  sendBtn.disabled = input.disabled;
+}
+
+function finishTurn(taps, typed, wasSkip) {
+  const turn = state.activeTurn;
+  if (!turn) return;
+  turn._zone.remove();
+  state.activeTurn = null;
+  input.value = "";
+  meBubble(summarize(taps, typed));
+  state.answeredTurns += 1;
+  setProgress(false);
+  turn.onSubmit(taps, typed, !!wasSkip);
+}
+
+function submitComposer() {
+  const turn = state.activeTurn;
+  const typed = input.value.trim();
+  if (!turn || (!typed && !state.tapped.length)) return;
+  finishTurn(state.tapped, typed);
+}
+sendBtn.addEventListener("click", submitComposer);
+input.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); submitComposer(); } });
+input.addEventListener("input", () => { if (state.activeTurn && state.activeTurn._refresh) state.activeTurn._refresh(); });
+
+/* ---------- the deterministic state machine (phases.py) ---------- */
+function startInterview() {
+  typingThen(() => presentTurn({
+    prompt: "What kind of news do you want in your feed? Tap all that pull you in.",
+    options: ROOTS.map((r) => r.label),
+    multi: true,
+    skipLabel: SKIP_LABEL,
+    allowTypeOwn: true,
+    onSubmit: (taps, typed) => {
+      state.litRoots = taps
+        .map((label) => { const r = ROOTS.find((x) => x.label === label); return r ? r.slug : null; })
+        .filter(Boolean);
+      if (typed) {
+        const slug = slugify(typed);
+        SUBNICHE[slug] = { q: "What about " + typed + " do you want to follow?", chips: [] };
+        ROOTS.push({ slug, label: typed });
+        state.litRoots.push(slug);
+      }
+      nextSubniche();
+    },
+  }));
+}
+
+function rootLabel(slug) { const r = ROOTS.find((x) => x.slug === slug); return r ? r.label : slug; }
+
+function nextSubniche() {
+  if (state.rootIndex >= state.litRoots.length) { buildWhoQueue(); return; }
+  const slug = state.litRoots[state.rootIndex];
+  const def = SUBNICHE[slug] || { q: "What about " + rootLabel(slug) + " pulls you in?", chips: [] };
+  typingThen(() => presentTurn({
+    prompt: def.q,
+    options: def.chips.slice(0, 6),
+    multi: true,
+    skipLabel: SKIP_LABEL,
+    allowTypeOwn: true,
+    onSubmit: (taps, typed, wasSkip) => {
+      if (wasSkip) { offerCategorySkip(slug); return; }
+      state.consecutiveCategorySkips = 0;
+      taps.forEach((label) => state.selections.push({ root: slug, label }));
+      if (typed) state.selections.push({ root: slug, label: typed });
+      state.rootIndex += 1;
+      nextSubniche();
+    },
+  }));
+}
+
+function offerCategorySkip(slug) {
+  typingThen(() => presentTurn({
+    prompt: "No rush on " + rootLabel(slug) + " — want to see a few options, or skip it for now?",
+    options: [CATEGORY_SKIP_DECLINE, CATEGORY_SKIP_ACCEPT],
+    multi: false,
+    onSubmit: (taps) => {
+      if (taps[0] === CATEGORY_SKIP_DECLINE) { nextSubniche(); return; }
+      state.consecutiveCategorySkips += 1;
+      state.rootIndex += 1;
+      if (state.consecutiveCategorySkips >= 2 && state.rootIndex < state.litRoots.length) { offerBuildFeed(); return; }
+      nextSubniche();
+    },
+  }));
+}
+
+function offerBuildFeed() {
+  typingThen(() => presentTurn({
+    prompt: "Want me to just build your feed from what you've picked so far? You can always fine-tune it later.",
+    options: [BUILD_FEED_DECLINE, BUILD_FEED_ACCEPT],
+    multi: false,
+    onSubmit: (taps) => {
+      if (taps[0] === BUILD_FEED_ACCEPT) { showConfirm(); return; }
+      state.consecutiveCategorySkips = 0;
+      nextSubniche();
+    },
+  }));
+}
+
+function buildWhoQueue() {
+  const sels = state.selections;
+  const queue = [];
+  if (sels.length <= MAX_WHO_DRILLS) {
+    sels.forEach((s) => queue.push({ kind: "single", selections: [s] }));
+  } else {
+    sels.slice(0, MAX_WHO_DRILLS - 1).forEach((s) => queue.push({ kind: "single", selections: [s] }));
+    queue.push({ kind: "folded", selections: sels.slice(MAX_WHO_DRILLS - 1) });
+  }
+  state.whoQueue = queue;
+  nextWho();
+}
+
+function splitNames(typed) {
+  return typed.split(/,| and /i).map((s) => s.trim().replace(/^the /i, "")).filter(Boolean);
+}
+
+function nextWho() {
+  if (state.whoIndex >= state.whoQueue.length) { buildTuneQueue(); return; }
+  const item = state.whoQueue[state.whoIndex];
+  let prompt;
+  if (item.kind === "single") {
+    prompt = item.selections[0].label + " — a specific series, team, org, or person you follow? Name one, or skip.";
+  } else {
+    const labels = item.selections.slice(0, 6).map((s) => s.label).join(", ") + (item.selections.length > 6 ? ", and more" : "");
+    prompt = "Anything specific within " + labels + "? Name what matters most, or skip.";
+  }
+  typingThen(() => presentTurn({
+    prompt,
+    options: [],
+    multi: false,
+    skipLabel: WHO_NOTHING_LABEL,
+    allowTypeOwn: true,
+    allowFreeText: true,
+    onSubmit: (taps, typed) => {
+      if (typed) state.whoAnswers.push({ item, names: splitNames(typed) });
+      state.whoIndex += 1;
+      nextWho();
+    },
+  }));
+}
+
+function buildTuneQueue() {
+  const roots = [];
+  state.selections.forEach((s) => { if (!roots.includes(s.root)) roots.push(s.root); });
+  state.tuneQueue = roots;
+  state.tuneIndex = 0;
+  state.tuneStep = "angle";
+  nextTune();
+}
+
+function nextTune() {
+  if (state.tuneIndex >= state.tuneQueue.length) { showConfirm(); return; }
+  const slug = state.tuneQueue[state.tuneIndex];
+  const label = rootLabel(slug);
+  if (state.tuneStep === "angle") {
+    typingThen(() => presentTurn({
+      prompt: "How do you like to read " + label + " — which angle pulls you in?",
+      options: ANGLE_OPTIONS,
+      multi: true,
+      skipLabel: SKIP_LABEL,
+      allowTypeOwn: true,
+      onSubmit: (taps, typed) => {
+        state.angles[slug] = taps.concat(typed ? [typed] : []);
+        state.tuneStep = "mute";
+        nextTune();
+      },
+    }));
+  } else {
+    typingThen(() => presentTurn({
+      prompt: "Anything in " + label + " you're sick of and want kept out? Type it to mute, or skip.",
+      options: [],
+      multi: false,
+      skipLabel: SKIP_LABEL,
+      allowTypeOwn: true,
+      allowFreeText: true,
+      onSubmit: (taps, typed) => {
+        if (typed) state.mutes[slug] = typed;
+        state.tuneStep = "angle";
+        state.tuneIndex += 1;
+        nextTune();
+      },
+    }));
+  }
+}
+
+/* ---------- profile derivation (production does this with LLM extraction + guards.py) ---------- */
+function deriveInterests() {
+  const interests = [];
+  const claimed = new Set();
+  state.whoAnswers.forEach((ans) => {
+    const base = ans.item.selections[0];
+    ans.names.forEach((name) => {
+      interests.push({ label: name, slug: base.root + "." + slugify(base.label) + "." + slugify(name) });
+    });
+    ans.item.selections.forEach((s) => claimed.add(s.root + "|" + s.label));
+  });
+  state.selections.forEach((s) => {
+    if (!claimed.has(s.root + "|" + s.label)) {
+      interests.push({ label: s.label, slug: s.root + "." + slugify(s.label) });
+    }
+  });
+  return interests;
+}
+
+/* ---------- closing arc (InterviewChat.tsx client phases) ---------- */
+function hideComposer() { composer.style.display = "none"; setProgress(true); }
+
+function showConfirm() {
+  hideComposer();
+  const interests = deriveInterests();
+  typingThen(() => {
+    const card = el("section", "card");
+    card.appendChild(el("span", "eyebrow", "HERE'S WHAT WE HEARD"));
+    if (interests.length) {
+      card.appendChild(el("h2", null, "Your feed will focus on these."));
+      const ul = el("ul");
+      interests.forEach((i) => ul.appendChild(el("li", null, i.label)));
+      card.appendChild(ul);
+    } else {
+      card.appendChild(el("h2", null, "We'll start you with the big picture."));
+      card.appendChild(el("p", "gloss", "You skipped through, so we'll build a broad briefing across the main categories. You can always sharpen it later — nothing is locked in."));
+    }
+    const cta = el("button", "cta", interests.length ? "Looks good" : "Continue");
+    cta.type = "button";
+    cta.addEventListener("click", () => { card.querySelectorAll("button").forEach((b) => (b.disabled = true)); showBuildYour30(); });
+    card.appendChild(cta);
+    const change = el("button", "linkish", "Change an answer");
+    change.type = "button";
+    change.addEventListener("click", () => toast("IN THE APP THIS REOPENS THE TRANSCRIPT FOR EDITING"));
+    card.appendChild(change);
+    scroller.appendChild(card);
+    pin();
+  });
+}
+
+/* Post-2026-07-07 build: the YouTube/X source rows are gone. The 30 divides
+   across the sections you picked, weighted by how much you told us about each
+   (sub-niches tapped + names given), largest-remainder so it lands on 30 exactly. */
+function computeSectionSplit() {
+  const interests = deriveInterests();
+  let sections;
+  if (interests.length) {
+    const weightByRoot = {};
+    interests.forEach((i) => {
+      const root = i.slug.split(".")[0];
+      weightByRoot[root] = (weightByRoot[root] || 0) + 1;
+    });
+    sections = state.litRoots
+      .filter((slug) => weightByRoot[slug])
+      .map((slug) => ({ label: rootLabel(slug), weight: weightByRoot[slug] }));
+  } else {
+    sections = ROOTS.slice(0, 8).map((r) => ({ label: r.label, weight: 1 }));
+  }
+  const totalWeight = sections.reduce((sum, s) => sum + s.weight, 0);
+  sections.forEach((s) => {
+    s.share = (30 * s.weight) / totalWeight;
+    s.n = Math.floor(s.share);
+  });
+  let leftover = 30 - sections.reduce((sum, s) => sum + s.n, 0);
+  const byRemainder = sections.slice().sort((a, b) => (b.share - b.n) - (a.share - a.n));
+  for (let i = 0; leftover > 0; i = (i + 1) % byRemainder.length) { byRemainder[i].n += 1; leftover -= 1; }
+  sections.filter((s) => s.n === 0).forEach((s) => {
+    const biggest = sections.reduce((a, b) => (b.n > a.n ? b : a));
+    biggest.n -= 1; s.n += 1;
+  });
+  return sections;
+}
+
+function showBuildYour30() {
+  typingThen(() => {
+    const sections = computeSectionSplit();
+    const broad = deriveInterests().length === 0;
+    const card = el("section", "card");
+    card.appendChild(el("span", "eyebrow", "BUILD YOUR 30"));
+    card.appendChild(el("h2", null, "Here's how your 30 splits."));
+    card.appendChild(el("p", "gloss", broad
+      ? "You skipped through, so your 30 spreads across the main categories. Sharpen it any time."
+      : "Every day we build you 30 stories, split across the sections you picked — the more you told us about one, the bigger its share."));
+    sections.forEach((s) => {
+      const row = el("div", "sumrow");
+      row.appendChild(el("span", null, s.label));
+      row.appendChild(el("span", "n", String(s.n)));
+      card.appendChild(row);
+    });
+    const status = el("div", "budget-status");
+    status.appendChild(el("span", null, "DIVIDED ACROSS " + sections.length + (sections.length === 1 ? " SECTION" : " SECTIONS")));
+    status.appendChild(el("span", "total", "30 / 30"));
+    card.appendChild(status);
+    const cta = el("button", "cta", "Build my 30 →");
+    cta.type = "button";
+    cta.addEventListener("click", () => { card.querySelectorAll("button").forEach((b) => (b.disabled = true)); showDone(); });
+    card.appendChild(cta);
+    scroller.appendChild(card);
+    pin();
+  });
+}
+
+function showDone() {
+  typingThen(() => {
+    const interests = deriveInterests();
+    const card = el("section", "card");
+    card.appendChild(el("span", "eyebrow", "PROFILE SAVED"));
+    card.appendChild(el("h2", null, "The overnight pipeline takes it from here."));
+    const slugLines = interests.slice(0, 6).map((i) => i.slug).join("\n");
+    const gloss = el("p", "gloss");
+    gloss.textContent = interests.length
+      ? "In the app this mints your interests into the shared tree, saves your split and mutes, and assembles your first feed. Minted slugs from this run:"
+      : "In the app this saves a roots-only profile and assembles a broad first feed.";
+    card.appendChild(gloss);
+    if (interests.length) {
+      const pre = el("p", null, slugLines);
+      pre.style.fontFamily = '"JetBrains Mono", monospace';
+      pre.style.fontSize = "11px";
+      pre.style.color = "var(--muted)";
+      pre.style.whiteSpace = "pre-wrap";
+      card.appendChild(pre);
+    }
+    const again = el("button", "linkish", "Start over ↺");
+    again.type = "button";
+    again.addEventListener("click", () => location.reload());
+    card.appendChild(again);
+    scroller.appendChild(card);
+    pin();
+  });
+}
+
+setProgress(false);
+startInterview();
+</script>
+</body>
+</html>

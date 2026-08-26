@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type React from "react";
-import { Badge } from "@/components/ui/Badge";
+import { Badge, type BadgeTone } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
 import type { LongformArticle } from "@/content/longform-types";
@@ -16,9 +16,12 @@ function riseStyle(order: number): React.CSSProperties {
   return { animationDelay: `${order * 90}ms` };
 }
 
+/** Tag chips cycle through the warm tones so the row reads as a spectrum, not a monochrome strip. */
+const TAG_TONE_CYCLE: BadgeTone[] = ["orange", "blue", "sun", "mint"];
+
 /**
- * Shared shell for every long-form page: back link, staggered header (eyebrow,
- * title, dek, tags), scannable overview card, stat band, body blocks, and a
+ * Shared shell for every long-form page: back link, staggered header (title,
+ * dek, tags), scannable overview card, stat band, body blocks, and a
  * footer CTA row. Every page built on this is standalone-readable — the
  * expected reader arrived from a single forwarded URL.
  */
@@ -50,21 +53,8 @@ export function ArticleLayout({ article }: ArticleLayoutProps) {
       </div>
 
       <header style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-        <span
-          className="fp-rise"
-          style={{
-            ...riseStyle(1),
-            fontFamily: "var(--font-mono)",
-            fontSize: 12,
-            letterSpacing: "0.08em",
-            fontWeight: 600,
-            color: "var(--orange-600)",
-            textTransform: "uppercase",
-          }}
-        >
-          {article.article_eyebrow}
-        </span>
-
+        {/* Ash (2026-08-12): orange eyebrow kickers are retired site-wide —
+            article_eyebrow stays in the content modules but is not rendered. */}
         <h1 className="fp-rise" style={{ ...riseStyle(2), fontSize: "clamp(32px, 5vw, 46px)", fontWeight: 800 }}>
           <InlineText text={article.article_title} />
         </h1>
@@ -87,8 +77,8 @@ export function ArticleLayout({ article }: ArticleLayoutProps) {
 
         {article.article_tags && article.article_tags.length > 0 && (
           <div className="fp-rise" style={{ ...riseStyle(4), display: "flex", gap: 8, flexWrap: "wrap" }}>
-            {article.article_tags.map((tag) => (
-              <Badge key={tag} tone="blue">
+            {article.article_tags.map((tag, tag_index) => (
+              <Badge key={tag} tone={TAG_TONE_CYCLE[tag_index % TAG_TONE_CYCLE.length]}>
                 {tag}
               </Badge>
             ))}

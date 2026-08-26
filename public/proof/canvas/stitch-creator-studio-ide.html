@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Creator Studio IDE</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-surface-variant": "#c6c6c6",
+                        "surface-dim": "#131313",
+                        "tertiary-container": "#3ea26d",
+                        "inverse-surface": "#e5e2e1",
+                        "background": "#131313",
+                        "on-error-container": "#ffdad6",
+                        "tertiary-fixed-dim": "#00522f",
+                        "secondary-container": "#464747",
+                        "on-tertiary-fixed": "#ffffff",
+                        "on-tertiary-container": "#000000",
+                        "secondary-fixed-dim": "#ababab",
+                        "secondary": "#c7c6c6",
+                        "primary-fixed": "#5d5f5f",
+                        "surface-tint": "#c6c6c6",
+                        "outline": "#919191",
+                        "secondary-fixed": "#c7c6c6",
+                        "tertiary": "#93f7ba",
+                        "surface-container-lowest": "#0e0e0e",
+                        "surface-container": "#201f1f",
+                        "tertiary-fixed": "#006d40",
+                        "primary-container": "#d4d4d4",
+                        "surface": "#131313",
+                        "on-tertiary": "#002110",
+                        "error": "#ffb4ab",
+                        "surface-variant": "#353534",
+                        "primary-fixed-dim": "#454747",
+                        "surface-container-low": "#1c1b1b",
+                        "surface-container-highest": "#353534",
+                        "on-primary-fixed": "#ffffff",
+                        "on-primary": "#1a1c1c",
+                        "on-error": "#690005",
+                        "on-secondary-fixed": "#1b1c1c",
+                        "on-tertiary-fixed-variant": "#93f7ba",
+                        "on-primary-fixed-variant": "#e2e2e2",
+                        "outline-variant": "#474747",
+                        "on-secondary-container": "#e3e2e2",
+                        "on-background": "#e5e2e1",
+                        "error-container": "#93000a",
+                        "on-primary-container": "#000000",
+                        "primary": "#ffffff",
+                        "surface-bright": "#3a3939",
+                        "inverse-primary": "#5d5f5f",
+                        "on-secondary": "#1b1c1c",
+                        "on-surface": "#e5e2e1",
+                        "inverse-on-surface": "#313030",
+                        "on-secondary-fixed-variant": "#3b3b3c",
+                        "surface-container-high": "#2a2a2a",
+                        
+                        // Overrides for precision monolith
+                        "shell-base": "#0D0D0D",
+                        "panel-primary": "#141414",
+                        "surface-card": "#1C1C1C",
+                        "elevated-active": "#242424",
+                        "text-primary": "#EBEBEB",
+                        "text-secondary": "#888888",
+                        "text-tertiary": "#555555",
+                        "accent-success": "#4CAF78",
+                        "accent-danger": "#E24B4A",
+                        "border-ghost": "#222222",
+                    },
+                    fontFamily: {
+                        "headline": ["Inter", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "label": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem"},
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #0D0D0D; color: #EBEBEB; }
+        .micro-label { font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.1em; color: #555555; }
+        .text-body { font-size: 14px; color: #888888; }
+        .text-title { font-size: 12px; font-weight: 500; color: #EBEBEB; }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: transparent; border-radius: 2px; }
+        *:hover::-webkit-scrollbar-thumb { background: #333333; }
+        
+        /* Grid definitions */
+        .workspace-grid { display: grid; grid-template-columns: 220px 1fr 280px; height: calc(100vh - 32px); }
+        .main-split { display: grid; grid-template-columns: 1fr 1fr; height: 100%; }
+        .panel-column { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
+        
+        /* Ghost border utilities */
+        .border-r-ghost { border-right: 0.5px solid #222222; }
+        .border-b-ghost { border-bottom: 0.5px solid #222222; }
+        .border-l-ghost { border-left: 0.5px solid #222222; }
+        .border-t-ghost { border-top: 0.5px solid #222222; }
+    </style>
+</head>
+<body class="h-screen w-screen overflow-hidden flex flex-col antialiased">
+<!-- Topbar -->
+<header class="h-8 bg-[#111111] border-b-ghost flex items-center justify-between px-3 shrink-0">
+<div class="flex items-center gap-2">
+<svg class="w-3.5 h-3.5 text-text-secondary" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+<span class="text-[12px] text-text-secondary font-medium">Creator Studio</span>
+</div>
+<div class="text-[12px] text-text-primary font-medium absolute left-1/2 -translate-x-1/2">
+            Autumn Campaign 2025
+        </div>
+<div class="flex items-center gap-3 text-text-tertiary">
+<button class="hover:text-text-primary transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">left_panel_close</span>
+</button>
+<button class="hover:text-text-primary transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">right_panel_close</span>
+</button>
+<button class="hover:text-text-primary transition-colors flex items-center justify-center ml-1">
+<span class="material-symbols-outlined text-[16px]">settings</span>
+</button>
+</div>
+</header>
+<!-- Main Content Grid -->
+<div class="workspace-grid">
+<!-- Left Sidebar -->
+<aside class="bg-panel-primary border-r-ghost flex flex-col h-full">
+<div class="h-8 border-b border-[#2A2A2A] flex items-center px-4 shrink-0">
+<span class="micro-label">PROJECTS</span>
+</div>
+<div class="flex-1 overflow-y-auto py-2">
+<!-- Tree Item (Folder) -->
+<div class="flex items-center px-4 py-1 gap-2 hover:bg-surface-card cursor-pointer group">
+<span class="material-symbols-outlined text-[14px] text-text-tertiary group-hover:text-text-secondary transition-colors">arrow_drop_down</span>
+<span class="material-symbols-outlined text-[14px] text-text-secondary" data-weight="fill" style="font-variation-settings: 'FILL' 1;">folder</span>
+<span class="text-title">Autumn Campaign 2025</span>
+</div>
+<!-- Tree Sub-items -->
+<div class="pl-6">
+<div class="flex items-center px-4 py-1 gap-2 hover:bg-surface-card cursor-pointer group">
+<span class="material-symbols-outlined text-[14px] text-text-tertiary group-hover:text-text-secondary transition-colors">arrow_right</span>
+<span class="material-symbols-outlined text-[14px] text-text-tertiary">folder</span>
+<span class="text-[12px] text-text-secondary">Moodboards</span>
+</div>
+<div class="flex items-center px-4 py-1 gap-2 bg-surface-card border-l-2 border-text-primary cursor-pointer">
+<span class="material-symbols-outlined text-[14px] text-text-tertiary">arrow_drop_down</span>
+<span class="material-symbols-outlined text-[14px] text-text-secondary" data-weight="fill" style="font-variation-settings: 'FILL' 1;">folder</span>
+<span class="text-[12px] text-text-primary">Hero Images</span>
+</div>
+<!-- Sub-sub-items -->
+<div class="pl-4">
+<div class="flex items-center px-4 py-1 gap-2 hover:bg-elevated-active cursor-pointer">
+<span class="material-symbols-outlined text-[14px] text-text-tertiary">image</span>
+<span class="text-[12px] text-text-secondary">v1_hero_landscape.png</span>
+</div>
+<div class="flex items-center px-4 py-1 gap-2 hover:bg-elevated-active cursor-pointer">
+<span class="material-symbols-outlined text-[14px] text-text-tertiary">image</span>
+<span class="text-[12px] text-text-secondary">v2_hero_portrait.png</span>
+</div>
+</div>
+<div class="flex items-center px-4 py-1 gap-2 hover:bg-surface-card cursor-pointer group">
+<span class="material-symbols-outlined text-[14px] text-text-tertiary group-hover:text-text-secondary transition-colors">arrow_right</span>
+<span class="material-symbols-outlined text-[14px] text-text-tertiary">folder</span>
+<span class="text-[12px] text-text-secondary">Social Assets</span>
+</div>
+</div>
+<div class="flex items-center px-4 py-1 mt-2 gap-2 hover:bg-surface-card cursor-pointer group">
+<span class="material-symbols-outlined text-[14px] text-text-tertiary group-hover:text-text-secondary transition-colors">arrow_right</span>
+<span class="material-symbols-outlined text-[14px] text-text-tertiary" data-weight="fill" style="font-variation-settings: 'FILL' 1;">folder</span>
+<span class="text-title text-text-secondary">Archive</span>
+</div>
+</div>
+<!-- Favorites Thumbnails -->
+<div class="border-t-ghost shrink-0 flex flex-col">
+<div class="px-4 py-2 flex items-center justify-between">
+<span class="micro-label">FAVORITES</span>
+<span class="material-symbols-outlined text-[12px] text-text-tertiary">add</span>
+</div>
+<div class="flex gap-2 px-4 pb-4 overflow-x-auto">
+<div class="w-12 h-9 bg-surface-card border border-[#2A2A2A] rounded shrink-0 bg-cover bg-center" data-alt="close-up of digital camera lens with moody lighting" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB7H1OVnAQQGE-GnoBuebo0TwUnB1pUn2vPY43e5G2usA_kpAkucKsZDz_nC-BNRxBHvl_leHS6EtC9BXrsIVvGbgYMyMKx0UB-4JgWoVokl3-F2OheBEd3v01sHoRKnTiJLDmCEOYYuzCVQDTl6yXBghpw7UvS-TW30TzYRvdEmo1_F2gzoF9RWgzgOqnRPRqqlrQzOEeNO5s4ze4FVIxXx6ld6IWkTGretvuE7ZHEHZNuZK3dp9rD2Sq33PN32vgdj_zJgj67ujk');"></div>
+<div class="w-12 h-9 bg-surface-card border border-[#2A2A2A] rounded shrink-0 bg-cover bg-center" data-alt="retro styled computer setup with neon lighting" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBKv6jnRGt1tiIu9LAWMZhDUmNI4eqrVJAljvd3VLq7HnktmEpkkWOBNNULaAb_VsJ82j-S7g3Pou1TJEYfSs1A0PdS_jwOvNgwbfApH4v70GZOE4FtKCCDZPDAwG4x5Jn06-WQScLpcJZ_W-DGkaGUBRnZkwxf_TEAFMjPA-NidBEDUSkJJ8BvlkisIfbfBu6uTBq42CGGQp62ID5R_Ik3brPbQTQmrQIudk-wjDhQLm92LveE-l9CGW7aYsQ1t3fRrDurn5A59l8');"></div>
+<div class="w-12 h-9 bg-surface-card border border-[#2A2A2A] rounded shrink-0 bg-cover bg-center" data-alt="abstract liquid metallic texture with warm and cool tones" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAtKhPYX30ZZVNUJnKVx3drrRhpg8JBY8a6X4l-vbQ3y_TBDm5HQh-ruRhRiw9_JsI6piqxdufQy2coFaBIWsOdgTcytadr-CGkxheKe7NDvNQnvum6lmBENYFQ6_hNc-c6zbEOEAbTJ4hsIKMmLSBPK1lXJh7mFl7G5N-tpKYQeiWO4t20WjtVI9QwuWAIHWQUfd70tCuIreIgDUsYycUgLmPhmIOOypp4AHFmHOqp-4HrghsHKuka6IpaPBH4IhM0nuox-J1pBZ4');"></div>
+</div>
+</div>
+</aside>
+<!-- Middle Workspace -->
+<main class="bg-shell-base h-full flex flex-col">
+<div class="main-split border-b-ghost flex-1 overflow-hidden">
+<!-- Workspace A (Instant) -->
+<div class="panel-column border-r border-[#2A2A2A]">
+<div class="h-8 flex items-center px-4 shrink-0 bg-panel-primary border-b border-[#2A2A2A]">
+<span class="micro-label flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">bolt</span> INSTANT</span>
+</div>
+<div class="flex-1 overflow-y-auto p-4 bg-shell-base grid grid-cols-[repeat(auto-fill,minmax(140px,1fr))] gap-4 content-start">
+<!-- Output Images -->
+<div class="aspect-square bg-surface-card border border-border-ghost rounded overflow-hidden relative group">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="fashion model in autumn clothing against neutral background" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuA7bMLRIDwZTV1WA7ttv5dDRA7fwXYXZwLbMSYxzvCRU7OqdxK4kZwcOytdUCR2CNKT1e9cXYrwpXbtQGbBoImzsy3sFlNUxqYVMEye2PYY00231pHssqfX47H8KaVBZ23DD_NrDf__A50e2hcYte0t3MI6df7QeeGOq1qrwqtngUQT-cuabKpuxcPvmJTwP2y-nM3ugEdzjFSQxHvaBJqkEEOoIAdh2MsESib2N2qyF3uLYlcLaWpourQBHT3QWRxbJ6WoD0z5YG8');"></div>
+<div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+<button class="w-8 h-8 bg-[#242424] rounded flex items-center justify-center text-text-primary hover:bg-[#333333] border border-[#3A3A3A]"><span class="material-symbols-outlined text-[16px]">download</span></button>
+<button class="w-8 h-8 bg-[#242424] rounded flex items-center justify-center text-text-primary hover:bg-[#333333] border border-[#3A3A3A]"><span class="material-symbols-outlined text-[16px]">favorite</span></button>
+</div>
+</div>
+<div class="aspect-square bg-surface-card border border-border-ghost rounded overflow-hidden relative group">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="flat lay of autumn coats and sweaters on dark surface" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDrhScPdnsyICI4HX3NtYpcg0XMhFx-CIY6DZShCfkJ6a5DvgVWNkhV4hr8mKVkCBRyxwWRc2zl28GM8URynVuDL0WhLvgcmSxwc5-WWTy__zPdOsoa8jcryXgFN8ML33Ef1VYW1l8ob45-gT_hjJZU2YAhva5YDFjpRbWFa-HAGxrmO8e5LLMR2rqHkSgbncW77MkUbiz1nW-R8WoXBOVOBwln_npRX7k3sTbxbZNWliAhMpvzk_ann6SXbfD9yWOdXym6utcGCOM');"></div>
+</div>
+<!-- Generating State -->
+<div class="aspect-square bg-panel-primary border border-border-ghost rounded flex flex-col items-center justify-center gap-2 relative overflow-hidden">
+<span class="material-symbols-outlined text-[24px] text-text-tertiary animate-pulse">hourglass_empty</span>
+<span class="text-[12px] text-text-tertiary font-medium">Generating...</span>
+<div class="absolute bottom-0 left-0 h-1 bg-accent-success w-2/3"></div>
+</div>
+</div>
+<!-- Prompt Zone A -->
+<div class="shrink-0 bg-panel-primary border-t border-[#2A2A2A] p-3 flex flex-col gap-2">
+<div class="h-10 border border-dashed border-[#2A2A2A] bg-[#1A1A1A] rounded flex items-center justify-center">
+<span class="text-[11px] text-text-tertiary flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">add_photo_alternate</span> Drop reference image</span>
+</div>
+<textarea class="w-full bg-shell-base border border-[#2A2A2A] rounded p-2 text-[12px] text-text-primary focus:border-[#3A3A3A] focus:ring-0 resize-none h-16 placeholder:text-text-tertiary" placeholder="Describe the image..."></textarea>
+<div class="flex items-center justify-between">
+<select class="bg-shell-base border border-[#2A2A2A] rounded text-[11px] text-text-secondary py-1 px-2 focus:ring-0 focus:border-[#3A3A3A]">
+<option>Flux.1 Dev</option>
+<option>SDXL Base</option>
+</select>
+<button class="bg-text-primary text-[#0D0D0D] px-3 py-1 rounded text-[11px] font-semibold flex items-center gap-1 hover:bg-white">
+                                Generate <span class="material-symbols-outlined text-[14px]">arrow_upward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Workspace B (Batch/Queued) -->
+<div class="panel-column border-l-ghost">
+<div class="h-8 flex items-center px-4 shrink-0 bg-panel-primary border-b border-[#2A2A2A]">
+<span class="micro-label flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">queue</span> BATCH / QUEUED</span>
+</div>
+<div class="flex-1 overflow-y-auto p-4 bg-shell-base grid grid-cols-[repeat(auto-fill,minmax(140px,1fr))] gap-4 content-start">
+<!-- Queued States -->
+<div class="aspect-square bg-[#111111] border border-dashed border-[#2A2A2A] rounded flex flex-col items-center justify-center gap-2">
+<span class="text-[12px] text-[#444444] font-medium">Queued #4</span>
+</div>
+<div class="aspect-square bg-[#111111] border border-dashed border-[#2A2A2A] rounded flex flex-col items-center justify-center gap-2">
+<span class="text-[12px] text-[#444444] font-medium">Queued #5</span>
+</div>
+</div>
+<!-- Prompt AI Enhancement Zone -->
+<div class="shrink-0 bg-[#111111] border-t border-[#2A2A2A] p-3 flex flex-col gap-2">
+<div class="flex items-center justify-between mb-1">
+<span class="micro-label">PROMPT AI</span>
+<button class="text-[10px] text-text-secondary hover:text-text-primary">Clear</button>
+</div>
+<div class="bg-[#161616] border border-[#2A2A2A] rounded p-2 text-[12px] text-text-secondary leading-relaxed min-h-[64px]">
+                            "A cinematic shot of a stylish woman wearing an autumn trench coat, walking down a cobblestone street with golden hour lighting, 8k resolution, highly detailed, photorealistic."
+                        </div>
+<div class="flex items-center gap-2">
+<div class="flex-1 bg-[#1A1A1A] border border-[#2A2A2A] rounded flex items-center px-2">
+<input class="w-full bg-transparent border-none focus:ring-0 text-[12px] text-text-primary placeholder:text-text-tertiary p-1" placeholder="Refine prompt..." type="text"/>
+<button class="text-text-tertiary hover:text-text-primary p-1 flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px]">mic</span>
+</button>
+</div>
+<button class="bg-[#242424] border border-[#3A3A3A] text-text-primary px-3 py-1.5 rounded text-[11px] font-medium hover:bg-[#2A2A2A]">
+                                Copy
+                            </button>
+<button class="bg-text-primary text-[#0D0D0D] px-3 py-1.5 rounded text-[11px] font-semibold flex items-center gap-1 hover:bg-white">
+                                Push <span class="material-symbols-outlined text-[12px]">arrow_upward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Right Sidebar (Search) -->
+<aside class="bg-panel-primary border-l-ghost flex flex-col h-full">
+<div class="h-8 flex items-center px-2 gap-1 shrink-0 border-b border-[#2A2A2A]">
+<button class="px-3 py-1 rounded-full text-[10px] font-medium bg-[#222222] text-text-primary">Inspiration</button>
+<button class="px-3 py-1 rounded-full text-[10px] font-medium text-text-secondary hover:text-text-primary">Assets</button>
+<button class="px-3 py-1 rounded-full text-[10px] font-medium text-text-secondary hover:text-text-primary">History</button>
+</div>
+<div class="p-3 border-b border-[#2A2A2A] shrink-0 bg-[#111111]">
+<div class="bg-[#1A1A1A] border border-[#2A2A2A] rounded flex flex-col min-h-[72px] focus-within:border-[#3A3A3A] transition-colors relative">
+<textarea class="w-full bg-transparent border-none focus:ring-0 text-[12px] text-text-primary placeholder:text-text-tertiary p-2 resize-none flex-1" placeholder="Search visual references..."></textarea>
+<div class="flex items-center justify-between p-1">
+<div class="flex items-center gap-1 text-text-tertiary">
+<button class="p-1 hover:text-text-secondary rounded"><span class="material-symbols-outlined text-[14px]">language</span></button>
+<button class="p-1 hover:text-text-secondary rounded"><span class="material-symbols-outlined text-[14px]">image</span></button>
+<button class="p-1 hover:text-text-secondary rounded"><span class="material-symbols-outlined text-[14px]">mic</span></button>
+</div>
+<div class="flex items-center gap-1">
+<button class="text-[10px] text-text-secondary flex items-center gap-0.5 px-2 py-1 rounded hover:bg-[#242424]">
+                                Agentic Search <span class="material-symbols-outlined text-[12px]">arrow_drop_down</span>
+</button>
+<button class="bg-text-primary text-[#0D0D0D] w-6 h-6 rounded flex items-center justify-center hover:bg-white">
+<span class="material-symbols-outlined text-[14px]">play_arrow</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="p-3 border-b border-[#2A2A2A] shrink-0">
+<span class="micro-label block mb-2">SOURCES</span>
+<div class="flex flex-wrap gap-1.5">
+<span class="px-2 py-0.5 border border-[#2A2A2A] rounded-full text-[10px] text-text-secondary bg-surface-card hover:border-[#3A3A3A] cursor-pointer">Pinterest</span>
+<span class="px-2 py-0.5 border border-[#2A2A2A] rounded-full text-[10px] text-text-secondary bg-surface-card hover:border-[#3A3A3A] cursor-pointer">Amazon</span>
+<span class="px-2 py-0.5 border border-[#2A2A2A] rounded-full text-[10px] text-text-secondary bg-surface-card hover:border-[#3A3A3A] cursor-pointer">Behance</span>
+<span class="px-2 py-0.5 border border-[#2A2A2A] rounded-full text-[10px] text-text-secondary bg-surface-card hover:border-[#3A3A3A] cursor-pointer">Unsplash</span>
+<span class="px-2 py-0.5 border border-[#2A2A2A] rounded-full text-[10px] text-text-secondary bg-surface-card hover:border-[#3A3A3A] cursor-pointer">Getty</span>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto p-2 bg-shell-base">
+<div class="grid grid-cols-3 gap-1">
+<!-- Result Item 1 -->
+<div class="aspect-[4/3] bg-surface-card rounded-sm overflow-hidden relative group cursor-grab">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="minimalist fashion photography with neutral tones" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDV1veFTTTBNDEfOlSCgHmtD0LlWXjI8gvwDlIzsZigZ7FYm8NpeluB6ga4V5LiA5Hu_Cv-94GSeUsyjO6OKSlgUwNnz8Ep9bNm6oh4PihFr5sCSvl0jUdYrLT7ugOYuMBwZ7veixkrmOZ1ZfXSPBOVeBj5yc6vGoXsCHjBjZilu0pDkQLUfIZ0Uyrf1sESJK_p3QaRoGXJwNFhRWcQYn5QRR2JBZfmtAidVSWFod3-at-_QIPTnAX2GKVEAmj-8F1o_PyRoccMxVU');"></div>
+<div class="absolute top-1 left-1 w-3 h-3 rounded-full bg-[#E60023] flex items-center justify-center shadow-sm">
+<span class="text-[8px] font-bold text-white">P</span>
+</div>
+<div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="text-[10px] font-medium text-white text-center leading-tight">Pull to<br/>canvas</span>
+</div>
+</div>
+<!-- Result Item 2 -->
+<div class="aspect-[4/3] bg-surface-card rounded-sm overflow-hidden relative group cursor-grab">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="leather boots standing on autumn leaves" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBcINuKxCOWY73RQ_kS23H5oqhiFhL8Jsme5L68nHrD0WQnfXcIeUiVWXJfY_XMfXFJ28d70QnE1JtbiuwnBALtjMFnMmjPUh7X4tt4xz7Rbh_Cyb0trQ35ngi3crYROLMFQpbqWy8Rs8sK8c5f53XdG9CzR2GJSjglQD17VXzX4BELfsr0gh95vU3I5d1h76oEFMtZGgU2TscRKINJn03p1ne40jBdjJiLVqz6gjSKPVkWIXjgehpgEIx62-ENttJJzhKG4xZmVI0');"></div>
+<div class="absolute top-1 left-1 w-3 h-3 rounded-full bg-[#4285F4] flex items-center justify-center shadow-sm">
+<span class="text-[8px] font-bold text-white">G</span>
+</div>
+<div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="text-[10px] font-medium text-white text-center leading-tight">Pull to<br/>canvas</span>
+</div>
+</div>
+<!-- Result Item 3 -->
+<div class="aspect-[4/3] bg-surface-card rounded-sm overflow-hidden relative group cursor-grab">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="woman shopping for autumn clothes in boutique" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAKJqdFI6EH3zolKzMjvHoDpXRLne4RoyA_0HMhCxNVclJcNLKFvc6CuGmggGaFNqW763awNzKMM0Ql1cMV672tYKEjnEzUYgemjITFCoE648t1YiRhYCQHEcw5s81zrXq6t1x_tnurIWl7gzeDXUlYhA_L1R7xfn5YOB4GGOlCFQnSMOkUIE8x84vUD1fd7ZR_ve3W_W1US0yJh01zUFPuronhKafhvQpckS8SwVTYLZq27H_80hrzZdOjSfJ6R45aaqwfKqmnvBQ');"></div>
+<div class="absolute top-1 left-1 w-3 h-3 rounded-full bg-[#FF9900] flex items-center justify-center shadow-sm">
+<span class="text-[8px] font-bold text-black">A</span>
+</div>
+<div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+<span class="text-[10px] font-medium text-white text-center leading-tight">Pull to<br/>canvas</span>
+</div>
+</div>
+<!-- More results... -->
+<div class="aspect-[4/3] bg-surface-card rounded-sm overflow-hidden relative group cursor-grab">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="close up of knit sweater texture" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB1mqy41MfGBGsoeu-X5AIHyK8FB4KkLcrN7A1nJSC-5FeTjDFTCx9weRspYsxaaeloBcrl2rp3LT74TOvjOaySqxPTZwRCBddBBErica-Loo4nKXBiMbYppxgneZaunx9_MmEblPRqqFcLAYFjdn-dAYLcb3voM04J58ui2d-2Sw8eTQA1XWdLeaFAeFfa5QbrVMvU7Dn0YWyW8-BmCeLFnElil57Nm1Vy0fmOs_oR3EIH-9vrEQ2f_FBSb3klQjsSENNt4zR9FM0');"></div>
+</div>
+<div class="aspect-[4/3] bg-surface-card rounded-sm overflow-hidden relative group cursor-grab">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="studio lighting setup against dark grey background" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBJoPp1I0WUYQcFSxy0gHJSoODcX9U1f73683E1_vYsLJ18jV1EwBDSzYE2RNd1dRhC6Ciy_mXXDPMJZ8peat-5X91Aox2vSqttjrGElyZjuhs3un_mQEyuIuyezWL5dQVvKFEKPvF7N-b5hEg6zxoPG-KKDeBID2hy3Y00q0D3ad9r82Z7rSc72sk4ubp1BoVdcmvv04zlbjSG4wYUXT3_aP6hSnZwXZP0N3ZLg9QXs14mZkLNOgDSysJ01KvNel43EqTcTMvuEr4');"></div>
+</div>
+<div class="aspect-[4/3] bg-[#161616] rounded-sm border border-[#2A2A2A] flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px] text-[#333333] animate-spin">refresh</span>
+</div>
+</div>
+</div>
+</aside>
+</div>
+</body></html>

@@ -1,0 +1,817 @@
+/* =====================================================================
+   blip reel demo — the app's reel screen, embedded in an iPhone frame.
+
+   Class vocabulary + values are vendored from the app itself (News20
+   `src/styles/blip-flow.css` + the caption block of `globals.css`),
+   namespaced under `.bpd` so nothing leaks into Folio Pop. The interior
+   is laid out at the fixed logical size 393×852 and scaled to fit its
+   container by the component, so nothing ever crops.
+   ===================================================================== */
+
+.bpd {
+  --bpd-bg: #020617;
+  --bpd-hi: #facc15;
+  display: flex;
+  justify-content: center;
+}
+.bpd * {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+.bpd button {
+  font: inherit;
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* ---------- iPhone frame (393×852 logical, scaled by the component) ---------- */
+.bpd-device {
+  position: relative;
+  width: 393px;
+  height: 852px;
+  border-radius: 54px;
+  background: #000;
+  box-shadow:
+    0 0 0 12px #1c1d22,
+    0 0 0 13px #2a2b31,
+    0 40px 90px -20px rgba(0, 0, 0, 0.55),
+    0 10px 30px -10px rgba(0, 0, 0, 0.4);
+  flex: none;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.bpd-screen {
+  position: absolute;
+  inset: 0;
+  border-radius: 54px;
+  overflow: hidden;
+  background: var(--bpd-bg);
+  color: #fff;
+  /* pan-y keeps the ARTICLE scrolling normally when a thumb lands on the phone;
+     story navigation on touch is chevrons + auto-advance, not swipe-trapping. */
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.bpd-island {
+  position: absolute;
+  top: 11px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 124px;
+  height: 36px;
+  background: #000;
+  border-radius: 20px;
+  z-index: 90;
+  pointer-events: none;
+}
+.bpd-status {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 59px;
+  z-index: 85;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 36px 0 40px;
+  pointer-events: none;
+}
+.bpd-status .time {
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+.bpd-status .glyphs {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.bpd-home-indicator {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 134px;
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.8);
+  z-index: 85;
+  pointer-events: none;
+}
+
+/* ---------- vertical reel stack ---------- */
+.bpd-pages {
+  position: absolute;
+  inset: 0;
+  transition: transform 0.55s cubic-bezier(0.32, 0.72, 0.22, 1);
+  will-change: transform;
+}
+.bpd-page {
+  position: absolute;
+  left: 0;
+  width: 393px;
+  height: 852px;
+  overflow: hidden;
+}
+
+/* ---------- one reel: background layers ---------- */
+.bpd-reel {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bpd-bg);
+}
+.bpd-reel .poster {
+  pointer-events: none;
+  position: absolute;
+  inset: -4%;
+  z-index: 0;
+  width: 108%;
+  height: 108%;
+  object-fit: cover;
+}
+.bpd-reel.playing .poster {
+  animation: bpd-drift 26s ease-in-out infinite alternate;
+}
+@keyframes bpd-drift {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  100% {
+    transform: translate(-1.5%, 1.5%) scale(1.06);
+  }
+}
+.bpd-reel .poster-dim {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: color-mix(in oklab, var(--bpd-bg) 38%, transparent);
+}
+.bpd-reel .scrim-top {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 34%;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(to bottom, color-mix(in oklab, var(--bpd-bg) 88%, transparent), transparent);
+}
+.bpd-reel .scrim {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 62%;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    var(--bpd-bg) 12%,
+    color-mix(in oklab, var(--bpd-bg) 80%, transparent) 48%,
+    transparent 100%
+  );
+}
+.bpd-reel .halo {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: 0.7;
+  background: radial-gradient(60% 30% at 50% 4%, color-mix(in oklab, var(--accent) 42%, transparent), transparent 72%);
+}
+.bpd-reel .edge-top {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 59px;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(to bottom, color-mix(in oklab, var(--accent) 30%, transparent), transparent);
+}
+.bpd-reel .edge-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 42px;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(to top, color-mix(in oklab, var(--accent) 26%, transparent), transparent);
+}
+
+/* whole-surface tap target → pause/resume (below the interactive chrome) */
+.bpd-reel .tap {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+}
+.bpd-tap-indicator {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  z-index: 6;
+  width: 72px;
+  height: 72px;
+  border-radius: 9999px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  pointer-events: none;
+  opacity: 0;
+  transition:
+    opacity 0.18s,
+    transform 0.18s;
+}
+.bpd-tap-indicator.on {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+}
+.bpd-tap-indicator svg {
+  width: 30px;
+  height: 30px;
+}
+.bpd-start-hint {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(50% + 52px);
+  z-index: 6;
+  text-align: center;
+  font-family: var(--bpd-mono, ui-monospace, monospace);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: rgba(255, 255, 255, 0.5);
+  pointer-events: none;
+  transition: opacity 0.18s;
+}
+
+/* ---------- top chrome ---------- */
+.bpd-top {
+  position: relative;
+  z-index: 5;
+  padding: 73px 20px 0;
+}
+.bpd-finite {
+  display: flex;
+  gap: 3px;
+  margin-bottom: 12px;
+}
+.bpd-fseg {
+  height: 2.5px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.18);
+  flex: 1;
+  overflow: hidden;
+}
+.bpd-fseg.done {
+  background: rgba(255, 255, 255, 0.55);
+}
+/* Inner fill of the CURRENT segment — width driven per-frame off the audio clock,
+   no transition (a CSS transition restarts every frame and stalls the fill). */
+.bpd-fseg > i {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 9999px;
+  background: var(--accent);
+}
+.bpd-toprow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.bpd-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  min-width: 0;
+}
+.bpd-date {
+  font-family: var(--bpd-mono, ui-monospace, monospace);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.45);
+  white-space: nowrap;
+}
+.bpd-topright {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+}
+.bpd-counter {
+  font-family: var(--bpd-mono, ui-monospace, monospace);
+  font-size: 12px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+}
+
+/* the blip wordmark (vendored geometry: dot + 3 radar arcs over a dotless i) */
+.bpd-blip {
+  font-weight: 800;
+  font-size: 20px;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: #fff;
+  display: inline-flex;
+  align-items: baseline;
+}
+.bpd-blip .bi {
+  position: relative;
+  display: inline-block;
+}
+.bpd-blip .tittle {
+  position: absolute;
+  left: 50%;
+  top: -0.34em;
+  width: 0;
+  height: 0;
+}
+.bpd-blip .bdot {
+  position: absolute;
+  left: -0.085em;
+  top: 0.1em;
+  width: 0.17em;
+  height: 0.17em;
+  border-radius: 9999px;
+  background: #fff;
+  display: block;
+}
+.bpd-blip .sig {
+  position: absolute;
+  left: -0.02em;
+  top: -0.18em;
+  width: 0.55em;
+  height: 0.7em;
+  overflow: visible;
+}
+.bpd-blip .sig path {
+  stroke: #fff;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  fill: none;
+}
+.bpd-blip .sig .bw1 {
+  opacity: 0.9;
+}
+.bpd-blip .sig .bw2 {
+  opacity: 0.55;
+}
+.bpd-blip .sig .bw3 {
+  opacity: 0.3;
+}
+
+/* ---------- right action rail (profile row button + stacked circles) ---------- */
+.bpd-um {
+  width: 38px;
+  height: 38px;
+  border-radius: 9999px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  transition:
+    transform 0.14s,
+    color 0.15s,
+    border-color 0.15s;
+}
+.bpd-um:active {
+  transform: scale(0.9);
+}
+.bpd-um.on {
+  color: var(--bpd-hi);
+}
+.bpd-um.check-on {
+  color: var(--accent);
+  border-color: color-mix(in oklab, var(--accent) 55%, transparent);
+}
+.bpd-um svg {
+  width: 20px;
+  height: 20px;
+}
+.bpd-rail {
+  position: absolute;
+  right: 20px;
+  top: 150px;
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+/* prev/next story chevrons — right edge, vertically centred */
+.bpd-nav {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 7;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.bpd-nav button {
+  width: 30px;
+  height: 30px;
+  border-radius: 9999px;
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.65);
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(6px);
+  transition:
+    transform 0.14s,
+    opacity 0.2s;
+}
+.bpd-nav button:active {
+  transform: scale(0.88);
+}
+.bpd-nav button:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+.bpd-nav svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ---------- karaoke caption hero ---------- */
+.bpd-cap-wrap {
+  position: relative;
+  z-index: 5;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 26px;
+  pointer-events: none;
+}
+.bpd .caption {
+  font-family: var(--bpd-serif, "Playfair Display", Georgia, serif);
+  font-weight: 700;
+  font-size: 26px;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  text-align: center;
+  text-wrap: balance;
+  width: 100%;
+  text-shadow:
+    0 1px 18px rgba(2, 6, 23, 0.85),
+    0 1px 3px rgba(2, 6, 23, 0.9);
+}
+.bpd .caption .w {
+  color: rgba(255, 255, 255, 0.3);
+  display: inline-block;
+  transform: scale(1);
+  transition: transform 0.12s ease-out;
+}
+.bpd .caption .w.spoken {
+  color: rgba(255, 255, 255, 0.55);
+}
+.bpd .caption .w.active {
+  color: #fff;
+  transform: scale(1.06);
+}
+.bpd .caption .w.hl {
+  color: var(--bpd-hi);
+}
+
+/* ---------- headline zone ---------- */
+.bpd-head {
+  position: relative;
+  z-index: 5;
+  padding: 0 20px;
+}
+.bpd-seg-chip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--bpd-mono, ui-monospace, monospace);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.bpd-seg-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background: var(--accent);
+  box-shadow: 0 0 12px var(--accent);
+  flex: none;
+}
+.bpd-headline {
+  font-weight: 600;
+  font-size: 27px;
+  line-height: 1.14;
+  letter-spacing: -0.02em;
+  color: #fff;
+  max-width: 340px;
+  margin: 10px 0 0;
+  text-align: left;
+  text-shadow: 0 1px 18px rgba(2, 6, 23, 0.9);
+}
+.bpd-taphint {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 10px;
+  font-family: var(--bpd-mono, ui-monospace, monospace);
+  font-size: 9.5px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--bpd-hi);
+}
+.bpd-taphint svg {
+  width: 12px;
+  height: 12px;
+}
+
+/* ---------- speaker + play bar ---------- */
+.bpd-playbar {
+  position: relative;
+  z-index: 5;
+  padding: 14px 20px 0;
+}
+.bpd-speaker-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+.bpd-speaker {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--bpd-mono, ui-monospace, monospace);
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.8);
+  min-height: 14px;
+}
+.bpd-speaker .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  flex: none;
+}
+.bpd-time {
+  font-family: var(--bpd-mono, ui-monospace, monospace);
+  font-size: 10.5px;
+  color: rgba(255, 255, 255, 0.55);
+  letter-spacing: 0.06em;
+}
+.bpd-play-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.bpd-play-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 9999px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: rgba(10, 15, 28, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(8px);
+  flex: none;
+  transition: transform 0.14s;
+}
+.bpd-play-btn:active {
+  transform: scale(0.92);
+}
+.bpd-play-btn svg {
+  width: 18px;
+  height: 18px;
+}
+.bpd-progress {
+  flex: 1;
+  height: 3px;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.16);
+  overflow: hidden;
+}
+.bpd-progress > i {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.85);
+}
+
+/* ---------- ask bar: white signal mic + question field ---------- */
+.bpd-ask {
+  position: relative;
+  z-index: 5;
+  padding: 16px 18px 8px;
+}
+.bpd-ask-row {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+.bpd-sig-btn {
+  position: relative;
+  flex: none;
+  width: 56px;
+  height: 56px;
+  border-radius: 9999px;
+  display: grid;
+  place-items: center;
+  background: #fff;
+  color: #06080f;
+  box-shadow:
+    0 10px 26px -8px rgba(255, 255, 255, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  transition: transform 0.14s;
+}
+.bpd-sig-btn:active {
+  transform: scale(0.93);
+}
+.bpd-sig-btn svg {
+  width: 23px;
+  height: 23px;
+}
+.bpd-sig-btn .ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  animation: bpd-sigpulse 2.6s ease-out infinite;
+  pointer-events: none;
+}
+.bpd-sig-btn .ring.r2 {
+  animation-delay: 1.3s;
+}
+.bpd-sig-btn.listening .ring {
+  animation-duration: 1.1s;
+  border-color: rgba(255, 255, 255, 0.85);
+}
+@keyframes bpd-sigpulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+.bpd-qfield {
+  flex: 1;
+  min-width: 0;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 8px 0 16px;
+  border-radius: 15px;
+  background: rgba(8, 12, 22, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(12px);
+  transition:
+    border-color 0.16s,
+    box-shadow 0.16s;
+}
+.bpd-qfield:focus-within {
+  border-color: rgba(255, 255, 255, 0.34);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.06);
+}
+.bpd-qfield input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: rgba(255, 255, 255, 0.88);
+  font-family: inherit;
+  font-size: 14px;
+}
+.bpd-qfield input::placeholder {
+  color: rgba(255, 255, 255, 0.66);
+}
+.bpd-kbd {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  flex: none;
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+.bpd-kbd svg {
+  width: 17px;
+  height: 17px;
+}
+.bpd-ask-hint {
+  margin-top: 12px;
+  padding-bottom: 22px;
+  text-align: center;
+  font-family: var(--bpd-mono, ui-monospace, monospace);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.35);
+}
+
+/* ---------- the finish line: all caught up (page 5) ---------- */
+.bpd-done {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bpd-bg);
+  text-align: center;
+  padding: 0 32px;
+}
+.bpd-done .wash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background: radial-gradient(70% 40% at 50% 0%, rgba(108, 140, 255, 0.16), transparent 70%);
+}
+.bpd-done .done-counter {
+  font-family: var(--bpd-mono, ui-monospace, monospace);
+  font-size: 12px;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 24px;
+}
+.bpd-done h2 {
+  font-family: var(--bpd-serif, "Playfair Display", Georgia, serif);
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.08;
+  color: #fff;
+  margin: 0;
+}
+.bpd-done p {
+  margin: 20px 0 0;
+  font-size: 15px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.55);
+  max-width: 280px;
+}
+.bpd-done .rule {
+  width: 48px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.15);
+  margin: 28px 0;
+}
+.bpd-done .replay {
+  font-family: var(--bpd-mono, ui-monospace, monospace);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.4);
+  transition: transform 0.14s;
+}
+.bpd-done .replay:active {
+  transform: scale(0.95);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bpd-pages {
+    transition: none;
+  }
+  .bpd-reel.playing .poster {
+    animation: none;
+  }
+  .bpd .caption .w,
+  .bpd .caption .w.active {
+    transition: none;
+    transform: none;
+  }
+  .bpd-sig-btn .ring {
+    animation: none;
+    opacity: 0;
+  }
+}
