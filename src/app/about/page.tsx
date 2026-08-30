@@ -19,7 +19,7 @@ import { SHOW_PENDING_MARKERS } from "@/content/publish-state";
 import { site } from "@/content/site";
 
 export const metadata: Metadata = {
-  title: "About · Ashesh Srivastava",
+  title: "About · Ash Sri",
   description:
     "Customer, operator, founder, builder — the journey from ecommerce at scale to AI product management, and what I'm right for (and not).",
 };

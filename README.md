@@ -1,6 +1,6 @@
 # Folio Pop portfolio
 
-Personal portfolio for **Ashesh Srivastava** — an AI Product Manager / Forward-Deployed Engineer.
+Personal portfolio for **Ash Sri** — an AI Product Manager / Forward-Deployed Engineer.
 Built on the [Folio Pop design system](https://claude.ai/design/p/edc09950-a47b-4511-8dc9-a93584fe8851):
 a Linktree-inspired, warm, punchy, link-first single-column page.
 

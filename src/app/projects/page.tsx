@@ -6,7 +6,7 @@ import { ProjectsIndexGrid } from "@/components/sections/ProjectsIndexGrid";
 import { site } from "@/content/site";
 
 export const metadata: Metadata = {
-  title: "Things I've shipped · Ashesh Srivastava",
+  title: "Things I've shipped · Ash Sri",
   description:
     "Every product here was designed, built, and shipped solo — with the decisions, agent architectures, evals, and what each one cost to learn.",
 };

@@ -136,8 +136,8 @@ export interface SiteContent {
 const RESUME_PDF_HREF = "/Ashesh_Srivastava_Resume_PM.pdf";
 
 export const site: SiteContent = {
-  owner_name: "Ashesh Srivastava",
-  wordmark_text: "Ashesh Srivastava",
+  owner_name: "Ash Sri",
+  wordmark_text: "Ash Sri",
   primary_email: "ashesh.srivastava1234@gmail.com", // TODO: confirm this is the address to expose publicly
   resume_pdf_href: RESUME_PDF_HREF,
 
