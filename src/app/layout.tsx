@@ -33,9 +33,27 @@ const fontMono = IBM_Plex_Mono({
   display: "swap",
 });
 
+/**
+ * OpenGraph/Twitter metadata drives the share-preview card on LinkedIn,
+ * iMessage, Slack, etc. The card image itself is the file-convention
+ * `src/app/opengraph-image.png` (Next.js emits og:image/twitter:image for it);
+ * `metadataBase` makes that image URL absolute, which LinkedIn requires.
+ */
 export const metadata: Metadata = {
+  metadataBase: new URL("https://ashsri.blog"),
   title: `${site.owner_name} — ${site.role_line}`,
   description: site.hero_headline,
+  openGraph: {
+    title: "Case studies: how I actually build products",
+    description:
+      "Seven AI products shipped end to end — documented with the numbers, the reversals, and the decision logs.",
+    url: "https://ashsri.blog",
+    siteName: "ashsri.blog",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({
